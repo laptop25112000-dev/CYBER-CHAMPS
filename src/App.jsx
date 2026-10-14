@@ -1,6 +1,10 @@
 import React, { useState, useMemo } from 'react';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
+import CustomCursor from './components/CustomCursor';
+import ThemeCursorControls from './components/ThemeCursorControls';
 import Navbar from './components/Navbar';
-import CyberHeroCanvas from './components/CyberHeroCanvas';
+import ScrollAnimated3DScene from './components/ScrollAnimated3DScene';
+import NRLSection from './components/NRLSection';
 import Member3DCard from './components/Member3DCard';
 import MemberModal from './components/MemberModal';
 import CyberLab3D from './components/CyberLab3D';
@@ -13,10 +17,11 @@ import { TEAM_MEMBERS } from './data/team';
 import { soundManager } from './utils/audio';
 import { 
   Shield, Terminal, Cpu, Users, ChevronRight, 
-  Search, Filter, Lock, Zap, Award, Sparkles 
+  Search, Filter, Lock, Zap, Award, Trophy, ChevronDown 
 } from 'lucide-react';
 
-export default function App() {
+function MainAppContent() {
+  const { activeThemeObj } = useTheme();
   const [selectedMember, setSelectedMember] = useState(null);
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -51,12 +56,22 @@ export default function App() {
   }, [activeCategory, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-[#030712] text-slate-100 relative selection:bg-cyan-500 selection:text-slate-950 font-['Rajdhani']">
-      {/* Background Cyber Grid */}
+    <div className="min-h-screen bg-[#030712] text-slate-100 relative font-['Rajdhani'] selection:text-slate-950" style={{ selectionBackgroundColor: activeThemeObj.hex }}>
+      {/* Background Cyber Grid with Dynamic Glow */}
       <div className="fixed inset-0 cyber-grid opacity-35 pointer-events-none -z-10" />
+      <div className="fixed inset-0 scanlines opacity-35 pointer-events-none -z-10" />
 
-      {/* Subtle Scanlines */}
-      <div className="fixed inset-0 scanlines opacity-40 pointer-events-none -z-10" />
+      {/* Dynamic Ambient Background Aura */}
+      <div 
+        className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[140px] opacity-20 pointer-events-none -z-10 transition-colors duration-700"
+        style={{ backgroundColor: activeThemeObj.hex }}
+      />
+
+      {/* Custom Interactive Cursor */}
+      <CustomCursor />
+
+      {/* Floating Theme & Cursor Switcher HUD */}
+      <ThemeCursorControls />
 
       {/* Floating Header */}
       <Navbar />
@@ -64,80 +79,103 @@ export default function App() {
       {/* MAIN CONTENT CONTAINER */}
       <main className="pt-24 space-y-24 sm:space-y-32">
         {/* ========================================================
-            HERO SECTION: 3D CYBER CORE & SQUAD IDENTITY
+            HERO SECTION: 3D SCROLL ANIMATED ROBO CAR & TEAM IDENTITY
         ======================================================== */}
-        <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-16">
+        <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-14">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left Column: Heading, Tagline, CTAs */}
             <div className="lg:col-span-6 space-y-6 text-center lg:text-left z-10">
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2.5 font-mono text-xs px-3.5 py-1.5 rounded-full bg-cyan-950/60 border border-cyan-500/40 text-cyan-300 backdrop-blur-md">
-                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-                <span>OFFICIAL PORTFOLIO // 9 ELITE OPERATORS</span>
+              {/* Competition Badge */}
+              <div 
+                className="inline-flex items-center gap-2.5 font-mono text-xs px-3.5 py-1.5 rounded-full border backdrop-blur-md"
+                style={{
+                  color: activeThemeObj.hex,
+                  borderColor: `${activeThemeObj.hex}50`,
+                  backgroundColor: `${activeThemeObj.hex}12`
+                }}
+              >
+                <Trophy className="w-3.5 h-3.5 animate-bounce" />
+                <span>NRL 2026 // NATIONAL ROBOTICS LEAGUE HYPERDRIVE</span>
               </div>
 
               {/* Main Glitch Title */}
               <h1 className="font-['Orbitron'] text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-none">
                 CYBER <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 text-glow-cyan">
+                <span 
+                  className="text-transparent bg-clip-text bg-gradient-to-r transition-all duration-500"
+                  style={{
+                    backgroundImage: `linear-gradient(90deg, ${activeThemeObj.hex}, ${activeThemeObj.secondary}, #ffffff)`
+                  }}
+                >
                   CHAMPS
                 </span>
               </h1>
 
               {/* Punchy Subheadline */}
               <p className="text-slate-300 text-base sm:text-lg lg:text-xl font-normal leading-relaxed max-w-xl mx-auto lg:mx-0">
-                A multidisciplinary strike team of 9 cybersecurity researchers, exploit developers, post-quantum cryptographers, and autonomous systems engineers.
+                Official squad of 9 elite engineers competing in the National Robotics League (NRL) with our custom-engineered battle robo car, pioneering autonomous guidance, kinetic defense, and cyber systems.
               </p>
 
               {/* Quick Action CTAs */}
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
                 <a
-                  href="#squad"
+                  href="#nrl-car"
                   onClick={() => soundManager.playClick()}
-                  className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-mono text-xs font-bold hover:shadow-xl hover:shadow-cyan-500/30 transition-all flex items-center gap-2 active:scale-95"
+                  className="px-6 py-3.5 rounded-xl text-slate-950 font-mono text-xs font-bold hover:shadow-xl transition-all flex items-center gap-2 active:scale-95 shadow-md"
+                  style={{
+                    backgroundColor: activeThemeObj.hex,
+                    boxShadow: `0 4px 25px ${activeThemeObj.bgGlow}`
+                  }}
                 >
-                  <Users className="w-4 h-4" />
-                  EXPLORE THE SQUAD (09)
+                  <Zap className="w-4 h-4" />
+                  INSPECT 3D ROBO CAR
                 </a>
 
                 <a
-                  href="#terminal"
+                  href="#squad"
                   onClick={() => soundManager.playClick()}
-                  className="px-6 py-3.5 rounded-xl bg-slate-900/90 text-cyan-300 hover:text-white border border-cyan-500/30 hover:border-cyan-400 font-mono text-xs font-semibold backdrop-blur-md transition-all flex items-center gap-2 active:scale-95"
+                  className="px-6 py-3.5 rounded-xl bg-slate-900/90 text-white hover:border-slate-500 border border-slate-800 font-mono text-xs font-semibold backdrop-blur-md transition-all flex items-center gap-2 active:scale-95"
                 >
-                  <Terminal className="w-4 h-4" />
-                  LAUNCH CLI TERMINAL
+                  <Users className="w-4 h-4" />
+                  MEET SQUAD (09)
                 </a>
               </div>
 
-              {/* Security Directives Pills */}
-              <div className="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-4 font-mono text-xs text-slate-400">
-                <span className="flex items-center gap-1.5 text-cyan-400">
-                  <Lock className="w-3.5 h-3.5" /> 100% Defense Verified
+              {/* Directives Indicator */}
+              <div className="pt-3 flex flex-wrap items-center justify-center lg:justify-start gap-3 font-mono text-xs text-slate-400">
+                <span className="flex items-center gap-1.5" style={{ color: activeThemeObj.hex }}>
+                  <Shield className="w-3.5 h-3.5" /> Titanium AR500 Chassis
                 </span>
                 <span className="text-slate-700">•</span>
-                <span className="flex items-center gap-1.5 text-purple-400">
-                  <Shield className="w-3.5 h-3.5" /> Zero-Day Research
+                <span className="flex items-center gap-1.5 text-slate-300">
+                  <Cpu className="w-3.5 h-3.5" /> 360° Solid-State LiDAR
                 </span>
                 <span className="text-slate-700">•</span>
-                <span className="flex items-center gap-1.5 text-emerald-400">
-                  <Cpu className="w-3.5 h-3.5" /> Post-Quantum Ready
+                <span className="flex items-center gap-1.5 text-slate-300">
+                  <Zap className="w-3.5 h-3.5" /> 4WD Brushless Motors
                 </span>
               </div>
             </div>
 
-            {/* Right Column: 3D Holographic Cyber Hero Canvas */}
+            {/* Right Column: 3D Scroll-Animated Scene */}
             <div className="lg:col-span-6 relative flex items-center justify-center">
               <div className="w-full relative">
-                <CyberHeroCanvas />
+                <ScrollAnimated3DScene />
               </div>
             </div>
           </div>
 
           {/* SQUAD LIVE METRICS BAR */}
-          <div className="mt-14 sm:mt-20">
+          <div className="mt-14 sm:mt-18">
             <LiveThreatStats />
           </div>
+        </section>
+
+        {/* ========================================================
+            NRL BATTLE ROBO CAR & 3D MODEL VIEWER SECTION
+        ======================================================== */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <NRLSection />
         </section>
 
         {/* ========================================================
@@ -145,15 +183,22 @@ export default function App() {
         ======================================================== */}
         <section id="squad" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-28 space-y-8">
           <div className="text-center max-w-3xl mx-auto space-y-3">
-            <div className="inline-flex items-center gap-2 font-mono text-xs text-cyan-400 bg-cyan-950/40 px-3 py-1 rounded-full border border-cyan-500/30">
+            <div 
+              className="inline-flex items-center gap-2 font-mono text-xs px-3.5 py-1 rounded-full border"
+              style={{
+                color: activeThemeObj.hex,
+                borderColor: `${activeThemeObj.hex}40`,
+                backgroundColor: `${activeThemeObj.hex}10`
+              }}
+            >
               <Users className="w-3.5 h-3.5" />
-              TACTICAL COMBAT ROSTER
+              SQUAD OPERATORS & ROBOTICS ENGINEERS
             </div>
             <h2 className="font-['Orbitron'] text-3xl sm:text-5xl font-black text-white">
               Meet The Cyber Champs
             </h2>
             <p className="text-slate-400 text-sm sm:text-base font-sans leading-relaxed">
-              Nine specialists united by a single mission: uncovering critical vulnerabilities, neutralizing nation-state attacks, and engineering resilient digital defense systems.
+              The 9 minds behind our robotics hardware, telemetry algorithms, and competitive cyber defense systems.
             </p>
           </div>
 
@@ -167,7 +212,7 @@ export default function App() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search operator, skill, or tool (e.g., Mayank, kernel, python)..."
+                  placeholder="Search operator, skill, or tool (e.g., Mayank, LiDAR, python)..."
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500 text-xs font-mono text-white placeholder-slate-500 focus:outline-none transition-colors"
                 />
                 {searchQuery && (
@@ -182,29 +227,35 @@ export default function App() {
 
               {/* Counter Indicator */}
               <div className="font-mono text-xs text-slate-400 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyan-400" />
-                SHOWING <span className="text-cyan-300 font-bold">{filteredMembers.length}</span> OF 9 OPERATORS
+                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: activeThemeObj.hex }} />
+                SHOWING <span className="font-bold text-white">{filteredMembers.length}</span> OF 9 OPERATORS
               </div>
             </div>
 
             {/* Filter Tabs */}
             <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-800/80">
-              {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => {
-                    soundManager.playHover();
-                    setActiveCategory(cat.id);
-                  }}
-                  className={`px-3 py-1.5 rounded-lg font-mono text-xs transition-all ${
-                    activeCategory === cat.id
-                      ? 'bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/20'
-                      : 'bg-slate-950/80 text-slate-400 hover:text-white border border-slate-800'
-                  }`}
-                >
-                  {cat.label} ({cat.count})
-                </button>
-              ))}
+              {categories.map((cat) => {
+                const isCatActive = activeCategory === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => {
+                      soundManager.playHover();
+                      setActiveCategory(cat.id);
+                    }}
+                    className={`px-3 py-1.5 rounded-lg font-mono text-xs transition-all ${
+                      isCatActive
+                        ? 'text-slate-950 font-bold shadow-md'
+                        : 'bg-slate-950/80 text-slate-400 hover:text-white border border-slate-800'
+                    }`}
+                    style={{
+                      backgroundColor: isCatActive ? activeThemeObj.hex : undefined
+                    }}
+                  >
+                    {cat.label} ({cat.count})
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -230,7 +281,8 @@ export default function App() {
                   setSearchQuery('');
                   setActiveCategory('all');
                 }}
-                className="font-mono text-xs text-cyan-400 underline"
+                className="font-mono text-xs underline"
+                style={{ color: activeThemeObj.hex }}
               >
                 Reset Search Filters
               </button>
@@ -262,15 +314,22 @@ export default function App() {
         ======================================================== */}
         <section id="terminal" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-28 space-y-6">
           <div className="text-center max-w-2xl mx-auto space-y-2">
-            <div className="inline-flex items-center gap-2 font-mono text-xs text-cyan-400 bg-cyan-950/40 px-3 py-1 rounded-full border border-cyan-500/30">
+            <div 
+              className="inline-flex items-center gap-2 font-mono text-xs px-3 py-1 rounded-full border"
+              style={{
+                color: activeThemeObj.hex,
+                borderColor: `${activeThemeObj.hex}40`,
+                backgroundColor: `${activeThemeObj.hex}10`
+              }}
+            >
               <Terminal className="w-3.5 h-3.5" />
-              RESTRICTED SHELL ACCESS
+              TACTICAL CLI ENVIRONMENT
             </div>
             <h2 className="font-['Orbitron'] text-3xl sm:text-4xl font-black text-white">
               Tactical Cyber Terminal
             </h2>
             <p className="text-slate-400 text-sm font-sans">
-              Interact directly with the Cyber Champs squad database. Query member records, execute diagnostics, and review classified mission files.
+              Query squad operator profiles, NRL robo car diagnostics, and security clearances directly from the shell.
             </p>
           </div>
 
@@ -298,5 +357,13 @@ export default function App() {
         onClose={() => setSelectedMember(null)}
       />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <MainAppContent />
+    </ThemeProvider>
   );
 }

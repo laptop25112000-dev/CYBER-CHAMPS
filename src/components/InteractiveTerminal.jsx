@@ -39,6 +39,7 @@ export default function InteractiveTerminal({ onSelectMember }) {
           text: `AVAILABLE COMMANDS:
   help              - List all available terminal commands
   team / members    - List all 9 Cyber Champs operators
+  car / nrl         - Inspect 2026 NRL HYPERDRIVE Battle Robo Car telemetry
   cat <name>        - Inspect dossier for an operator (e.g., cat mayank, cat sayan)
   stats             - Display squad combat & CTF metrics
   missions          - List flagship cyber defense projects
@@ -47,6 +48,22 @@ export default function InteractiveTerminal({ onSelectMember }) {
   sudo access       - Request root privilege escalation
   win / celebrate   - Trigger team victory protocol
   clear             - Clear terminal window`
+        });
+        break;
+
+      case 'car':
+      case 'nrl':
+      case 'hyperdrive':
+        newHistory.push({
+          type: 'response',
+          text: `=== [NRL 2026 HYPERDRIVE ROBO CAR TELEMETRY] ===
+League: National Robotics League (NRL) - HYPERDRIVE (Presented by Amazon)
+Video: https://youtu.be/C0-qp_30QFk?si=48g3O7u7qas8O-7q
+Chassis: CNC Billet 6061-T6 + Hardened AR500 Titanium Deflection Wedge
+Drivetrain: 4x Brushless Motors + 12:1 Planetary Reduction
+Sensors: 360° Solid-State Optical LiDAR + Edge Neural Flight Controller
+Power: 6S 22.2V LiPo, 120C Burst Discharge
+Status: READY FOR ARENA COMBAT`
         });
         break;
 
