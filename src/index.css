@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-heading: 'Orbitron', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-body: 'Rajdhani', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #030712;
+    color: #e2e8f0;
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    overflow-x: hidden;
+    selection-background-color: #00f0ff;
+    selection-color: #030712;
+  }
+
+  ::selection {
+    background: #00f0ff;
+    color: #050811;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #050b18;
+}
+::-webkit-scrollbar-thumb {
+  background: #00f0ff44;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00f0ffaa;
+}
+
+/* Cyber Glows and Utilities */
+.glow-cyan {
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.35);
+}
+.glow-purple {
+  box-shadow: 0 0 25px rgba(188, 19, 254, 0.35);
+}
+.glow-emerald {
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.35);
+}
+.text-glow-cyan {
+  text-shadow: 0 0 12px rgba(0, 240, 255, 0.7);
+}
+.text-glow-purple {
+  text-shadow: 0 0 12px rgba(188, 19, 254, 0.7);
+}
+
+/* Scanlines overlay effect */
+.scanlines {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 3px, 6px 100%;
+  pointer-events: none;
+}
+
+/* Cyber Grid background */
+.cyber-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 240, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 240, 255, 0.06) 1px, transparent 1px);
+}
+
+.cyber-grid-dense {
+  background-size: 20px 20px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 240, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 240, 255, 0.08) 1px, transparent 1px);
+}
+
+/* Glassmorphism Cyber Card */
+.cyber-card {
+  background: rgba(10, 16, 32, 0.75);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cyber-card:hover {
+  border-color: rgba(0, 240, 255, 0.6);
+  box-shadow: 0 10px 30px -10px rgba(0, 240, 255, 0.3);
+}
+
+/* Tech Cut Corners */
+.cut-corner-tl {
+  clip-path: polygon(14px 0%, 100% 0, 100% 100%, 0 100%, 0 14px);
+}
+.cut-corner-br {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+}
+.cut-corner-both {
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+}
+
+/* Cyber Button */
+.btn-cyber {
+  position: relative;
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(188, 19, 254, 0.15));
+  border: 1px solid rgba(0, 240, 255, 0.5);
+  color: #00f0ff;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.btn-cyber:hover {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.3), rgba(188, 19, 254, 0.3));
+  border-color: #00f0ff;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+  color: #ffffff;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s infinite ease-in-out;
+}
