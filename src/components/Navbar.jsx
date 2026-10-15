@@ -19,7 +19,6 @@ export default function Navbar() {
   const navItems = [
     { label: 'NRL ROBO CAR', href: '#nrl-car', badge: 'KIT 2026' },
     { label: 'SQUAD ROSTER', href: '#squad' },
-    { label: 'MISSIONS', href: '#missions' },
     { label: 'TERMINAL', href: '#terminal' }
   ];
 

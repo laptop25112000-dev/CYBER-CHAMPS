@@ -7,7 +7,6 @@ import ScrollAnimated3DScene from './components/ScrollAnimated3DScene';
 import NRLSection from './components/NRLSection';
 import Member3DCard from './components/Member3DCard';
 import MemberModal from './components/MemberModal';
-import MissionShowcase from './components/MissionShowcase';
 import LiveThreatStats from './components/LiveThreatStats';
 import InteractiveTerminal from './components/InteractiveTerminal';
 import Footer from './components/Footer';
@@ -305,13 +304,6 @@ function MainAppContent() {
               </button>
             </div>
           )}
-        </section>
-
-        {/* ========================================================
-            FLAGSHIP MISSIONS SECTION
-        ======================================================== */}
-        <section id="missions" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-28">
-          <MissionShowcase />
         </section>
 
         {/* ========================================================
