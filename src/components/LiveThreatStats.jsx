@@ -19,39 +19,37 @@ export default function LiveThreatStats() {
       {SQUAD_STATS.map((stat, idx) => (
         <div
           key={idx}
-          className={`relative p-5 rounded-xl border backdrop-blur-md transition-all duration-300 cut-corner-tl group ${
+          className={`relative p-5 rounded-xl border-2 sm:border-3 border-slate-900 shadow-[4px_4px_0px_0px_#000] transition-all duration-200 group hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_#000] ${
             isLightMode 
-              ? 'bg-white/90 border-slate-200 shadow-sm hover:shadow-lg' 
-              : 'bg-slate-900/70 border-slate-800 hover:border-cyan-500/40'
+              ? 'bg-white' 
+              : 'bg-slate-900'
           }`}
         >
           <div className="flex items-center justify-between mb-3">
-            <span className={`p-2 rounded-lg border transition-colors ${
-              isLightMode ? 'bg-slate-50 border-slate-200' : 'bg-slate-950 border-slate-800/80'
+            <span className={`p-2 rounded-lg border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] transition-colors ${
+              isLightMode ? 'bg-amber-100' : 'bg-slate-950'
             }`}>
               {iconMap[stat.icon]}
             </span>
-            <span className={`font-mono text-[10px] uppercase tracking-widest ${
-              isLightMode ? 'text-slate-500' : 'text-slate-400'
-            }`}>
+            <span className="font-mono text-[10px] uppercase tracking-widest font-black px-2 py-0.5 rounded border border-slate-900 bg-emerald-300 text-slate-950 shadow-[1px_1px_0px_0px_#000]">
               LIVE
             </span>
           </div>
 
-          <div className={`font-['Orbitron'] text-2xl sm:text-3xl font-extrabold transition-colors ${
-            isLightMode ? 'text-slate-900' : 'text-white'
+          <div className={`font-['Orbitron'] text-2xl sm:text-3xl font-black transition-colors ${
+            isLightMode ? 'text-slate-950' : 'text-white'
           }`}>
             {stat.value}
           </div>
 
-          <div className={`font-mono text-xs mt-1 font-semibold ${
-            isLightMode ? 'text-slate-700' : 'text-slate-300'
+          <div className={`font-mono text-xs mt-1 font-bold ${
+            isLightMode ? 'text-slate-900' : 'text-slate-200'
           }`}>
             {stat.label}
           </div>
 
-          <div className={`font-mono text-[10px] mt-0.5 ${
-            isLightMode ? 'text-slate-500' : 'text-slate-400'
+          <div className={`font-mono text-[10px] mt-0.5 font-medium ${
+            isLightMode ? 'text-slate-600' : 'text-slate-400'
           }`}>
             // {stat.unit}
           </div>

@@ -7,11 +7,9 @@ import ScrollAnimated3DScene from './components/ScrollAnimated3DScene';
 import NRLSection from './components/NRLSection';
 import Member3DCard from './components/Member3DCard';
 import MemberModal from './components/MemberModal';
-import CyberLab3D from './components/CyberLab3D';
 import MissionShowcase from './components/MissionShowcase';
 import LiveThreatStats from './components/LiveThreatStats';
 import InteractiveTerminal from './components/InteractiveTerminal';
-import ContactTransmission from './components/ContactTransmission';
 import Footer from './components/Footer';
 import { TEAM_MEMBERS } from './data/team';
 import { soundManager } from './utils/audio';
@@ -93,27 +91,22 @@ function MainAppContent() {
             <div className="lg:col-span-6 space-y-6 text-center lg:text-left z-10">
               {/* Competition Badge */}
               <div 
-                className="inline-flex items-center gap-2.5 font-mono text-xs px-3.5 py-1.5 rounded-full border backdrop-blur-md"
-                style={{
-                  color: activeThemeObj.hex,
-                  borderColor: `${activeThemeObj.hex}50`,
-                  backgroundColor: `${activeThemeObj.hex}12`
-                }}
+                className="inline-flex items-center gap-2.5 font-mono text-xs font-black px-4 py-2 rounded-full border-2 border-slate-900 shadow-[3px_3px_0px_0px_#000] bg-amber-300 text-slate-950"
               >
-                <Trophy className="w-3.5 h-3.5 animate-bounce" />
+                <Trophy className="w-4 h-4 animate-bounce" />
                 <span>NRL 2026 // NATIONAL ROBOTICS LEAGUE HYPERDRIVE</span>
               </div>
 
               {/* Main Glitch Title */}
               <h1 className={`font-['Orbitron'] text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none ${
-                isLightMode ? 'text-slate-900' : 'text-white'
+                isLightMode ? 'text-slate-950' : 'text-white'
               }`}>
                 CYBER <br />
                 <span 
                   className="text-transparent bg-clip-text bg-gradient-to-r transition-all duration-500"
                   style={{
                     backgroundImage: isLightMode
-                      ? `linear-gradient(90deg, ${activeThemeObj.hex}, #1e293b, ${activeThemeObj.secondary})`
+                      ? `linear-gradient(90deg, ${activeThemeObj.hex}, #0f172a, ${activeThemeObj.secondary})`
                       : `linear-gradient(90deg, ${activeThemeObj.hex}, ${activeThemeObj.secondary}, #ffffff)`
                   }}
                 >
@@ -122,21 +115,20 @@ function MainAppContent() {
               </h1>
 
               {/* Punchy Subheadline */}
-              <p className={`text-base sm:text-lg lg:text-xl font-normal leading-relaxed max-w-xl mx-auto lg:mx-0 ${
-                isLightMode ? 'text-slate-600' : 'text-slate-300'
+              <p className={`text-base sm:text-lg lg:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0 ${
+                isLightMode ? 'text-slate-700' : 'text-slate-300'
               }`}>
                 Official squad of 9 elite engineers competing in the National Robotics League (NRL) with our custom-engineered battle robo car, pioneering autonomous guidance, kinetic defense, and cyber systems.
               </p>
 
               {/* Quick Action CTAs */}
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
                 <a
                   href="#nrl-car"
                   onClick={() => soundManager.playClick()}
-                  className="px-6 py-3.5 rounded-xl text-white font-mono text-xs font-bold hover:shadow-xl transition-all flex items-center gap-2 active:scale-95 shadow-md"
+                  className="px-6 py-3.5 rounded-xl text-slate-950 font-mono text-xs font-black border-3 border-slate-900 shadow-[4px_4px_0px_0px_#000] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-2"
                   style={{
-                    backgroundColor: activeThemeObj.hex,
-                    boxShadow: `0 4px 25px ${activeThemeObj.bgGlow}`
+                    backgroundColor: activeThemeObj.hex
                   }}
                 >
                   <Zap className="w-4 h-4" />
@@ -146,10 +138,10 @@ function MainAppContent() {
                 <a
                   href="#squad"
                   onClick={() => soundManager.playClick()}
-                  className={`px-6 py-3.5 rounded-xl border font-mono text-xs font-semibold backdrop-blur-md transition-all flex items-center gap-2 active:scale-95 ${
+                  className={`px-6 py-3.5 rounded-xl border-3 border-slate-900 font-mono text-xs font-black shadow-[4px_4px_0px_0px_#000] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-2 ${
                     isLightMode 
-                      ? 'bg-white text-slate-800 hover:bg-slate-100 border-slate-300 shadow-sm' 
-                      : 'bg-slate-900/90 text-white hover:border-slate-500 border-slate-800'
+                      ? 'bg-white text-slate-950 hover:bg-slate-100' 
+                      : 'bg-slate-900 text-white hover:bg-slate-800'
                   }`}
                 >
                   <Users className="w-4 h-4" />
@@ -158,19 +150,17 @@ function MainAppContent() {
               </div>
 
               {/* Directives Indicator */}
-              <div className={`pt-3 flex flex-wrap items-center justify-center lg:justify-start gap-3 font-mono text-xs ${
-                isLightMode ? 'text-slate-500' : 'text-slate-400'
+              <div className={`pt-3 flex flex-wrap items-center justify-center lg:justify-start gap-2 sm:gap-3 font-mono text-xs font-bold ${
+                isLightMode ? 'text-slate-800' : 'text-slate-300'
               }`}>
-                <span className="flex items-center gap-1.5" style={{ color: activeThemeObj.hex }}>
-                  <Shield className="w-3.5 h-3.5" /> Titanium AR500 Chassis
+                <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border-2 border-slate-900 bg-white shadow-[2px_2px_0px_0px_#000]">
+                  <Shield className="w-3.5 h-3.5 text-cyan-600" /> Acrylic / Metal Chassis
                 </span>
-                <span className="text-slate-400">•</span>
-                <span className="flex items-center gap-1.5">
-                  <Cpu className="w-3.5 h-3.5" /> 360° Solid-State LiDAR
+                <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border-2 border-slate-900 bg-white shadow-[2px_2px_0px_0px_#000]">
+                  <Cpu className="w-3.5 h-3.5 text-purple-600" /> HEXA Core Telemetry
                 </span>
-                <span className="text-slate-400">•</span>
-                <span className="flex items-center gap-1.5">
-                  <Zap className="w-3.5 h-3.5" /> 4WD Brushless Motors
+                <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border-2 border-slate-900 bg-white shadow-[2px_2px_0px_0px_#000]">
+                  <Zap className="w-3.5 h-3.5 text-amber-600" /> 4WD Motors + Gripper
                 </span>
               </div>
             </div>
@@ -202,53 +192,46 @@ function MainAppContent() {
         <section id="squad" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-28 space-y-8">
           <div className="text-center max-w-3xl mx-auto space-y-3">
             <div 
-              className="inline-flex items-center gap-2 font-mono text-xs px-3.5 py-1 rounded-full border"
-              style={{
-                color: activeThemeObj.hex,
-                borderColor: `${activeThemeObj.hex}40`,
-                backgroundColor: `${activeThemeObj.hex}10`
-              }}
+              className="inline-flex items-center gap-2 font-mono text-xs font-black px-4 py-1.5 rounded-full border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] bg-cyan-300 text-slate-950"
             >
               <Users className="w-3.5 h-3.5" />
               SQUAD OPERATORS & ROBOTICS ENGINEERS
             </div>
             <h2 className={`font-['Orbitron'] text-3xl sm:text-5xl font-black ${
-              isLightMode ? 'text-slate-900' : 'text-white'
+              isLightMode ? 'text-slate-950' : 'text-white'
             }`}>
               Meet The Cyber Champs
             </h2>
-            <p className={`text-sm sm:text-base font-sans leading-relaxed ${
-              isLightMode ? 'text-slate-600' : 'text-slate-400'
+            <p className={`text-sm sm:text-base font-medium leading-relaxed ${
+              isLightMode ? 'text-slate-700' : 'text-slate-300'
             }`}>
               The 9 minds behind our robotics hardware, telemetry algorithms, and competitive cyber defense systems.
             </p>
           </div>
 
           {/* Search & Filter Controls */}
-          <div className={`p-4 sm:p-5 rounded-2xl border backdrop-blur-md space-y-4 ${
-            isLightMode ? 'bg-white border-slate-200 shadow-sm' : 'bg-slate-900/70 border-slate-800'
+          <div className={`p-4 sm:p-6 rounded-2xl border-3 sm:border-4 border-slate-900 shadow-[6px_6px_0px_0px_#000] space-y-4 ${
+            isLightMode ? 'bg-white' : 'bg-slate-900'
           }`}>
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               {/* Search input */}
               <div className="relative w-full sm:w-96">
-                <Search className={`w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 ${
-                  isLightMode ? 'text-slate-400' : 'text-slate-500'
-                }`} />
+                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-950" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search operator, skill, or tool (e.g., Mayank, LiDAR, python)..."
-                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-xs font-mono focus:outline-none transition-colors ${
+                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] text-xs font-mono font-bold focus:outline-none transition-colors ${
                     isLightMode 
-                      ? 'bg-slate-50 border-slate-300 text-slate-900 placeholder-slate-400 focus:border-slate-500' 
-                      : 'bg-slate-950 border-slate-800 text-white placeholder-slate-500 focus:border-cyan-500'
+                      ? 'bg-slate-50 text-slate-950 placeholder-slate-500' 
+                      : 'bg-slate-950 text-white placeholder-slate-400'
                   }`}
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 font-mono text-xs text-slate-500 hover:text-slate-900"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 font-mono text-xs font-black text-rose-600 hover:text-rose-800"
                   >
                     CLEAR
                   </button>
@@ -256,18 +239,14 @@ function MainAppContent() {
               </div>
 
               {/* Counter Indicator */}
-              <div className={`font-mono text-xs flex items-center gap-2 ${
-                isLightMode ? 'text-slate-600' : 'text-slate-400'
-              }`}>
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: activeThemeObj.hex }} />
-                SHOWING <span className="font-bold" style={{ color: activeThemeObj.hex }}>{filteredMembers.length}</span> OF 9 OPERATORS
+              <div className="font-mono text-xs font-black flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 border-slate-900 bg-amber-300 text-slate-950 shadow-[2px_2px_0px_0px_#000]">
+                <span className="w-2.5 h-2.5 rounded-full bg-slate-950" />
+                SHOWING <span>{filteredMembers.length}</span> OF 9 OPERATORS
               </div>
             </div>
 
             {/* Filter Tabs */}
-            <div className={`flex flex-wrap items-center gap-2 pt-2 border-t ${
-              isLightMode ? 'border-slate-200' : 'border-slate-800/80'
-            }`}>
+            <div className={`flex flex-wrap items-center gap-2 pt-2 border-t-2 border-slate-900`}>
               {categories.map((cat) => {
                 const isCatActive = activeCategory === cat.id;
                 return (
@@ -277,12 +256,12 @@ function MainAppContent() {
                       soundManager.playHover();
                       setActiveCategory(cat.id);
                     }}
-                    className={`px-3 py-1.5 rounded-lg font-mono text-xs transition-all ${
+                    className={`px-3 py-1.5 rounded-lg font-mono text-xs font-black border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] transition-all active:translate-x-0.5 active:translate-y-0.5 active:shadow-none ${
                       isCatActive
-                        ? 'text-white font-bold shadow-sm'
+                        ? 'text-slate-950'
                         : isLightMode
-                        ? 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200 border border-slate-200'
-                        : 'bg-slate-950/80 text-slate-400 hover:text-white border border-slate-800'
+                        ? 'bg-white text-slate-800 hover:bg-slate-100'
+                        : 'bg-slate-950 text-slate-300 hover:text-white'
                     }`}
                     style={{
                       backgroundColor: isCatActive ? activeThemeObj.hex : undefined
@@ -307,11 +286,11 @@ function MainAppContent() {
           </div>
 
           {filteredMembers.length === 0 && (
-            <div className={`p-12 text-center rounded-2xl border space-y-3 ${
-              isLightMode ? 'bg-white border-slate-200' : 'bg-slate-900/50 border-slate-800'
+            <div className={`p-12 text-center rounded-2xl border-3 border-slate-900 shadow-[4px_4px_0px_0px_#000] space-y-3 ${
+              isLightMode ? 'bg-white' : 'bg-slate-900'
             }`}>
-              <Shield className="w-8 h-8 text-slate-400 mx-auto" />
-              <div className="font-mono text-sm text-slate-600">
+              <Shield className="w-8 h-8 text-slate-900 mx-auto" />
+              <div className="font-mono text-sm font-bold text-slate-900">
                 No squad operators match "{searchQuery}" in this filter.
               </div>
               <button
@@ -319,25 +298,13 @@ function MainAppContent() {
                   setSearchQuery('');
                   setActiveCategory('all');
                 }}
-                className="font-mono text-xs underline"
+                className="font-mono text-xs font-black underline"
                 style={{ color: activeThemeObj.hex }}
               >
                 Reset Search Filters
               </button>
             </div>
           )}
-        </section>
-
-        {/* ========================================================
-            3D LAB & ARSENAL SECTION
-        ======================================================== */}
-        <section id="lab" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-28">
-          <CyberLab3D 
-            onSelectMemberByName={(name) => {
-              const found = TEAM_MEMBERS.find(m => m.name.toLowerCase().includes(name.toLowerCase()));
-              if (found) setSelectedMember(found);
-            }} 
-          />
         </section>
 
         {/* ========================================================
@@ -353,23 +320,18 @@ function MainAppContent() {
         <section id="terminal" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-28 space-y-6">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <div 
-              className="inline-flex items-center gap-2 font-mono text-xs px-3 py-1 rounded-full border"
-              style={{
-                color: activeThemeObj.hex,
-                borderColor: `${activeThemeObj.hex}40`,
-                backgroundColor: `${activeThemeObj.hex}10`
-              }}
+              className="inline-flex items-center gap-2 font-mono text-xs font-black px-4 py-1.5 rounded-full border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] bg-emerald-300 text-slate-950"
             >
               <Terminal className="w-3.5 h-3.5" />
               TACTICAL CLI ENVIRONMENT
             </div>
             <h2 className={`font-['Orbitron'] text-3xl sm:text-4xl font-black ${
-              isLightMode ? 'text-slate-900' : 'text-white'
+              isLightMode ? 'text-slate-950' : 'text-white'
             }`}>
               Tactical Cyber Terminal
             </h2>
-            <p className={`text-sm font-sans ${
-              isLightMode ? 'text-slate-600' : 'text-slate-400'
+            <p className={`text-sm font-medium ${
+              isLightMode ? 'text-slate-700' : 'text-slate-300'
             }`}>
               Query squad operator profiles, NRL robo car diagnostics, and security clearances directly from the shell.
             </p>
@@ -380,13 +342,6 @@ function MainAppContent() {
               onSelectMember={(m) => setSelectedMember(m)}
             />
           </div>
-        </section>
-
-        {/* ========================================================
-            CONTACT / SECURE TRANSMISSION SECTION
-        ======================================================== */}
-        <section id="contact" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-28">
-          <ContactTransmission />
         </section>
       </main>
 

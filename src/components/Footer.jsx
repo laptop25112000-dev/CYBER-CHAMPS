@@ -1,44 +1,54 @@
 import React from 'react';
 import { TEAM_MEMBERS } from '../data/team';
 import { soundManager } from '../utils/audio';
-import { Shield, ChevronUp, Terminal, Lock } from 'lucide-react';
-
+import { Shield, ChevronUp, Terminal, Lock, Trophy } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Footer({ onSelectMember }) {
+  const { isLightMode, activeThemeObj } = useTheme();
+
   const scrollToTop = () => {
     soundManager.playClick();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <footer className="border-t border-cyan-500/20 bg-slate-950/95 pt-16 pb-12 text-slate-400 font-sans">
+    <footer className={`border-t-3 sm:border-t-4 border-slate-900 pt-16 pb-12 font-sans transition-colors ${
+      isLightMode ? 'bg-[#f1f5f9] text-slate-800' : 'bg-slate-950 text-slate-300'
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
           {/* Col 1: Brand & Ethos */}
           <div className="md:col-span-5 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-cyan-950 border border-cyan-500/40 flex items-center justify-center">
-                <Shield className="w-5 h-5 text-cyan-400" />
+              <div 
+                className="w-10 h-10 rounded-xl border-2 border-slate-900 shadow-[3px_3px_0px_0px_#000] flex items-center justify-center"
+                style={{ backgroundColor: activeThemeObj.hex }}
+              >
+                <Shield className="w-5 h-5 text-slate-950" />
               </div>
-              <span className="font-['Orbitron'] text-xl font-bold text-white tracking-wider">
-                CYBER <span className="text-cyan-400">CHAMPS</span>
+              <span className="font-['Orbitron'] text-2xl font-black tracking-wider text-slate-950">
+                CYBER <span style={{ color: activeThemeObj.hex }}>CHAMPS</span>
               </span>
             </div>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-sm leading-relaxed">
-              Elite cybersecurity & autonomous engineering squad. Defending critical digital frontiers through continuous research, exploit mitigation, and post-quantum architectures.
+            <p className={`text-xs sm:text-sm max-w-sm leading-relaxed font-medium ${
+              isLightMode ? 'text-slate-600' : 'text-slate-400'
+            }`}>
+              Official National Robotics League (NRL) - HYPERDRIVE robotics & cybersecurity engineering squad. Autonomous tactical systems, 4WD combat drivetrain, and zero-trust firmware.
             </p>
-            <div className="flex items-center gap-2 font-mono text-[11px] text-emerald-400 bg-emerald-950/30 px-3 py-1.5 rounded-md border border-emerald-500/30 w-fit">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              STATUS: ALL NODES OPERATIONAL (GREEN)
+            <div className="flex items-center gap-2 font-mono text-[11px] font-black text-slate-950 bg-emerald-300 px-3 py-1.5 rounded-lg border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] w-fit">
+              <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
+              STATUS: ALL 9 OPERATORS ACTIVE // NRL HYPERDRIVE READY
             </div>
           </div>
 
           {/* Col 2: Squad Quick Directory */}
           <div className="md:col-span-4 space-y-3">
-            <div className="font-mono text-xs font-bold text-white tracking-wider uppercase">
+            <div className="font-mono text-xs font-black text-slate-950 tracking-wider uppercase flex items-center gap-1.5">
+              <Trophy className="w-3.5 h-3.5" style={{ color: activeThemeObj.hex }} />
               // SQUAD OPERATORS (09)
             </div>
-            <div className="grid grid-cols-2 gap-1.5 font-mono text-xs">
+            <div className="grid grid-cols-2 gap-2 font-mono text-xs">
               {TEAM_MEMBERS.map((m) => (
                 <button
                   key={m.id}
@@ -46,9 +56,11 @@ export default function Footer({ onSelectMember }) {
                     soundManager.playClick();
                     if (onSelectMember) onSelectMember(m);
                   }}
-                  className="text-left text-slate-400 hover:text-cyan-400 hover:translate-x-1 transition-all flex items-center gap-1.5 py-0.5"
+                  className={`text-left font-bold transition-all flex items-center gap-1.5 py-1 px-2 rounded-lg border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none ${
+                    isLightMode ? 'bg-white text-slate-900 hover:bg-amber-100' : 'bg-slate-900 text-slate-200 hover:bg-slate-800'
+                  }`}
                 >
-                  <span className="text-[10px] text-slate-600">›</span>
+                  <span className="text-[10px]" style={{ color: activeThemeObj.hex }}>›</span>
                   <span className="truncate">{m.name}</span>
                 </button>
               ))}
@@ -57,37 +69,43 @@ export default function Footer({ onSelectMember }) {
 
           {/* Col 3: Directives */}
           <div className="md:col-span-3 space-y-3">
-            <div className="font-mono text-xs font-bold text-white tracking-wider uppercase">
+            <div className="font-mono text-xs font-black text-slate-950 tracking-wider uppercase">
               // DEFENSE DIRECTIVES
             </div>
-            <ul className="space-y-1.5 font-mono text-xs text-slate-400">
-              <li className="flex items-center gap-2">
-                <Lock className="w-3.5 h-3.5 text-cyan-400" />
+            <ul className="space-y-2 font-mono text-xs font-bold">
+              <li className={`flex items-center gap-2 p-2 rounded-lg border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] ${
+                isLightMode ? 'bg-cyan-100 text-slate-950' : 'bg-slate-900 text-slate-200'
+              }`}>
+                <Lock className="w-3.5 h-3.5 text-cyan-700" />
                 Zero-Trust Verification
               </li>
-              <li className="flex items-center gap-2">
-                <Shield className="w-3.5 h-3.5 text-purple-400" />
-                Kernel-Level Hardening
+              <li className={`flex items-center gap-2 p-2 rounded-lg border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] ${
+                isLightMode ? 'bg-purple-100 text-slate-950' : 'bg-slate-900 text-slate-200'
+              }`}>
+                <Shield className="w-3.5 h-3.5 text-purple-700" />
+                Dual-Deck Acrylic Armor
               </li>
-              <li className="flex items-center gap-2">
-                <Terminal className="w-3.5 h-3.5 text-emerald-400" />
-                Continuous Red Teaming
+              <li className={`flex items-center gap-2 p-2 rounded-lg border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] ${
+                isLightMode ? 'bg-amber-100 text-slate-950' : 'bg-slate-900 text-slate-200'
+              }`}>
+                <Terminal className="w-3.5 h-3.5 text-amber-700" />
+                Autonomous LiDAR Guidance
               </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-slate-400">
-          <div>
+        <div className="pt-8 border-t-2 border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs">
+          <div className="font-bold text-slate-700">
             &copy; {new Date().getFullYear()} CYBER CHAMPS SQUAD. All rights reserved.
           </div>
           <div className="flex items-center gap-4">
             <button
               onClick={scrollToTop}
-              className="flex items-center gap-1.5 text-slate-400 hover:text-cyan-400 transition-colors"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 border-slate-900 bg-white font-mono font-black text-slate-950 shadow-[2px_2px_0px_0px_#000] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_#000] active:translate-y-0.5 active:shadow-none transition-all"
             >
-              <span>RETURN TO APEX</span>
+              <span>RETURN TO TOP</span>
               <ChevronUp className="w-4 h-4" />
             </button>
           </div>

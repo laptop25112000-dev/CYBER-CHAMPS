@@ -212,24 +212,24 @@ rtt min/avg/max = 0.028/0.030/0.032 ms`
   };
 
   return (
-    <div className="w-full rounded-2xl bg-slate-950/95 border border-cyan-500/30 overflow-hidden shadow-2xl backdrop-blur-xl">
+    <div className="w-full rounded-2xl bg-slate-950 border-3 sm:border-4 border-slate-900 overflow-hidden shadow-[8px_8px_0px_0px_#000]">
       {/* Titlebar */}
-      <div className="flex items-center justify-between px-4 py-3 bg-slate-900/90 border-b border-slate-800">
+      <div className="flex items-center justify-between px-4 py-3 bg-slate-900 border-b-2 sm:border-b-3 border-slate-900">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-red-500/80" />
-          <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-          <div className="w-3 h-3 rounded-full bg-green-500/80" />
-          <span className="font-mono text-xs text-slate-400 ml-2">
+          <div className="w-3.5 h-3.5 rounded-full bg-rose-500 border border-slate-950" />
+          <div className="w-3.5 h-3.5 rounded-full bg-amber-400 border border-slate-950" />
+          <div className="w-3.5 h-3.5 rounded-full bg-emerald-400 border border-slate-950" />
+          <span className="font-mono text-xs font-bold text-slate-200 ml-2">
             bash - root@cyber-champs:~ (tty1)
           </span>
         </div>
-        <div className="font-mono text-[10px] text-cyan-400 bg-cyan-950/50 px-2 py-0.5 rounded border border-cyan-500/30">
+        <div className="font-mono text-[10px] font-black text-slate-950 bg-cyan-400 px-2 py-0.5 rounded border border-slate-900 shadow-[1px_1px_0px_0px_#000]">
           CLI_SECURE_TUNNEL
         </div>
       </div>
 
       {/* Terminal Output */}
-      <div className="p-4 sm:p-6 font-mono text-xs sm:text-sm text-slate-300 min-h-[300px] max-h-[420px] overflow-y-auto space-y-2 select-text">
+      <div className="p-4 sm:p-6 font-mono text-xs sm:text-sm text-slate-200 min-h-[300px] max-h-[420px] overflow-y-auto space-y-2 select-text">
         {history.map((item, idx) => (
           <div 
             key={idx} 
@@ -237,10 +237,10 @@ rtt min/avg/max = 0.028/0.030/0.032 ms`
               item.type === 'user' 
                 ? 'text-cyan-400 font-bold' 
                 : item.type === 'error' 
-                ? 'text-rose-400' 
+                ? 'text-rose-400 font-bold' 
                 : item.type === 'system'
-                ? 'text-emerald-400/90'
-                : 'text-slate-300 leading-relaxed'
+                ? 'text-emerald-400 font-semibold'
+                : 'text-slate-300 leading-relaxed font-normal'
             }`}
           >
             {item.text}
@@ -250,19 +250,19 @@ rtt min/avg/max = 0.028/0.030/0.032 ms`
       </div>
 
       {/* Interactive Input Prompt */}
-      <div className="flex items-center px-4 py-3 bg-slate-900/60 border-t border-slate-800/80">
-        <span className="font-mono text-cyan-400 font-bold mr-2 text-sm">$</span>
+      <div className="flex items-center px-4 py-3 bg-slate-900 border-t-2 sm:border-t-3 border-slate-900">
+        <span className="font-mono text-cyan-400 font-black mr-2 text-sm">$</span>
         <input
           type="text"
           value={inputVal}
           onChange={(e) => setInputVal(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Type command here... (try: team, help, cat mayank, win)"
-          className="flex-1 bg-transparent font-mono text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none"
+          className="flex-1 bg-transparent font-mono text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none"
         />
         <button
           onClick={() => handleCommand(inputVal)}
-          className="p-1.5 rounded bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500 hover:text-slate-950 font-mono text-xs transition-colors flex items-center gap-1"
+          className="px-3 py-1.5 rounded-lg bg-cyan-400 text-slate-950 font-mono text-xs font-black border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] hover:bg-cyan-300 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-1"
         >
           <CornerDownLeft className="w-3.5 h-3.5" />
           EXEC

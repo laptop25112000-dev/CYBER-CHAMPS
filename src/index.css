@@ -19,100 +19,97 @@
     font-size: 1.05rem;
     line-height: 1.6;
     overflow-x: hidden;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-
-  /* Dark mode default */
-  html.dark body {
-    background-color: #030712;
-    color: #f1f5f9;
-  }
-
-  /* Light mode (active by default as requested!) */
-  html.light body {
     background-color: #f8fafc;
     color: #0f172a;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar - Neobrutalist */
 ::-webkit-scrollbar {
-  width: 7px;
+  width: 9px;
 }
-html.dark ::-webkit-scrollbar-track {
-  background: #050b18;
-}
-html.light ::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: #f1f5f9;
+  border-left: 2px solid #0f172a;
 }
-html.dark ::-webkit-scrollbar-thumb {
-  background: rgba(0, 240, 255, 0.3);
-  border-radius: 4px;
-}
-html.light ::-webkit-scrollbar-thumb {
-  background: rgba(2, 132, 199, 0.35);
-  border-radius: 4px;
+::-webkit-scrollbar-thumb {
+  background: #0f172a;
+  border-radius: 0px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(2, 132, 199, 0.7);
+  background: #334155;
 }
 
-/* Cyber Grid background */
-html.dark .cyber-grid {
-  background-size: 40px 40px;
+/* Neobrutalist Core Utilities */
+.neo-box {
+  background-color: #ffffff;
+  border: 2px solid #0f172a;
+  box-shadow: 4px 4px 0px 0px #0f172a;
+  transition: all 0.15s ease-out;
+}
+
+.neo-box-lg {
+  background-color: #ffffff;
+  border: 3px solid #0f172a;
+  box-shadow: 6px 6px 0px 0px #0f172a;
+  transition: all 0.15s ease-out;
+}
+
+.neo-box-interactive {
+  background-color: #ffffff;
+  border: 2px solid #0f172a;
+  box-shadow: 4px 4px 0px 0px #0f172a;
+  transition: all 0.15s ease-out;
+}
+.neo-box-interactive:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px #0f172a;
+}
+.neo-box-interactive:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px #0f172a;
+}
+
+.neo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  border: 2px solid #0f172a;
+  box-shadow: 3px 3px 0px 0px #0f172a;
+  transition: all 0.12s ease-out;
+  cursor: pointer;
+}
+.neo-btn:hover {
+  transform: translate(-1.5px, -1.5px);
+  box-shadow: 4.5px 4.5px 0px 0px #0f172a;
+}
+.neo-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px 0px #0f172a;
+}
+
+.neo-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  border: 1.5px solid #0f172a;
+  box-shadow: 2px 2px 0px 0px #0f172a;
+}
+
+/* Neobrutalist dot grid pattern */
+.neo-grid-dots {
+  background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+/* Subtle architectural graph lines */
+.neo-grid-lines {
+  background-size: 32px 32px;
   background-image: 
-    linear-gradient(to right, rgba(0, 240, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 240, 255, 0.06) 1px, transparent 1px);
-}
-
-html.light .cyber-grid {
-  background-size: 40px 40px;
-  background-image: 
-    linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
-}
-
-/* Scanlines overlay */
-html.dark .scanlines {
-  background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%, 
-    rgba(0, 0, 0, 0.25) 50%
-  ), linear-gradient(
-    90deg,
-    rgba(255, 0, 0, 0.03),
-    rgba(0, 255, 0, 0.01),
-    rgba(0, 0, 255, 0.03)
-  );
-  background-size: 100% 3px, 6px 100%;
-  pointer-events: none;
-}
-
-html.light .scanlines {
-  opacity: 0.05 !important;
-  pointer-events: none;
-}
-
-/* Glassmorphic Cyber Cards */
-html.dark .cyber-card {
-  background: rgba(10, 16, 32, 0.75);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(0, 240, 255, 0.2);
-}
-
-html.light .cyber-card {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04);
-}
-
-/* Cut corners */
-.cut-corner-tl {
-  clip-path: polygon(14px 0%, 100% 0, 100% 100%, 0 100%, 0 14px);
-}
-.cut-corner-br {
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
-}
-.cut-corner-both {
-  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+    linear-gradient(to right, rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
 }
