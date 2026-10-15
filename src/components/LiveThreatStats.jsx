@@ -1,14 +1,17 @@
 import React from 'react';
 import { SQUAD_STATS } from '../data/team';
+import { useTheme } from '../context/ThemeContext';
 import { Users, Trophy, ShieldAlert, Activity, CheckCircle2 } from 'lucide-react';
 
 export default function LiveThreatStats() {
+  const { isLightMode, activeThemeObj } = useTheme();
+
   const iconMap = {
-    Users: <Users className="w-5 h-5 text-cyan-400" />,
-    Trophy: <Trophy className="w-5 h-5 text-amber-400" />,
-    ShieldAlert: <ShieldAlert className="w-5 h-5 text-rose-400" />,
-    Activity: <Activity className="w-5 h-5 text-emerald-400" />,
-    CheckCircle2: <CheckCircle2 className="w-5 h-5 text-purple-400" />
+    Users: <Users className="w-5 h-5 text-cyan-500" />,
+    Trophy: <Trophy className="w-5 h-5 text-amber-500" />,
+    ShieldAlert: <ShieldAlert className="w-5 h-5 text-rose-500" />,
+    Activity: <Activity className="w-5 h-5 text-emerald-500" />,
+    CheckCircle2: <CheckCircle2 className="w-5 h-5 text-purple-500" />
   };
 
   return (
@@ -16,26 +19,40 @@ export default function LiveThreatStats() {
       {SQUAD_STATS.map((stat, idx) => (
         <div
           key={idx}
-          className="relative p-5 rounded-xl bg-slate-900/70 border border-slate-800 hover:border-cyan-500/40 backdrop-blur-md transition-all duration-300 cut-corner-tl group"
+          className={`relative p-5 rounded-xl border backdrop-blur-md transition-all duration-300 cut-corner-tl group ${
+            isLightMode 
+              ? 'bg-white/90 border-slate-200 shadow-sm hover:shadow-lg' 
+              : 'bg-slate-900/70 border-slate-800 hover:border-cyan-500/40'
+          }`}
         >
           <div className="flex items-center justify-between mb-3">
-            <span className="p-2 rounded-lg bg-slate-950 border border-slate-800/80 group-hover:border-cyan-500/30 transition-colors">
+            <span className={`p-2 rounded-lg border transition-colors ${
+              isLightMode ? 'bg-slate-50 border-slate-200' : 'bg-slate-950 border-slate-800/80'
+            }`}>
               {iconMap[stat.icon]}
             </span>
-            <span className="font-mono text-[10px] text-slate-400 uppercase tracking-widest">
+            <span className={`font-mono text-[10px] uppercase tracking-widest ${
+              isLightMode ? 'text-slate-500' : 'text-slate-400'
+            }`}>
               LIVE
             </span>
           </div>
 
-          <div className="font-['Orbitron'] text-2xl sm:text-3xl font-extrabold text-white group-hover:text-cyan-300 transition-colors">
+          <div className={`font-['Orbitron'] text-2xl sm:text-3xl font-extrabold transition-colors ${
+            isLightMode ? 'text-slate-900' : 'text-white'
+          }`}>
             {stat.value}
           </div>
 
-          <div className="font-mono text-xs text-slate-300 mt-1 font-semibold">
+          <div className={`font-mono text-xs mt-1 font-semibold ${
+            isLightMode ? 'text-slate-700' : 'text-slate-300'
+          }`}>
             {stat.label}
           </div>
 
-          <div className="font-mono text-[10px] text-slate-400 mt-0.5">
+          <div className={`font-mono text-[10px] mt-0.5 ${
+            isLightMode ? 'text-slate-500' : 'text-slate-400'
+          }`}>
             // {stat.unit}
           </div>
         </div>

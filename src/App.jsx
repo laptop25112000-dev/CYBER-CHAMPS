@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 
 function MainAppContent() {
-  const { activeThemeObj } = useTheme();
+  const { activeThemeObj, isLightMode } = useTheme();
   const [selectedMember, setSelectedMember] = useState(null);
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -56,14 +56,20 @@ function MainAppContent() {
   }, [activeCategory, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-[#030712] text-slate-100 relative font-['Rajdhani'] selection:text-slate-950" style={{ selectionBackgroundColor: activeThemeObj.hex }}>
+    <div 
+      className={`min-h-screen relative font-['Rajdhani'] transition-colors duration-300 ${
+        isLightMode ? 'bg-[#f8fafc] text-slate-800' : 'bg-[#030712] text-slate-100'
+      }`}
+    >
       {/* Background Cyber Grid with Dynamic Glow */}
       <div className="fixed inset-0 cyber-grid opacity-35 pointer-events-none -z-10" />
       <div className="fixed inset-0 scanlines opacity-35 pointer-events-none -z-10" />
 
       {/* Dynamic Ambient Background Aura */}
       <div 
-        className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[140px] opacity-20 pointer-events-none -z-10 transition-colors duration-700"
+        className={`fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[140px] pointer-events-none -z-10 transition-colors duration-700 ${
+          isLightMode ? 'opacity-15' : 'opacity-20'
+        }`}
         style={{ backgroundColor: activeThemeObj.hex }}
       />
 
@@ -99,12 +105,16 @@ function MainAppContent() {
               </div>
 
               {/* Main Glitch Title */}
-              <h1 className="font-['Orbitron'] text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-none">
+              <h1 className={`font-['Orbitron'] text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none ${
+                isLightMode ? 'text-slate-900' : 'text-white'
+              }`}>
                 CYBER <br />
                 <span 
                   className="text-transparent bg-clip-text bg-gradient-to-r transition-all duration-500"
                   style={{
-                    backgroundImage: `linear-gradient(90deg, ${activeThemeObj.hex}, ${activeThemeObj.secondary}, #ffffff)`
+                    backgroundImage: isLightMode
+                      ? `linear-gradient(90deg, ${activeThemeObj.hex}, #1e293b, ${activeThemeObj.secondary})`
+                      : `linear-gradient(90deg, ${activeThemeObj.hex}, ${activeThemeObj.secondary}, #ffffff)`
                   }}
                 >
                   CHAMPS
@@ -112,7 +122,9 @@ function MainAppContent() {
               </h1>
 
               {/* Punchy Subheadline */}
-              <p className="text-slate-300 text-base sm:text-lg lg:text-xl font-normal leading-relaxed max-w-xl mx-auto lg:mx-0">
+              <p className={`text-base sm:text-lg lg:text-xl font-normal leading-relaxed max-w-xl mx-auto lg:mx-0 ${
+                isLightMode ? 'text-slate-600' : 'text-slate-300'
+              }`}>
                 Official squad of 9 elite engineers competing in the National Robotics League (NRL) with our custom-engineered battle robo car, pioneering autonomous guidance, kinetic defense, and cyber systems.
               </p>
 
@@ -121,7 +133,7 @@ function MainAppContent() {
                 <a
                   href="#nrl-car"
                   onClick={() => soundManager.playClick()}
-                  className="px-6 py-3.5 rounded-xl text-slate-950 font-mono text-xs font-bold hover:shadow-xl transition-all flex items-center gap-2 active:scale-95 shadow-md"
+                  className="px-6 py-3.5 rounded-xl text-white font-mono text-xs font-bold hover:shadow-xl transition-all flex items-center gap-2 active:scale-95 shadow-md"
                   style={{
                     backgroundColor: activeThemeObj.hex,
                     boxShadow: `0 4px 25px ${activeThemeObj.bgGlow}`
@@ -134,7 +146,11 @@ function MainAppContent() {
                 <a
                   href="#squad"
                   onClick={() => soundManager.playClick()}
-                  className="px-6 py-3.5 rounded-xl bg-slate-900/90 text-white hover:border-slate-500 border border-slate-800 font-mono text-xs font-semibold backdrop-blur-md transition-all flex items-center gap-2 active:scale-95"
+                  className={`px-6 py-3.5 rounded-xl border font-mono text-xs font-semibold backdrop-blur-md transition-all flex items-center gap-2 active:scale-95 ${
+                    isLightMode 
+                      ? 'bg-white text-slate-800 hover:bg-slate-100 border-slate-300 shadow-sm' 
+                      : 'bg-slate-900/90 text-white hover:border-slate-500 border-slate-800'
+                  }`}
                 >
                   <Users className="w-4 h-4" />
                   MEET SQUAD (09)
@@ -142,16 +158,18 @@ function MainAppContent() {
               </div>
 
               {/* Directives Indicator */}
-              <div className="pt-3 flex flex-wrap items-center justify-center lg:justify-start gap-3 font-mono text-xs text-slate-400">
+              <div className={`pt-3 flex flex-wrap items-center justify-center lg:justify-start gap-3 font-mono text-xs ${
+                isLightMode ? 'text-slate-500' : 'text-slate-400'
+              }`}>
                 <span className="flex items-center gap-1.5" style={{ color: activeThemeObj.hex }}>
                   <Shield className="w-3.5 h-3.5" /> Titanium AR500 Chassis
                 </span>
-                <span className="text-slate-700">•</span>
-                <span className="flex items-center gap-1.5 text-slate-300">
+                <span className="text-slate-400">•</span>
+                <span className="flex items-center gap-1.5">
                   <Cpu className="w-3.5 h-3.5" /> 360° Solid-State LiDAR
                 </span>
-                <span className="text-slate-700">•</span>
-                <span className="flex items-center gap-1.5 text-slate-300">
+                <span className="text-slate-400">•</span>
+                <span className="flex items-center gap-1.5">
                   <Zap className="w-3.5 h-3.5" /> 4WD Brushless Motors
                 </span>
               </div>
@@ -194,31 +212,43 @@ function MainAppContent() {
               <Users className="w-3.5 h-3.5" />
               SQUAD OPERATORS & ROBOTICS ENGINEERS
             </div>
-            <h2 className="font-['Orbitron'] text-3xl sm:text-5xl font-black text-white">
+            <h2 className={`font-['Orbitron'] text-3xl sm:text-5xl font-black ${
+              isLightMode ? 'text-slate-900' : 'text-white'
+            }`}>
               Meet The Cyber Champs
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base font-sans leading-relaxed">
+            <p className={`text-sm sm:text-base font-sans leading-relaxed ${
+              isLightMode ? 'text-slate-600' : 'text-slate-400'
+            }`}>
               The 9 minds behind our robotics hardware, telemetry algorithms, and competitive cyber defense systems.
             </p>
           </div>
 
           {/* Search & Filter Controls */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/70 border border-slate-800 backdrop-blur-md space-y-4">
+          <div className={`p-4 sm:p-5 rounded-2xl border backdrop-blur-md space-y-4 ${
+            isLightMode ? 'bg-white border-slate-200 shadow-sm' : 'bg-slate-900/70 border-slate-800'
+          }`}>
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               {/* Search input */}
               <div className="relative w-full sm:w-96">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Search className={`w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 ${
+                  isLightMode ? 'text-slate-400' : 'text-slate-500'
+                }`} />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search operator, skill, or tool (e.g., Mayank, LiDAR, python)..."
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500 text-xs font-mono text-white placeholder-slate-500 focus:outline-none transition-colors"
+                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-xs font-mono focus:outline-none transition-colors ${
+                    isLightMode 
+                      ? 'bg-slate-50 border-slate-300 text-slate-900 placeholder-slate-400 focus:border-slate-500' 
+                      : 'bg-slate-950 border-slate-800 text-white placeholder-slate-500 focus:border-cyan-500'
+                  }`}
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 font-mono text-xs text-slate-500 hover:text-white"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 font-mono text-xs text-slate-500 hover:text-slate-900"
                   >
                     CLEAR
                   </button>
@@ -226,14 +256,18 @@ function MainAppContent() {
               </div>
 
               {/* Counter Indicator */}
-              <div className="font-mono text-xs text-slate-400 flex items-center gap-2">
+              <div className={`font-mono text-xs flex items-center gap-2 ${
+                isLightMode ? 'text-slate-600' : 'text-slate-400'
+              }`}>
                 <span className="w-2 h-2 rounded-full" style={{ backgroundColor: activeThemeObj.hex }} />
-                SHOWING <span className="font-bold text-white">{filteredMembers.length}</span> OF 9 OPERATORS
+                SHOWING <span className="font-bold" style={{ color: activeThemeObj.hex }}>{filteredMembers.length}</span> OF 9 OPERATORS
               </div>
             </div>
 
             {/* Filter Tabs */}
-            <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-800/80">
+            <div className={`flex flex-wrap items-center gap-2 pt-2 border-t ${
+              isLightMode ? 'border-slate-200' : 'border-slate-800/80'
+            }`}>
               {categories.map((cat) => {
                 const isCatActive = activeCategory === cat.id;
                 return (
@@ -245,7 +279,9 @@ function MainAppContent() {
                     }}
                     className={`px-3 py-1.5 rounded-lg font-mono text-xs transition-all ${
                       isCatActive
-                        ? 'text-slate-950 font-bold shadow-md'
+                        ? 'text-white font-bold shadow-sm'
+                        : isLightMode
+                        ? 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200 border border-slate-200'
                         : 'bg-slate-950/80 text-slate-400 hover:text-white border border-slate-800'
                     }`}
                     style={{
@@ -271,9 +307,11 @@ function MainAppContent() {
           </div>
 
           {filteredMembers.length === 0 && (
-            <div className="p-12 text-center rounded-2xl bg-slate-900/50 border border-slate-800 space-y-3">
-              <Shield className="w-8 h-8 text-slate-600 mx-auto" />
-              <div className="font-mono text-sm text-slate-300">
+            <div className={`p-12 text-center rounded-2xl border space-y-3 ${
+              isLightMode ? 'bg-white border-slate-200' : 'bg-slate-900/50 border-slate-800'
+            }`}>
+              <Shield className="w-8 h-8 text-slate-400 mx-auto" />
+              <div className="font-mono text-sm text-slate-600">
                 No squad operators match "{searchQuery}" in this filter.
               </div>
               <button
@@ -325,10 +363,14 @@ function MainAppContent() {
               <Terminal className="w-3.5 h-3.5" />
               TACTICAL CLI ENVIRONMENT
             </div>
-            <h2 className="font-['Orbitron'] text-3xl sm:text-4xl font-black text-white">
+            <h2 className={`font-['Orbitron'] text-3xl sm:text-4xl font-black ${
+              isLightMode ? 'text-slate-900' : 'text-white'
+            }`}>
               Tactical Cyber Terminal
             </h2>
-            <p className="text-slate-400 text-sm font-sans">
+            <p className={`text-sm font-sans ${
+              isLightMode ? 'text-slate-600' : 'text-slate-400'
+            }`}>
               Query squad operator profiles, NRL robo car diagnostics, and security clearances directly from the shell.
             </p>
           </div>

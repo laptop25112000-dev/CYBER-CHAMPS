@@ -1,12 +1,54 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export const THEME_COLORS = [
-  { id: 'cyan', name: 'Cyber Cyan', hex: '#00f0ff', secondary: '#3b82f6', bgGlow: 'rgba(0, 240, 255, 0.25)' },
-  { id: 'emerald', name: 'Laser Emerald', hex: '#10b981', secondary: '#06b6d4', bgGlow: 'rgba(16, 185, 129, 0.25)' },
-  { id: 'crimson', name: 'Crimson Fury', hex: '#ff0055', secondary: '#ec4899', bgGlow: 'rgba(255, 0, 85, 0.25)' },
-  { id: 'amber', name: 'Solar Amber', hex: '#f59e0b', secondary: '#ef4444', bgGlow: 'rgba(245, 158, 11, 0.25)' },
-  { id: 'purple', name: 'Hyperdrive Purple', hex: '#a855f7', secondary: '#6366f1', bgGlow: 'rgba(168, 85, 247, 0.25)' },
-  { id: 'orange', name: 'Robo Orange', hex: '#ff6b00', secondary: '#eab308', bgGlow: 'rgba(255, 107, 0, 0.25)' },
+  { 
+    id: 'cyan', 
+    name: 'Cyber Cyan', 
+    darkHex: '#00f0ff', 
+    lightHex: '#0284c7', 
+    secondary: '#3b82f6', 
+    bgGlow: 'rgba(2, 132, 199, 0.2)' 
+  },
+  { 
+    id: 'emerald', 
+    name: 'Laser Emerald', 
+    darkHex: '#10b981', 
+    lightHex: '#059669', 
+    secondary: '#06b6d4', 
+    bgGlow: 'rgba(5, 150, 105, 0.2)' 
+  },
+  { 
+    id: 'crimson', 
+    name: 'Crimson Fury', 
+    darkHex: '#ff0055', 
+    lightHex: '#e11d48', 
+    secondary: '#ec4899', 
+    bgGlow: 'rgba(225, 29, 72, 0.2)' 
+  },
+  { 
+    id: 'amber', 
+    name: 'Solar Amber', 
+    darkHex: '#f59e0b', 
+    lightHex: '#d97706', 
+    secondary: '#ef4444', 
+    bgGlow: 'rgba(217, 119, 6, 0.2)' 
+  },
+  { 
+    id: 'purple', 
+    name: 'Hyperdrive Purple', 
+    darkHex: '#a855f7', 
+    lightHex: '#7c3aed', 
+    secondary: '#6366f1', 
+    bgGlow: 'rgba(124, 58, 237, 0.2)' 
+  },
+  { 
+    id: 'orange', 
+    name: 'Robo Orange', 
+    darkHex: '#ff6b00', 
+    lightHex: '#ea580c', 
+    secondary: '#eab308', 
+    bgGlow: 'rgba(234, 88, 12, 0.2)' 
+  },
 ];
 
 export const CURSOR_STYLES = [
@@ -19,6 +61,11 @@ export const CURSOR_STYLES = [
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
+  // Default to 'light' mode as requested!
+  const [themeMode, setThemeMode] = useState(() => {
+    return localStorage.getItem('cyber_mode') || 'light';
+  });
+
   const [currentTheme, setCurrentTheme] = useState(() => {
     return localStorage.getItem('cyber_theme') || 'cyan';
   });
@@ -27,15 +74,39 @@ export function ThemeProvider({ children }) {
     return localStorage.getItem('cyber_cursor') || 'crosshair';
   });
 
-  const activeThemeObj = THEME_COLORS.find(t => t.id === currentTheme) || THEME_COLORS[0];
+  const isLightMode = themeMode === 'light';
+  const rawTheme = THEME_COLORS.find(t => t.id === currentTheme) || THEME_COLORS[0];
+  
+  // Use lightHex in light mode and darkHex in dark mode for optimal contrast & aesthetics
+  const activeHex = isLightMode ? rawTheme.lightHex : rawTheme.darkHex;
+  const activeThemeObj = {
+    ...rawTheme,
+    hex: activeHex
+  };
+
+  const toggleThemeMode = () => {
+    setThemeMode(prev => (prev === 'light' ? 'dark' : 'light'));
+  };
+
+  useEffect(() => {
+    localStorage.setItem('cyber_mode', themeMode);
+    const root = document.documentElement;
+    if (themeMode === 'light') {
+      root.classList.remove('dark');
+      root.classList.add('light');
+    } else {
+      root.classList.remove('light');
+      root.classList.add('dark');
+    }
+  }, [themeMode]);
 
   useEffect(() => {
     localStorage.setItem('cyber_theme', currentTheme);
     const root = document.documentElement;
-    root.style.setProperty('--theme-accent', activeThemeObj.hex);
-    root.style.setProperty('--theme-secondary', activeThemeObj.secondary);
-    root.style.setProperty('--theme-glow', activeThemeObj.bgGlow);
-  }, [currentTheme, activeThemeObj]);
+    root.style.setProperty('--theme-accent', activeHex);
+    root.style.setProperty('--theme-secondary', rawTheme.secondary);
+    root.style.setProperty('--theme-glow', rawTheme.bgGlow);
+  }, [currentTheme, activeHex, rawTheme]);
 
   useEffect(() => {
     localStorage.setItem('cyber_cursor', cursorStyle);
@@ -48,6 +119,10 @@ export function ThemeProvider({ children }) {
 
   return (
     <ThemeContext.Provider value={{
+      themeMode,
+      setThemeMode,
+      toggleThemeMode,
+      isLightMode,
       currentTheme,
       setCurrentTheme,
       activeThemeObj,
