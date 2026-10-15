@@ -57,7 +57,7 @@ export default function Member3DCard({ member, onSelect }) {
         isHovered ? 'shadow-[7px_7px_0px_0px_#0f172a]' : 'shadow-[4px_4px_0px_0px_#0f172a]'
       }`}
     >
-      {/* Top Header: Clearance & Badge */}
+      {/* Top Header: Member Tag */}
       <div className="flex items-center justify-between gap-2 border-b-2 border-slate-900 pb-3 mb-4">
         <div className="flex items-center gap-2">
           <span 
@@ -65,11 +65,11 @@ export default function Member3DCard({ member, onSelect }) {
             style={{ backgroundColor: member.accentColor }} 
           />
           <span className="font-mono text-[11px] font-black tracking-wider uppercase text-slate-900">
-            {member.badgeType}
+            TEAM MEMBER
           </span>
         </div>
-        <div className="font-mono text-[10px] px-2 py-0.5 rounded border border-slate-900 bg-slate-100 text-slate-900 font-extrabold shadow-[1.5px_1.5px_0px_0px_#0f172a]">
-          ID: {member.id.toUpperCase().slice(0, 7)}
+        <div className="font-mono text-[10px] px-2.5 py-0.5 rounded border border-slate-900 bg-amber-200 text-slate-950 font-black shadow-[1.5px_1.5px_0px_0px_#0f172a]">
+          DELHI REGIONAL
         </div>
       </div>
 
@@ -85,33 +85,19 @@ export default function Member3DCard({ member, onSelect }) {
         <div className="absolute inset-0 neo-grid-dots opacity-40 pointer-events-none" />
       </div>
 
-      {/* Identity & Callsign */}
+      {/* Member Name */}
       <div className="mb-3">
-        <div className="flex items-center justify-between">
-          <h3 className="font-['Orbitron'] text-xl font-black text-slate-950 group-hover:underline">
-            {member.name}
-          </h3>
-          <span 
-            className="font-mono text-xs px-2.5 py-0.5 rounded-lg border-2 border-slate-900 font-black shadow-[2px_2px_0px_0px_#0f172a]"
-            style={{ 
-              backgroundColor: `${member.accentColor}30`,
-              color: '#0f172a'
-            }}
-          >
-            {member.callsign}
-          </span>
-        </div>
-        <p className="text-sm font-extrabold mt-1" style={{ color: member.accentColor }}>
-          {member.role}
-        </p>
+        <h3 className="font-['Orbitron'] text-2xl font-black text-slate-950 group-hover:underline">
+          {member.name}
+        </h3>
       </div>
 
       {/* Bio excerpt */}
-      <p className="text-xs font-sans font-medium text-slate-600 line-clamp-2 mb-4 leading-relaxed">
+      <p className="text-xs font-sans font-medium text-slate-700 line-clamp-2 mb-4 leading-relaxed">
         {member.bio}
       </p>
 
-      {/* Top 2 Skills with Progress Bars */}
+      {/* Skills with Progress Bars */}
       <div className="space-y-2 mb-4 pt-2 border-t-2 border-slate-900">
         {member.skills.slice(0, 2).map((skill, idx) => (
           <div key={idx} className="space-y-1">
@@ -155,7 +141,7 @@ export default function Member3DCard({ member, onSelect }) {
       >
         <span className="flex items-center gap-1.5">
           <Terminal className="w-3.5 h-3.5" />
-          INSPECT DOSSIER
+          VIEW PROFILE
         </span>
         <ChevronRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
       </button>

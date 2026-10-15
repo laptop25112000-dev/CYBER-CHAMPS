@@ -34,11 +34,11 @@ export default function Footer({ onSelectMember }) {
             <p className={`text-xs sm:text-sm max-w-sm leading-relaxed font-medium ${
               isLightMode ? 'text-slate-600' : 'text-slate-400'
             }`}>
-              Official National Robotics League (NRL) - HYPERDRIVE robotics & cybersecurity engineering squad. Autonomous tactical systems, 4WD combat drivetrain, and zero-trust firmware.
+              Official portfolio of Team Cyber Champs for the National Robotics League (NRL) Delhi Regional State-Level Robotics Competition.
             </p>
             <div className="flex items-center gap-2 font-mono text-[11px] font-black text-slate-950 bg-emerald-300 px-3 py-1.5 rounded-lg border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] w-fit">
               <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
-              STATUS: ALL 9 OPERATORS ACTIVE // NRL HYPERDRIVE READY
+              STATUS: ALL 9 MEMBERS ACTIVE // DELHI REGIONAL READY
             </div>
           </div>
 
@@ -46,7 +46,7 @@ export default function Footer({ onSelectMember }) {
           <div className="md:col-span-4 space-y-3">
             <div className="font-mono text-xs font-black text-slate-950 tracking-wider uppercase flex items-center gap-1.5">
               <Trophy className="w-3.5 h-3.5" style={{ color: activeThemeObj.hex }} />
-              // SQUAD OPERATORS (09)
+              // TEAM MEMBERS (09)
             </div>
             <div className="grid grid-cols-2 gap-2 font-mono text-xs">
               {TEAM_MEMBERS.map((m) => (
@@ -67,29 +67,29 @@ export default function Footer({ onSelectMember }) {
             </div>
           </div>
 
-          {/* Col 3: Directives */}
+          {/* Col 3: Competition Specs */}
           <div className="md:col-span-3 space-y-3">
             <div className="font-mono text-xs font-black text-slate-950 tracking-wider uppercase">
-              // DEFENSE DIRECTIVES
+              // COMPETITION SPECS
             </div>
             <ul className="space-y-2 font-mono text-xs font-bold">
               <li className={`flex items-center gap-2 p-2 rounded-lg border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] ${
                 isLightMode ? 'bg-cyan-100 text-slate-950' : 'bg-slate-900 text-slate-200'
               }`}>
-                <Lock className="w-3.5 h-3.5 text-cyan-700" />
-                Zero-Trust Verification
+                <Trophy className="w-3.5 h-3.5 text-cyan-700" />
+                Delhi Regional State Level
               </li>
               <li className={`flex items-center gap-2 p-2 rounded-lg border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] ${
                 isLightMode ? 'bg-purple-100 text-slate-950' : 'bg-slate-900 text-slate-200'
               }`}>
                 <Shield className="w-3.5 h-3.5 text-purple-700" />
-                Dual-Deck Acrylic Armor
+                Dual-Deck Acrylic Chassis
               </li>
               <li className={`flex items-center gap-2 p-2 rounded-lg border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] ${
                 isLightMode ? 'bg-amber-100 text-slate-950' : 'bg-slate-900 text-slate-200'
               }`}>
                 <Terminal className="w-3.5 h-3.5 text-amber-700" />
-                Autonomous LiDAR Guidance
+                4WD Motors + Servo Gripper
               </li>
             </ul>
           </div>

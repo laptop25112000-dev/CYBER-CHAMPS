@@ -34,10 +34,10 @@ export default function MemberModal({ member, onClose }) {
               style={{ backgroundColor: member.accentColor }}
             />
             <div className="font-mono text-xs tracking-wider text-slate-900 font-extrabold">
-              OPERATOR DOSSIER // <span style={{ color: member.accentColor }}>{member.callsign}</span>
+              TEAM MEMBER PROFILE // <span style={{ color: member.accentColor }}>{member.name.toUpperCase()}</span>
             </div>
-            <span className="hidden sm:inline-block font-mono text-[10px] px-2.5 py-0.5 rounded border border-slate-900 bg-red-200 text-slate-900 font-black">
-              {member.clearanceLevel}
+            <span className="font-mono text-[10px] px-2.5 py-0.5 rounded border border-slate-900 bg-amber-200 text-slate-950 font-black">
+              DELHI REGIONAL
             </span>
           </div>
 
@@ -47,7 +47,7 @@ export default function MemberModal({ member, onClose }) {
               onClose();
             }}
             className="p-1.5 rounded-lg border-2 border-slate-900 bg-white hover:bg-slate-200 transition-colors shadow-[2px_2px_0px_0px_#000]"
-            title="Close Dossier (Esc)"
+            title="Close Profile (Esc)"
           >
             <X className="w-5 h-5 text-slate-900" />
           </button>
@@ -55,7 +55,7 @@ export default function MemberModal({ member, onClose }) {
 
         {/* Content Body */}
         <div className="p-6 md:p-8 space-y-6 max-h-[80vh] overflow-y-auto">
-          {/* Hero Row: 3D Badge & Core Identity */}
+          {/* Hero Row: 3D Shape & Core Identity */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center border-b-2 border-slate-900 pb-8">
             {/* 3D Model Column */}
             <div className="md:col-span-5 flex flex-col items-center justify-center">
@@ -72,26 +72,11 @@ export default function MemberModal({ member, onClose }) {
               </div>
             </div>
 
-            {/* Operator Bio Column */}
+            {/* Member Bio Column */}
             <div className="md:col-span-7 space-y-3">
-              <div className="flex flex-wrap items-center gap-3">
-                <h2 className="font-['Orbitron'] text-3xl font-black text-slate-950">
-                  {member.name}
-                </h2>
-                <span 
-                  className="font-mono text-xs px-3 py-1 rounded-lg border-2 border-slate-900 font-black shadow-[2px_2px_0px_0px_#000]"
-                  style={{
-                    backgroundColor: `${member.accentColor}30`,
-                    color: '#0f172a'
-                  }}
-                >
-                  {member.callsign}
-                </span>
-              </div>
-
-              <div className="font-extrabold text-base" style={{ color: member.accentColor }}>
-                {member.role}
-              </div>
+              <h2 className="font-['Orbitron'] text-3xl font-black text-slate-950">
+                {member.name}
+              </h2>
 
               <p className="text-slate-700 text-sm leading-relaxed font-sans font-medium">
                 {member.bio}
@@ -143,13 +128,13 @@ export default function MemberModal({ member, onClose }) {
             </div>
           </div>
 
-          {/* Technical Skills & Combat Radar Stats */}
+          {/* Technical Skills & Engineering Focus */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Skills */}
             <div className="p-5 rounded-xl neo-box">
               <div className="flex items-center gap-2 mb-4 font-mono text-xs font-black text-slate-900 tracking-wider">
                 <Cpu className="w-4 h-4 text-slate-900" />
-                PRIMARY CAPABILITIES MATRIX
+                ROBOTICS & ENGINEERING SKILLS
               </div>
               <div className="space-y-3">
                 {member.skills.map((skill, idx) => (
@@ -172,11 +157,11 @@ export default function MemberModal({ member, onClose }) {
               </div>
             </div>
 
-            {/* Tactical Combat / Intel Stats */}
+            {/* Technical Focus Metrics */}
             <div className="p-5 rounded-xl neo-box">
               <div className="flex items-center gap-2 mb-4 font-mono text-xs font-black text-slate-900 tracking-wider">
                 <Shield className="w-4 h-4 text-slate-900" />
-                TACTICAL PROFILE METRICS
+                TECHNICAL FOCUS METRICS
               </div>
               <div className="space-y-3">
                 {Object.entries(member.stats).map(([statKey, value], idx) => {
@@ -202,11 +187,11 @@ export default function MemberModal({ member, onClose }) {
             </div>
           </div>
 
-          {/* Tools & Frameworks */}
+          {/* Tools & Hardware */}
           <div className="p-5 rounded-xl neo-box">
             <div className="flex items-center gap-2 mb-3 font-mono text-xs font-black text-slate-900 tracking-wider">
               <Lock className="w-4 h-4" />
-              DEPLOYED ARSENAL & TOOLSETS
+              HARDWARE TOOLS & SOFTWARE
             </div>
             <div className="flex flex-wrap gap-2">
               {member.tools.map((tool, idx) => (
@@ -230,7 +215,7 @@ export default function MemberModal({ member, onClose }) {
             }}
             className="neo-btn px-6 py-2 rounded-xl bg-slate-950 text-white font-mono text-xs font-bold"
           >
-            DISMISS DOSSIER
+            CLOSE PROFILE
           </button>
         </div>
       </div>

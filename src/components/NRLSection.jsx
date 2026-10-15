@@ -33,7 +33,7 @@ export default function NRLSection() {
           className="inline-flex items-center gap-2 font-mono text-xs font-black px-4 py-1.5 rounded-full border-2 border-slate-900 shadow-[3px_3px_0px_0px_#000] bg-white"
         >
           <Trophy className="w-4 h-4 text-amber-500" />
-          <span>NATIONAL ROBOTICS LEAGUE™ // OFFICIAL ROBOT KIT</span>
+          <span>NATIONAL ROBOTICS LEAGUE™ // DELHI REGIONAL COMPETITION</span>
         </div>
 
         <h2 className="font-['Orbitron'] text-3xl sm:text-5xl font-black text-slate-950">
@@ -41,7 +41,7 @@ export default function NRLSection() {
         </h2>
 
         <p className="text-slate-600 text-sm sm:text-base font-sans font-medium leading-relaxed">
-          Engineered using the official <strong>National Robotics League™ (Presented by Amazon) Robot Kit</strong>. Hover over any component on the 3D model below to inspect real-time hardware telemetry.
+          Engineered for the <strong>National Robotics League™ Delhi Regional State-Level Competition</strong> using the official tournament Robot Kit. Hover over any component on the 3D model below to inspect real-time hardware telemetry.
         </p>
       </div>
 

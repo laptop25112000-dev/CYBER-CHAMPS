@@ -20,37 +20,20 @@ import {
 function MainAppContent() {
   const { activeThemeObj, isLightMode } = useTheme();
   const [selectedMember, setSelectedMember] = useState(null);
-  const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Category filter tabs
-  const categories = [
-    { id: 'all', label: 'All Operators', count: 9 },
-    { id: 'leadership', label: 'Command & Arch', count: 1 },
-    { id: 'offensive', label: 'Offensive & Red Team', count: 1 },
-    { id: 'web3-crypto', label: 'Web3 & Cryptography', count: 2 },
-    { id: 'defensive', label: 'Defensive & Forensics', count: 2 },
-    { id: 'ai-cloud', label: 'AI & Systems', count: 1 },
-    { id: 'systems', label: '3D UI & DevSecOps', count: 2 },
-  ];
-
-  // Filtered members based on tab and search
+  // Filtered members based on search (name, skills, or tools)
   const filteredMembers = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return TEAM_MEMBERS;
     return TEAM_MEMBERS.filter((m) => {
-      const matchesCategory = activeCategory === 'all' || m.category === activeCategory;
-      const q = searchQuery.toLowerCase().trim();
-      const matchesSearch = 
-        !q ||
+      return (
         m.name.toLowerCase().includes(q) ||
-        m.callsign.toLowerCase().includes(q) ||
-        m.role.toLowerCase().includes(q) ||
-        m.specialization.toLowerCase().includes(q) ||
         m.tools.some(t => t.toLowerCase().includes(q)) ||
-        m.skills.some(s => s.name.toLowerCase().includes(q));
-
-      return matchesCategory && matchesSearch;
+        m.skills.some(s => s.name.toLowerCase().includes(q))
+      );
     });
-  }, [activeCategory, searchQuery]);
+  }, [searchQuery]);
 
   return (
     <div 
@@ -93,7 +76,7 @@ function MainAppContent() {
                 className="inline-flex items-center gap-2.5 font-mono text-xs font-black px-4 py-2 rounded-full border-2 border-slate-900 shadow-[3px_3px_0px_0px_#000] bg-amber-300 text-slate-950"
               >
                 <Trophy className="w-4 h-4 animate-bounce" />
-                <span>NRL 2026 // NATIONAL ROBOTICS LEAGUE HYPERDRIVE</span>
+                <span>NRL 2026 // DELHI REGIONAL STATE LEVEL COMPETITION</span>
               </div>
 
               {/* Main Glitch Title */}
@@ -117,7 +100,7 @@ function MainAppContent() {
               <p className={`text-base sm:text-lg lg:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0 ${
                 isLightMode ? 'text-slate-700' : 'text-slate-300'
               }`}>
-                Official squad of 9 elite engineers competing in the National Robotics League (NRL) with our custom-engineered battle robo car, pioneering autonomous guidance, kinetic defense, and cyber systems.
+                Official portfolio website of our 9-member student team competing in the National Robotics League (NRL) Delhi Regional state-level championship with our custom 4WD battle robo car.
               </p>
 
               {/* Quick Action CTAs */}
@@ -144,7 +127,7 @@ function MainAppContent() {
                   }`}
                 >
                   <Users className="w-4 h-4" />
-                  MEET SQUAD (09)
+                  MEET THE TEAM (09)
                 </a>
               </div>
 
@@ -153,13 +136,13 @@ function MainAppContent() {
                 isLightMode ? 'text-slate-800' : 'text-slate-300'
               }`}>
                 <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border-2 border-slate-900 bg-white shadow-[2px_2px_0px_0px_#000]">
-                  <Shield className="w-3.5 h-3.5 text-cyan-600" /> Acrylic / Metal Chassis
+                  <Shield className="w-3.5 h-3.5 text-cyan-600" /> Delhi Regional State Level
                 </span>
                 <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border-2 border-slate-900 bg-white shadow-[2px_2px_0px_0px_#000]">
-                  <Cpu className="w-3.5 h-3.5 text-purple-600" /> HEXA Core Telemetry
+                  <Cpu className="w-3.5 h-3.5 text-purple-600" /> 4WD Battle Robo Car
                 </span>
                 <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border-2 border-slate-900 bg-white shadow-[2px_2px_0px_0px_#000]">
-                  <Zap className="w-3.5 h-3.5 text-amber-600" /> 4WD Motors + Gripper
+                  <Zap className="w-3.5 h-3.5 text-amber-600" /> National Robotics League
                 </span>
               </div>
             </div>
@@ -194,22 +177,22 @@ function MainAppContent() {
               className="inline-flex items-center gap-2 font-mono text-xs font-black px-4 py-1.5 rounded-full border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] bg-cyan-300 text-slate-950"
             >
               <Users className="w-3.5 h-3.5" />
-              SQUAD OPERATORS & ROBOTICS ENGINEERS
+              DELHI REGIONAL // TEAM (09)
             </div>
             <h2 className={`font-['Orbitron'] text-3xl sm:text-5xl font-black ${
               isLightMode ? 'text-slate-950' : 'text-white'
             }`}>
-              Meet The Cyber Champs
+              Meet The Team
             </h2>
             <p className={`text-sm sm:text-base font-medium leading-relaxed ${
               isLightMode ? 'text-slate-700' : 'text-slate-300'
             }`}>
-              The 9 minds behind our robotics hardware, telemetry algorithms, and competitive cyber defense systems.
+              The 9 students from Cyber Champs competing in the Delhi Regional state-level robotics championship.
             </p>
           </div>
 
-          {/* Search & Filter Controls */}
-          <div className={`p-4 sm:p-6 rounded-2xl border-3 sm:border-4 border-slate-900 shadow-[6px_6px_0px_0px_#000] space-y-4 ${
+          {/* Search Bar */}
+          <div className={`p-4 sm:p-5 rounded-2xl border-3 sm:border-4 border-slate-900 shadow-[6px_6px_0px_0px_#000] ${
             isLightMode ? 'bg-white' : 'bg-slate-900'
           }`}>
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -220,7 +203,7 @@ function MainAppContent() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search operator, skill, or tool (e.g., Mayank, LiDAR, python)..."
+                  placeholder="Search team member by name or skill (e.g., Mayank, Arduino)..."
                   className={`w-full pl-10 pr-4 py-2.5 rounded-xl border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] text-xs font-mono font-bold focus:outline-none transition-colors ${
                     isLightMode 
                       ? 'bg-slate-50 text-slate-950 placeholder-slate-500' 
@@ -238,38 +221,10 @@ function MainAppContent() {
               </div>
 
               {/* Counter Indicator */}
-              <div className="font-mono text-xs font-black flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 border-slate-900 bg-amber-300 text-slate-950 shadow-[2px_2px_0px_0px_#000]">
+              <div className="font-mono text-xs font-black flex items-center gap-2 px-3.5 py-2 rounded-lg border-2 border-slate-900 bg-amber-300 text-slate-950 shadow-[2px_2px_0px_0px_#000]">
                 <span className="w-2.5 h-2.5 rounded-full bg-slate-950" />
-                SHOWING <span>{filteredMembers.length}</span> OF 9 OPERATORS
+                SHOWING <span>{filteredMembers.length}</span> OF 9 TEAM MEMBERS
               </div>
-            </div>
-
-            {/* Filter Tabs */}
-            <div className={`flex flex-wrap items-center gap-2 pt-2 border-t-2 border-slate-900`}>
-              {categories.map((cat) => {
-                const isCatActive = activeCategory === cat.id;
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => {
-                      soundManager.playHover();
-                      setActiveCategory(cat.id);
-                    }}
-                    className={`px-3 py-1.5 rounded-lg font-mono text-xs font-black border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] transition-all active:translate-x-0.5 active:translate-y-0.5 active:shadow-none ${
-                      isCatActive
-                        ? 'text-slate-950'
-                        : isLightMode
-                        ? 'bg-white text-slate-800 hover:bg-slate-100'
-                        : 'bg-slate-950 text-slate-300 hover:text-white'
-                    }`}
-                    style={{
-                      backgroundColor: isCatActive ? activeThemeObj.hex : undefined
-                    }}
-                  >
-                    {cat.label} ({cat.count})
-                  </button>
-                );
-              })}
             </div>
           </div>
 
@@ -315,17 +270,17 @@ function MainAppContent() {
               className="inline-flex items-center gap-2 font-mono text-xs font-black px-4 py-1.5 rounded-full border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] bg-emerald-300 text-slate-950"
             >
               <Terminal className="w-3.5 h-3.5" />
-              TACTICAL CLI ENVIRONMENT
+              DELHI REGIONAL // INTERACTIVE TERMINAL
             </div>
             <h2 className={`font-['Orbitron'] text-3xl sm:text-4xl font-black ${
               isLightMode ? 'text-slate-950' : 'text-white'
             }`}>
-              Tactical Cyber Terminal
+              Interactive Team Terminal
             </h2>
             <p className={`text-sm font-medium ${
               isLightMode ? 'text-slate-700' : 'text-slate-300'
             }`}>
-              Query squad operator profiles, NRL robo car diagnostics, and security clearances directly from the shell.
+              Query team member profiles, Delhi Regional robo car diagnostics, and tournament kit specs.
             </p>
           </div>
 
@@ -340,7 +295,7 @@ function MainAppContent() {
       {/* FOOTER */}
       <Footer onSelectMember={(m) => setSelectedMember(m)} />
 
-      {/* OPERATOR DOSSIER MODAL */}
+      {/* TEAM MEMBER MODAL */}
       <MemberModal
         member={selectedMember}
         onClose={() => setSelectedMember(null)}

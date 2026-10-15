@@ -18,7 +18,7 @@ export default function Navbar() {
 
   const navItems = [
     { label: 'NRL ROBO CAR', href: '#nrl-car', badge: 'KIT 2026' },
-    { label: 'SQUAD ROSTER', href: '#squad' },
+    { label: 'TEAM', href: '#squad' },
     { label: 'TERMINAL', href: '#terminal' }
   ];
 
@@ -42,7 +42,7 @@ export default function Navbar() {
               <span style={{ color: activeThemeObj.hex }}>CHAMPS</span>
             </div>
             <div className="font-mono text-[9px] tracking-widest uppercase font-black text-slate-600">
-              NRL 2026 // ROBOTICS & CYBER SQUAD
+              NRL DELHI REGIONAL // TEAM PORTFOLIO
             </div>
           </div>
         </a>

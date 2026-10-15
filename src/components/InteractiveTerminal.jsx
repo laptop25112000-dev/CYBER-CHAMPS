@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { TEAM_MEMBERS, SQUAD_STATS, MISSIONS } from '../data/team';
+import { TEAM_MEMBERS, SQUAD_STATS } from '../data/team';
 import { soundManager } from '../utils/audio';
 import confetti from 'canvas-confetti';
 import { Terminal, Copy, Check, CornerDownLeft } from 'lucide-react';
 
 export default function InteractiveTerminal({ onSelectMember }) {
   const [history, setHistory] = useState([
-    { type: 'system', text: 'CYBER CHAMPS SECURE TACTICAL TERMINAL v4.2.0 [ONLINE]' },
-    { type: 'system', text: 'Type "help" to display available squad commands.' }
+    { type: 'system', text: 'CYBER CHAMPS // DELHI REGIONAL ROBOTICS TEAM PORTFOLIO [ONLINE]' },
+    { type: 'system', text: 'Type "help" to display available commands.' }
   ]);
   const [inputVal, setInputVal] = useState('');
   const [cmdIndex, setCmdIndex] = useState(-1);
@@ -38,15 +38,11 @@ export default function InteractiveTerminal({ onSelectMember }) {
           type: 'response',
           text: `AVAILABLE COMMANDS:
   help              - List all available terminal commands
-  team / members    - List all 9 Cyber Champs operators
-  car / nrl         - Inspect 2026 NRL HYPERDRIVE Battle Robo Car telemetry
-  cat <name>        - Inspect dossier for an operator (e.g., cat mayank, cat sayan)
-  stats             - Display squad combat & CTF metrics
-  missions          - List flagship cyber defense projects
-  matrix            - Run quantum matrix diagnostic
-  ping              - Test link latency to Cyber Champs Enclave
-  sudo access       - Request root privilege escalation
-  win / celebrate   - Trigger team victory protocol
+  team / members    - List all 9 Cyber Champs team members
+  car / nrl         - Inspect Delhi Regional Battle Robo Car specs
+  view <name>       - View profile of a team member (e.g., view mayank, view sayan)
+  stats             - Display competition & robo car stats
+  win / celebrate   - Trigger team celebration protocol
   clear             - Clear terminal window`
         });
         break;
@@ -56,14 +52,14 @@ export default function InteractiveTerminal({ onSelectMember }) {
       case 'hyperdrive':
         newHistory.push({
           type: 'response',
-          text: `=== [NRL 2026 HYPERDRIVE ROBO CAR TELEMETRY] ===
-League: National Robotics League (NRL) - HYPERDRIVE (Presented by Amazon)
-Video: https://youtu.be/C0-qp_30QFk?si=48g3O7u7qas8O-7q
-Chassis: CNC Billet 6061-T6 + Hardened AR500 Titanium Deflection Wedge
-Drivetrain: 4x Brushless Motors + 12:1 Planetary Reduction
-Sensors: 360° Solid-State Optical LiDAR + Edge Neural Flight Controller
-Power: 6S 22.2V LiPo, 120C Burst Discharge
-Status: READY FOR ARENA COMBAT`
+          text: `=== [NRL 2026 DELHI REGIONAL BATTLE ROBO CAR] ===
+Competition: National Robotics League (NRL) - Delhi Regional State Level
+Kit: Official NRL Hyperdrive Robot Kit (Presented by Amazon)
+Chassis: Polycarbonate / Acrylic Upper Deck with Laser-Cut Slots & Aluminum Brackets
+Drivetrain: 4WD Independent High-Torque DC Motors with White Dish Wheels & Knobby Rubber Tires
+Grabber: Front Articulated Clamp Linkage Powered by SG90 Micro-Servo
+Electronics: HEXA Wireless Command Hub + 2.4GHz Dual-Joystick Remote
+Status: 100% ASSEMBLED & READY FOR DELHI REGIONAL ARENA ROUNDS`
         });
         break;
 
@@ -71,8 +67,8 @@ Status: READY FOR ARENA COMBAT`
       case 'members':
         newHistory.push({
           type: 'response',
-          text: `CYBER CHAMPS OPERATIONAL ROSTER:
-${TEAM_MEMBERS.map((m, i) => `  [0${i+1}] ${m.name.padEnd(16)} | Callsign: ${m.callsign.padEnd(15)} | Role: ${m.role}`).join('\n')}`
+          text: `CYBER CHAMPS TEAM MEMBERS (DELHI REGIONAL):
+${TEAM_MEMBERS.map((m, i) => `  [0${i+1}] ${m.name.padEnd(20)} | Focus: ${m.skills[0]?.name || 'Robotics Engineering'}`).join('\n')}`
         });
         break;
 
@@ -80,30 +76,27 @@ ${TEAM_MEMBERS.map((m, i) => `  [0${i+1}] ${m.name.padEnd(16)} | Callsign: ${m.c
       case 'inspect':
       case 'view':
         if (!arg) {
-          newHistory.push({ type: 'error', text: 'Error: Provide an operator name. (Example: "cat mayank", "cat sayan", "cat divyansh")' });
+          newHistory.push({ type: 'error', text: 'Error: Provide a team member name. (Example: "view mayank", "view sayan", "view divyansh")' });
         } else {
           const found = TEAM_MEMBERS.find(m => 
             m.name.toLowerCase().includes(arg) || 
-            m.id.toLowerCase().includes(arg) || 
-            m.callsign.toLowerCase().includes(arg)
+            m.id.toLowerCase().includes(arg)
           );
           if (found) {
             newHistory.push({
               type: 'response',
-              text: `=== [DOSSIER: ${found.name.toUpperCase()} // ${found.callsign}] ===
-Role: ${found.role}
-Clearance: ${found.clearanceLevel}
-Specialization: ${found.specialization}
-Top Skills: ${found.skills.map(s => `${s.name} (${s.level}%)`).join(', ')}
-Arsenal: ${found.tools.join(', ')}
+              text: `=== [TEAM MEMBER: ${found.name.toUpperCase()}] ===
+Competition: NRL Delhi Regional State Level
 Bio: ${found.bio}
+Skills: ${found.skills.map(s => `${s.name} (${s.level}%)`).join(', ')}
+Tools: ${found.tools.join(', ')}
 Quote: "${found.quote}"`
             });
             if (onSelectMember) {
               onSelectMember(found);
             }
           } else {
-            newHistory.push({ type: 'error', text: `Operator "${arg}" not found in Cyber Champs active directory.` });
+            newHistory.push({ type: 'error', text: `Team member "${arg}" not found. Type "team" to list all 9 members.` });
           }
         }
         break;
@@ -111,27 +104,8 @@ Quote: "${found.quote}"`
       case 'stats':
         newHistory.push({
           type: 'response',
-          text: `TACTICAL METRICS:
-${SQUAD_STATS.map(s => `  * ${s.label.padEnd(24)}: ${s.value} ${s.unit}`).join('\n')}`
-        });
-        break;
-
-      case 'missions':
-        newHistory.push({
-          type: 'response',
-          text: `DEPLOYED MISSIONS:
-${MISSIONS.map(m => `  * ${m.title.padEnd(24)} [${m.status}] - ${m.subtitle}`).join('\n')}`
-        });
-        break;
-
-      case 'matrix':
-        newHistory.push({
-          type: 'response',
-          text: `[DIAGNOSTIC] Initializing 256-bit entropy stream:
-01000011 01011001 01000010 01000101 01010010 
-01000011 01001000 01000001 01001101 01010000 01010011 
->> ALL 9 CORE OPERATORS SYNCHRONIZED
->> POST-QUANTUM HARDENING: ACTIVE`
+          text: `DELHI REGIONAL COMPETITION STATS:
+${SQUAD_STATS.map(s => `  * ${s.label.padEnd(20)}: ${s.value} ${s.unit}`).join('\n')}`
         });
         break;
 
@@ -220,11 +194,11 @@ rtt min/avg/max = 0.028/0.030/0.032 ms`
           <div className="w-3.5 h-3.5 rounded-full bg-amber-400 border border-slate-950" />
           <div className="w-3.5 h-3.5 rounded-full bg-emerald-400 border border-slate-950" />
           <span className="font-mono text-xs font-bold text-slate-200 ml-2">
-            bash - root@cyber-champs:~ (tty1)
+            bash - team@cyber-champs:delhi-regional (tty1)
           </span>
         </div>
         <div className="font-mono text-[10px] font-black text-slate-950 bg-cyan-400 px-2 py-0.5 rounded border border-slate-900 shadow-[1px_1px_0px_0px_#000]">
-          CLI_SECURE_TUNNEL
+          DELHI_REGIONAL_TERMINAL
         </div>
       </div>
 
