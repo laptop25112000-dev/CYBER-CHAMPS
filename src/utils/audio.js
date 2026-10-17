@@ -108,6 +108,14 @@ class SoundManager {
     }
   }
 
+  playModalOpen() {
+    this.playAccessGranted();
+  }
+
+  playModalClose() {
+    this.playBeep(420, 0.06, 'sine', 0.08);
+  }
+
   startAmbient() {
     if (this.isMuted || this.ambientOsc) return;
     try {

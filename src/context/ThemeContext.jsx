@@ -2,9 +2,17 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export const THEME_COLORS = [
   { 
+    id: 'amber', 
+    name: 'Solar Amber', 
+    darkHex: '#fbbf24', 
+    lightHex: '#f59e0b', 
+    secondary: '#ef4444', 
+    bgGlow: 'rgba(245, 158, 11, 0.2)' 
+  },
+  { 
     id: 'cyan', 
     name: 'Cyber Cyan', 
-    darkHex: '#00f0ff', 
+    darkHex: '#38bdf8', 
     lightHex: '#0284c7', 
     secondary: '#3b82f6', 
     bgGlow: 'rgba(2, 132, 199, 0.2)' 
@@ -12,7 +20,7 @@ export const THEME_COLORS = [
   { 
     id: 'emerald', 
     name: 'Laser Emerald', 
-    darkHex: '#10b981', 
+    darkHex: '#4ade80', 
     lightHex: '#059669', 
     secondary: '#06b6d4', 
     bgGlow: 'rgba(5, 150, 105, 0.2)' 
@@ -20,23 +28,15 @@ export const THEME_COLORS = [
   { 
     id: 'crimson', 
     name: 'Crimson Fury', 
-    darkHex: '#ff0055', 
+    darkHex: '#fb7185', 
     lightHex: '#e11d48', 
     secondary: '#ec4899', 
     bgGlow: 'rgba(225, 29, 72, 0.2)' 
   },
   { 
-    id: 'amber', 
-    name: 'Solar Amber', 
-    darkHex: '#f59e0b', 
-    lightHex: '#d97706', 
-    secondary: '#ef4444', 
-    bgGlow: 'rgba(217, 119, 6, 0.2)' 
-  },
-  { 
     id: 'purple', 
     name: 'Hyperdrive Purple', 
-    darkHex: '#a855f7', 
+    darkHex: '#c084fc', 
     lightHex: '#7c3aed', 
     secondary: '#6366f1', 
     bgGlow: 'rgba(124, 58, 237, 0.2)' 
@@ -44,7 +44,7 @@ export const THEME_COLORS = [
   { 
     id: 'orange', 
     name: 'Robo Orange', 
-    darkHex: '#ff6b00', 
+    darkHex: '#fb923c', 
     lightHex: '#ea580c', 
     secondary: '#eab308', 
     bgGlow: 'rgba(234, 88, 12, 0.2)' 
@@ -61,13 +61,13 @@ export const CURSOR_STYLES = [
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  // Default to 'light' mode as requested!
+  // Default to Neobrutalist mode (Warm Paper/Cream #FAF5E6 - never pure white!)
   const [themeMode, setThemeMode] = useState(() => {
     return localStorage.getItem('cyber_mode') || 'light';
   });
 
   const [currentTheme, setCurrentTheme] = useState(() => {
-    return localStorage.getItem('cyber_theme') || 'cyan';
+    return localStorage.getItem('cyber_theme') || 'amber';
   });
 
   const [cursorStyle, setCursorStyle] = useState(() => {
@@ -77,7 +77,6 @@ export function ThemeProvider({ children }) {
   const isLightMode = themeMode === 'light';
   const rawTheme = THEME_COLORS.find(t => t.id === currentTheme) || THEME_COLORS[0];
   
-  // Use lightHex in light mode and darkHex in dark mode for optimal contrast & aesthetics
   const activeHex = isLightMode ? rawTheme.lightHex : rawTheme.darkHex;
   const activeThemeObj = {
     ...rawTheme,

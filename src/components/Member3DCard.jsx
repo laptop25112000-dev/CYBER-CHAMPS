@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Member3DAvatar from './Member3DAvatar';
 import { useTheme } from '../context/ThemeContext';
 import { soundManager } from '../utils/audio';
@@ -10,6 +10,25 @@ export default function Member3DCard({ member, onSelect }) {
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [inView, setInView] = useState(false);
+  const [glare, setGlare] = useState({ x: 50, y: 50 });
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const handleMouseMove = (e) => {
     if (!cardRef.current) return;
@@ -24,6 +43,10 @@ export default function Member3DCard({ member, onSelect }) {
 
     setRotateX(rX);
     setRotateY(rY);
+    setGlare({
+      x: (x / rect.width) * 100,
+      y: (y / rect.height) * 100
+    });
   };
 
   const handleMouseEnter = () => {
@@ -53,28 +76,28 @@ export default function Member3DCard({ member, onSelect }) {
         transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) ${isHovered ? 'translateY(-4px)' : ''}`,
         transition: isHovered ? 'transform 0.1s ease-out' : 'transform 0.3s ease-out, box-shadow 0.3s ease',
       }}
-      className={`group relative cursor-pointer flex flex-col justify-between p-6 rounded-2xl border-2 border-slate-900 bg-white transition-all duration-200 ${
-        isHovered ? 'shadow-[7px_7px_0px_0px_#0f172a]' : 'shadow-[4px_4px_0px_0px_#0f172a]'
+      className={`group relative cursor-pointer flex flex-col justify-between p-6 rounded-2xl border-3 border-black bg-[#FFF9EB] transition-all duration-200 ${
+        isHovered ? 'shadow-[7px_7px_0px_0px_#000]' : 'shadow-[4px_4px_0px_0px_#000]'
       }`}
     >
       {/* Top Header: Member Tag */}
-      <div className="flex items-center justify-between gap-2 border-b-2 border-slate-900 pb-3 mb-4">
+      <div className="flex items-center justify-between gap-2 border-b-2 border-black pb-3 mb-4">
         <div className="flex items-center gap-2">
           <span 
-            className="w-2.5 h-2.5 rounded-full border border-slate-900" 
+            className="w-2.5 h-2.5 rounded-full border border-black" 
             style={{ backgroundColor: member.accentColor }} 
           />
-          <span className="font-mono text-[11px] font-black tracking-wider uppercase text-slate-900">
+          <span className="font-mono text-[11px] font-black tracking-wider uppercase text-black">
             TEAM MEMBER
           </span>
         </div>
-        <div className="font-mono text-[10px] px-2.5 py-0.5 rounded border border-slate-900 bg-amber-200 text-slate-950 font-black shadow-[1.5px_1.5px_0px_0px_#0f172a]">
+        <div className="font-mono text-[10px] px-2.5 py-0.5 rounded border-2 border-black bg-[#FEF08A] text-black font-black shadow-[2px_2px_0px_0px_#000]">
           DELHI REGIONAL
         </div>
       </div>
 
       {/* 3D Geometric Avatar Container */}
-      <div className="relative w-full h-36 mb-4 flex items-center justify-center overflow-hidden rounded-xl border-2 border-slate-900 bg-slate-50 shadow-[2px_2px_0px_0px_#0f172a]">
+      <div className="relative w-full h-36 mb-4 flex items-center justify-center overflow-hidden rounded-xl border-2 border-black bg-[#FAF5E6] shadow-[2px_2px_0px_0px_#000]">
         <div className="w-28 h-28">
           <Member3DAvatar 
             shape={member.shape} 
@@ -87,30 +110,31 @@ export default function Member3DCard({ member, onSelect }) {
 
       {/* Member Name */}
       <div className="mb-3">
-        <h3 className="font-['Orbitron'] text-2xl font-black text-slate-950 group-hover:underline">
+        <h3 className="font-['Orbitron'] text-2xl font-black text-black group-hover:underline">
           {member.name}
         </h3>
       </div>
 
       {/* Bio excerpt */}
-      <p className="text-xs font-sans font-medium text-slate-700 line-clamp-2 mb-4 leading-relaxed">
+      <p className="text-xs font-sans font-medium text-slate-800 line-clamp-2 mb-4 leading-relaxed">
         {member.bio}
       </p>
 
-      {/* Skills with Progress Bars */}
-      <div className="space-y-2 mb-4 pt-2 border-t-2 border-slate-900">
+      {/* Skills with Scroll-Animated Progress Bars */}
+      <div className="space-y-2 mb-4 pt-2 border-t-2 border-black">
         {member.skills.slice(0, 2).map((skill, idx) => (
           <div key={idx} className="space-y-1">
-            <div className="flex justify-between text-[11px] font-mono text-slate-900 font-bold">
+            <div className="flex justify-between text-[11px] font-mono text-black font-bold">
               <span className="truncate pr-2">{skill.name}</span>
               <span>{skill.level}%</span>
             </div>
-            <div className="w-full h-2 rounded-full border border-slate-900 bg-slate-100 overflow-hidden">
+            <div className="w-full h-2 rounded-full border border-black bg-[#FAF5E6] overflow-hidden">
               <div
-                className="h-full rounded-full transition-all duration-700 ease-out"
+                className="h-full rounded-full transition-all ease-out"
                 style={{
-                  width: `${skill.level}%`,
-                  backgroundColor: member.accentColor
+                  width: inView ? `${skill.level}%` : '0%',
+                  backgroundColor: member.accentColor,
+                  transition: `width 900ms cubic-bezier(0.16, 1, 0.3, 1) ${idx * 150}ms`
                 }}
               />
             </div>
@@ -123,13 +147,13 @@ export default function Member3DCard({ member, onSelect }) {
         {member.tools.slice(0, 4).map((tool, idx) => (
           <span
             key={idx}
-            className="font-mono text-[10px] font-bold px-2 py-0.5 rounded border border-slate-900 bg-white shadow-[1.5px_1.5px_0px_0px_#0f172a] text-slate-800"
+            className="font-mono text-[10px] font-black px-2 py-0.5 rounded border border-black bg-[#FEF08A] shadow-[1.5px_1.5px_0px_0px_#000] text-black"
           >
             {tool}
           </span>
         ))}
         {member.tools.length > 4 && (
-          <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded border border-slate-900 bg-slate-100 text-slate-600">
+          <span className="font-mono text-[10px] font-black px-1.5 py-0.5 rounded border border-black bg-[#FED7AA] text-black">
             +{member.tools.length - 4}
           </span>
         )}
@@ -137,7 +161,7 @@ export default function Member3DCard({ member, onSelect }) {
 
       {/* Action Footer */}
       <button 
-        className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl border-2 border-slate-900 bg-slate-900 text-white font-mono text-xs font-black shadow-[3px_3px_0px_0px_#0f172a] group-hover:bg-slate-800 transition-all active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+        className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl border-2 border-black bg-black text-[#FAF5E6] font-mono text-xs font-black shadow-[3px_3px_0px_0px_#000] hover:bg-[#1a1a1a] transition-all active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
       >
         <span className="flex items-center gap-1.5">
           <Terminal className="w-3.5 h-3.5" />
@@ -145,6 +169,16 @@ export default function Member3DCard({ member, onSelect }) {
         </span>
         <ChevronRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
       </button>
+
+      {/* MotionSites Specular Glare Overlay */}
+      <div
+        className="absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-300"
+        style={{
+          opacity: isHovered ? 0.14 : 0,
+          background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255, 255, 255, 0.9), transparent 60%)`,
+          mixBlendMode: 'overlay'
+        }}
+      />
     </div>
   );
 }

@@ -240,12 +240,12 @@ export default function ScrollAnimated3DScene() {
       />
 
       {/* Neobrutalist 3D Scroll Badge */}
-      <div className="absolute bottom-4 left-4 pointer-events-none font-mono text-[11px] font-bold text-slate-900 bg-white px-3 py-1.5 rounded-lg border-2 border-slate-900 shadow-[3px_3px_0px_0px_#000] flex items-center gap-2">
-        <span className="w-2 h-2 rounded-full animate-ping" style={{ backgroundColor: activeThemeObj.hex }} />
+      <div className="absolute bottom-4 left-4 pointer-events-none font-mono text-[11px] font-black text-black bg-[#FEF08A] px-3 py-1.5 rounded-lg border-2 border-black shadow-[3px_3px_0px_0px_#000] flex items-center gap-2">
+        <span className="w-2 h-2 rounded-full border border-black animate-ping" style={{ backgroundColor: activeThemeObj.hex }} />
         <span>3D SCROLL ANIMATION // DELHI REGIONAL</span>
       </div>
 
-      <div className="absolute top-4 right-4 pointer-events-none font-mono text-[10px] font-bold text-slate-900 bg-amber-300 px-2.5 py-1 rounded border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000]">
+      <div className="absolute top-4 right-4 pointer-events-none font-mono text-[10px] font-black text-black bg-[#FEF08A] px-2.5 py-1 rounded border-2 border-black shadow-[2px_2px_0px_0px_#000]">
         NRL 2026 // DELHI REGIONAL CAR
       </div>
     </div>

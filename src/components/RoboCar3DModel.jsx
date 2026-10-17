@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useTheme } from '../context/ThemeContext';
 import { soundManager } from '../utils/audio';
+import { buildRoboCar3DGroup } from '../utils/roboCar3DBuilder';
 import { 
   RotateCw, ZoomIn, Eye, Sparkles, Zap, Shield, 
   Cpu, Activity, Radio, Play, Pause, Layers, Info, Crosshair 
@@ -12,13 +13,56 @@ export default function RoboCar3DModel({ autoRotate = false }) {
   const { activeThemeObj } = useTheme();
   const [wireframeMode, setWireframeMode] = useState(false);
   const [isDriving, setIsDriving] = useState(false);
+  const [isDonutTumbling, setIsDonutTumbling] = useState(true);
   const [hoveredPart, setHoveredPart] = useState(null);
+
+  // WASD Drive Simulator State
+  const [isSimulatorActive, setIsSimulatorActive] = useState(false);
+  const [simSpeed, setSimSpeed] = useState(0);
+  const [simClawClosed, setSimClawClosed] = useState(false);
+  const simControlsRef = useRef({ fwd: false, bwd: false, left: false, right: false, claw: false });
 
   // References
   const wheelsRef = useRef([]);
   const armRef = useRef(null);
   const carGroupRef = useRef(null);
+  const ledRef = useRef(null);
+  const groundShadowRef = useRef(null);
   const interactiveObjectsRef = useRef([]);
+
+  // Drive Simulator Key Listeners
+  useEffect(() => {
+    if (!isSimulatorActive) return;
+
+    const handleKeyDown = (e) => {
+      const code = e.code;
+      if (code === 'KeyW' || code === 'ArrowUp') simControlsRef.current.fwd = true;
+      if (code === 'KeyS' || code === 'ArrowDown') simControlsRef.current.bwd = true;
+      if (code === 'KeyA' || code === 'ArrowLeft') simControlsRef.current.left = true;
+      if (code === 'KeyD' || code === 'ArrowRight') simControlsRef.current.right = true;
+      if (code === 'Space') {
+        e.preventDefault();
+        simControlsRef.current.claw = !simControlsRef.current.claw;
+        setSimClawClosed(simControlsRef.current.claw);
+        soundManager.playClick();
+      }
+    };
+
+    const handleKeyUp = (e) => {
+      const code = e.code;
+      if (code === 'KeyW' || code === 'ArrowUp') simControlsRef.current.fwd = false;
+      if (code === 'KeyS' || code === 'ArrowDown') simControlsRef.current.bwd = false;
+      if (code === 'KeyA' || code === 'ArrowLeft') simControlsRef.current.left = false;
+      if (code === 'KeyD' || code === 'ArrowRight') simControlsRef.current.right = false;
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [isSimulatorActive]);
 
   useEffect(() => {
     const container = mountRef.current;
@@ -29,8 +73,8 @@ export default function RoboCar3DModel({ autoRotate = false }) {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
-    camera.position.set(4.2, 3.8, 6.8);
-    camera.lookAt(0, 0.5, 0);
+    camera.position.set(4.2, 3.2, 6.8);
+    camera.lookAt(0, 0.4, 0);
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -40,385 +84,28 @@ export default function RoboCar3DModel({ autoRotate = false }) {
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.25;
     container.appendChild(renderer.domElement);
 
-    const carGroup = new THREE.Group();
-    carGroupRef.current = carGroup;
-    scene.add(carGroup);
-
     const themeColor = new THREE.Color(activeThemeObj.hex);
     interactiveObjectsRef.current = [];
 
-    const registerPart = (mesh, info) => {
-      mesh.userData = info;
-      interactiveObjectsRef.current.push(mesh);
-    };
-
-    // ==========================================
-    // 1. HYPERREALISTIC CLEAR ACRYLIC DECK
-    // ==========================================
-    const acrylicMat = new THREE.MeshPhysicalMaterial({
-      color: 0xffffff,
-      transmission: 0.92,
-      opacity: 0.95,
-      transparent: true,
-      roughness: 0.08,
-      ior: 1.49,
-      metalness: 0.0,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.05,
-      wireframe: wireframeMode
+    // Build hyperrealistic robo car using shared builder
+    const { carGroup, wheels, armGroup, led } = buildRoboCar3DGroup({
+      themeHex: activeThemeObj.hex,
+      wireframe: wireframeMode,
+      onRegisterPart: (mesh, info) => {
+        interactiveObjectsRef.current.push(mesh);
+      }
     });
 
-    // Top deck plate
-    const topDeckGeom = new THREE.BoxGeometry(2.5, 0.08, 3.8);
-    const topDeck = new THREE.Mesh(topDeckGeom, acrylicMat);
-    topDeck.position.y = 0.95;
-    topDeck.castShadow = true;
-    carGroup.add(topDeck);
-    registerPart(topDeck, {
-      name: "Precision Acrylic Deck",
-      category: "CHASSIS DECK",
-      desc: "CNC laser-machined 4mm optical grade polycarbonate deck with modular sensor rails."
-    });
-
-    // Lower aluminum motor chassis plate
-    const alumMat = new THREE.MeshStandardMaterial({
-      color: 0x94a3b8,
-      metalness: 0.95,
-      roughness: 0.22,
-      wireframe: wireframeMode
-    });
-    const lowerDeckGeom = new THREE.BoxGeometry(2.3, 0.06, 3.5);
-    const lowerDeck = new THREE.Mesh(lowerDeckGeom, alumMat);
-    lowerDeck.position.y = 0.38;
-    lowerDeck.castShadow = true;
-    carGroup.add(lowerDeck);
-    registerPart(lowerDeck, {
-      name: "Aluminum Structural Base",
-      category: "LOWER TRAY",
-      desc: "Aircraft 6061-T6 alloy base plate providing rigidity against high-speed impacts."
-    });
-
-    // 4 Brass/Chrome Standoff Pillars connecting top and lower deck
-    const standoffMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.9, roughness: 0.2 });
-    const standoffGeom = new THREE.CylinderGeometry(0.04, 0.04, 0.52, 12);
-    const standoffPositions = [
-      { x: -1.0, z: 1.5 },
-      { x: 1.0, z: 1.5 },
-      { x: -1.0, z: -1.5 },
-      { x: 1.0, z: -1.5 }
-    ];
-    standoffPositions.forEach(p => {
-      const standoff = new THREE.Mesh(standoffGeom, standoffMat);
-      standoff.position.set(p.x, 0.67, p.z);
-      carGroup.add(standoff);
-    });
-
-    // ==========================================
-    // 2. HEXA COMMAND HUB CONTROLLER (HYPERREAL PCB)
-    // ==========================================
-    const hubGroup = new THREE.Group();
-    hubGroup.position.set(0, 1.02, -0.3);
-
-    // Green multi-layer PCB
-    const pcbGeom = new THREE.BoxGeometry(1.5, 0.06, 1.6);
-    const pcbMat = new THREE.MeshStandardMaterial({
-      color: 0x064e3b,
-      roughness: 0.45,
-      metalness: 0.15
-    });
-    const pcb = new THREE.Mesh(pcbGeom, pcbMat);
-    hubGroup.add(pcb);
-
-    // Microcontroller Chip (QFP package with lead pins)
-    const mcuGeom = new THREE.BoxGeometry(0.48, 0.08, 0.48);
-    const mcuMat = new THREE.MeshStandardMaterial({ color: 0x090d16, roughness: 0.3 });
-    const mcu = new THREE.Mesh(mcuGeom, mcuMat);
-    mcu.position.set(-0.35, 0.06, 0.1);
-    hubGroup.add(mcu);
-
-    // Aluminum Fin Heat Sink for Motor Driver
-    const sinkGeom = new THREE.BoxGeometry(0.45, 0.18, 0.45);
-    const sinkMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.95, roughness: 0.15 });
-    const sink = new THREE.Mesh(sinkGeom, sinkMat);
-    sink.position.set(0.35, 0.11, 0.1);
-    hubGroup.add(sink);
-
-    // Blue Screw Terminal Blocks
-    const termGeom = new THREE.BoxGeometry(0.24, 0.16, 1.0);
-    const termMat = new THREE.MeshStandardMaterial({ color: 0x1d4ed8, roughness: 0.3 });
-    const termBlock = new THREE.Mesh(termGeom, termMat);
-    termBlock.position.set(0.6, 0.1, -0.15);
-    hubGroup.add(termBlock);
-
-    // Active Status Blink LEDs
-    const ledGeom = new THREE.SphereGeometry(0.045, 12, 12);
-    const ledMat = new THREE.MeshBasicMaterial({ color: themeColor });
-    const led1 = new THREE.Mesh(ledGeom, ledMat);
-    led1.position.set(0.2, 0.08, 0.6);
-    hubGroup.add(led1);
-
-    carGroup.add(hubGroup);
-    registerPart(pcb, {
-      name: "HEXA Command Hub Controller",
-      category: "AVIONICS & MOTOR ESC",
-      desc: "Multi-channel motor driver and ESP32 wireless telemetry processing core."
-    });
-
-    // ==========================================
-    // 3. FRONT ROBOTIC GRIPPER & ACTUATOR ARM
-    // ==========================================
-    const armGroup = new THREE.Group();
-    armGroup.position.set(0, 1.05, 1.85);
-
-    // Translucent Blue Micro Servo (SG90/MG90 exactly as in photo)
-    const servoGeom = new THREE.BoxGeometry(0.42, 0.42, 0.35);
-    const servoMat = new THREE.MeshPhysicalMaterial({
-      color: 0x1d4ed8,
-      transmission: 0.7,
-      transparent: true,
-      roughness: 0.2,
-      ior: 1.4
-    });
-    const servo = new THREE.Mesh(servoGeom, servoMat);
-    servo.position.set(0, 0.18, 0);
-    armGroup.add(servo);
-
-    // Servo Output Gear Spline
-    const splineGeom = new THREE.CylinderGeometry(0.09, 0.09, 0.12, 16);
-    const splineMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.95 });
-    const spline = new THREE.Mesh(splineGeom, splineMat);
-    spline.position.set(0, 0.42, 0.08);
-    spline.rotation.x = Math.PI / 2;
-    armGroup.add(spline);
-
-    // Aluminum Arm Linkage Bracket
-    const armBracketMat = new THREE.MeshStandardMaterial({ color: 0xcbd5e1, metalness: 0.9, roughness: 0.2 });
-    
-    // Left Gripper Claw Finger with Knurled Rubber Grip
-    const clawGeom = new THREE.BoxGeometry(0.09, 0.16, 1.05);
-    const clawLeft = new THREE.Mesh(clawGeom, armBracketMat);
-    clawLeft.position.set(-0.6, 0.12, 0.65);
-    clawLeft.rotation.y = 0.22;
-    armGroup.add(clawLeft);
-
-    const clawRight = new THREE.Mesh(clawGeom, armBracketMat);
-    clawRight.position.set(0.6, 0.12, 0.65);
-    clawRight.rotation.y = -0.22;
-    armGroup.add(clawRight);
-
-    // Black Textured Rubber Pads on Claws
-    const padMat = new THREE.MeshStandardMaterial({ color: 0x09090b, roughness: 0.95 });
-    const padL = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.14, 0.38), padMat);
-    padL.position.set(-0.51, 0.12, 0.98);
-    armGroup.add(padL);
-
-    const padR = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.14, 0.38), padMat);
-    padR.position.set(0.51, 0.12, 0.98);
-    armGroup.add(padR);
-
-    carGroup.add(armGroup);
+    carGroupRef.current = carGroup;
+    wheelsRef.current = wheels;
     armRef.current = armGroup;
-
-    registerPart(servo, {
-      name: "Robotic Gripper & Actuator Claw",
-      category: "ACTIVE MANIPULATOR",
-      desc: "Micro-servo powered kinetic claw designed to scoop, grip, and transport NRL arena rings."
-    });
-    registerPart(clawLeft, {
-      name: "Robotic Gripper & Actuator Claw",
-      category: "ACTIVE MANIPULATOR",
-      desc: "Micro-servo powered kinetic claw designed to scoop, grip, and transport NRL arena rings."
-    });
-
-    // ==========================================
-    // 4. FOUR ALL-TERRAIN WHITE-DISH WHEELS (HYPERREALISTIC)
-    // ==========================================
-    const wheelPositions = [
-      { x: -1.55, y: 0.72, z: 1.25 },
-      { x: 1.55, y: 0.72, z: 1.25 },
-      { x: -1.55, y: 0.72, z: -1.25 },
-      { x: 1.55, y: 0.72, z: -1.25 }
-    ];
-
-    wheelsRef.current = [];
-    wheelPositions.forEach((pos) => {
-      const wheelGroup = new THREE.Group();
-      wheelGroup.position.set(pos.x, pos.y, pos.z);
-
-      // Matte Black Rubber Tire with Tread Ridges
-      const tireGeom = new THREE.CylinderGeometry(0.72, 0.72, 0.58, 32);
-      const tireMat = new THREE.MeshStandardMaterial({
-        color: 0x111318,
-        roughness: 0.92,
-        metalness: 0.04,
-        wireframe: wireframeMode
-      });
-      const tire = new THREE.Mesh(tireGeom, tireMat);
-      tire.rotation.z = Math.PI / 2;
-      tire.castShadow = true;
-      wheelGroup.add(tire);
-
-      // Deep White Dish Rim (Glossy Plastic as in NRL photo)
-      const rimGeom = new THREE.CylinderGeometry(0.58, 0.58, 0.6, 28);
-      const rimMat = new THREE.MeshStandardMaterial({
-        color: 0xffffff,
-        roughness: 0.2,
-        metalness: 0.05
-      });
-      const rim = new THREE.Mesh(rimGeom, rimMat);
-      rim.rotation.z = Math.PI / 2;
-      wheelGroup.add(rim);
-
-      // Recessed Center Dish
-      const dishInGeom = new THREE.CylinderGeometry(0.42, 0.55, 0.61, 24);
-      const dishInMat = new THREE.MeshStandardMaterial({
-        color: 0xf1f5f9,
-        roughness: 0.28
-      });
-      const dishIn = new THREE.Mesh(dishInGeom, dishInMat);
-      dishIn.rotation.z = Math.PI / 2;
-      wheelGroup.add(dishIn);
-
-      // Center Anodized Hex Locking Nut
-      const nutGeom = new THREE.CylinderGeometry(0.14, 0.14, 0.65, 6);
-      const nutMat = new THREE.MeshStandardMaterial({
-        color: themeColor,
-        metalness: 0.92,
-        roughness: 0.18
-      });
-      const nut = new THREE.Mesh(nutGeom, nutMat);
-      nut.rotation.z = Math.PI / 2;
-      wheelGroup.add(nut);
-
-      // Metal Gearbox Housing connecting motor to chassis
-      const motorGeom = new THREE.CylinderGeometry(0.2, 0.2, 0.6, 16);
-      const motorMat = new THREE.MeshStandardMaterial({
-        color: 0x475569,
-        metalness: 0.92,
-        roughness: 0.25
-      });
-      const motor = new THREE.Mesh(motorGeom, motorMat);
-      motor.position.x = pos.x > 0 ? -0.4 : 0.4;
-      motor.rotation.z = Math.PI / 2;
-      carGroup.add(motor);
-
-      registerPart(motor, {
-        name: "Metal Gear High-Torque Motor",
-        category: "PROPULSION",
-        desc: "All-metal planetary gearbox DC motor producing 180 RPM with peak 4.5 kg-cm stall torque."
-      });
-
-      registerPart(rim, {
-        name: "NRL All-Terrain Dish Wheel",
-        category: "TRACTION WHEEL",
-        desc: "High-traction knobby rubber tire mounted on lightweight white competition dish rim."
-      });
-
-      carGroup.add(wheelGroup);
-      wheelsRef.current.push(wheelGroup);
-    });
-
-    // ==========================================
-    // 5. RED LATERAL IMPACT SHIELDS
-    // ==========================================
-    const bumperGeom = new THREE.BoxGeometry(0.12, 0.65, 1.5);
-    const bumperMat = new THREE.MeshStandardMaterial({
-      color: 0xdc2626, // Vivid Red as in NRL kit
-      roughness: 0.35,
-      metalness: 0.3
-    });
-
-    const bLeft = new THREE.Mesh(bumperGeom, bumperMat);
-    bLeft.position.set(-1.3, 0.78, 0.1);
-    bLeft.rotation.z = 0.12;
-    bLeft.castShadow = true;
-    carGroup.add(bLeft);
-
-    const bRight = new THREE.Mesh(bumperGeom, bumperMat);
-    bRight.position.set(1.3, 0.78, 0.1);
-    bRight.rotation.z = -0.12;
-    bRight.castShadow = true;
-    carGroup.add(bRight);
-
-    registerPart(bLeft, {
-      name: "Lateral Impact Shield",
-      category: "CHASSIS ARMOR",
-      desc: "Protective side fairing absorbing lateral collisions in high-speed NRL arena encounters."
-    });
-
-    // ==========================================
-    // 6. LIPO RECHARGEABLE BATTERY PACK
-    // ==========================================
-    const battGeom = new THREE.BoxGeometry(0.95, 0.42, 1.35);
-    const battMat = new THREE.MeshStandardMaterial({
-      color: 0x18181b,
-      metalness: 0.2,
-      roughness: 0.65
-    });
-    const batt = new THREE.Mesh(battGeom, battMat);
-    batt.position.set(0, 0.56, -0.65);
-    batt.castShadow = true;
-    carGroup.add(batt);
-
-    // Yellow XT30 Connector Plug
-    const xtGeom = new THREE.BoxGeometry(0.2, 0.14, 0.18);
-    const xtMat = new THREE.MeshStandardMaterial({ color: 0xeab308, roughness: 0.3 });
-    const xt = new THREE.Mesh(xtGeom, xtMat);
-    xt.position.set(0.25, 0.68, -0.05);
-    carGroup.add(xt);
-
-    registerPart(batt, {
-      name: "Rechargeable Power Pack",
-      category: "ENERGY CELL",
-      desc: "High-discharge Li-Ion pack providing sustained current to 4 motors and HEXA hub via XT30."
-    });
-
-    // ==========================================
-    // 7. TOURNAMENT SCORING RINGS (BLUE & RED)
-    // ==========================================
-    const ringGroup = new THREE.Group();
-    ringGroup.position.set(1.5, 0.15, 2.7);
-
-    const ringGeom = new THREE.TorusGeometry(0.38, 0.09, 16, 32);
-    const ringBlueMat = new THREE.MeshStandardMaterial({ color: 0x2563eb, roughness: 0.2, metalness: 0.3 });
-    const r1 = new THREE.Mesh(ringGeom, ringBlueMat);
-    r1.rotation.x = Math.PI / 2;
-    r1.castShadow = true;
-    ringGroup.add(r1);
-
-    const ringRedMat = new THREE.MeshStandardMaterial({ color: 0xdc2626, roughness: 0.2, metalness: 0.3 });
-    const r2 = new THREE.Mesh(ringGeom, ringRedMat);
-    r2.rotation.x = Math.PI / 2;
-    r2.position.set(-0.85, 0, 0.45);
-    r2.castShadow = true;
-    ringGroup.add(r2);
-
-    carGroup.add(ringGroup);
-    registerPart(r1, {
-      name: "NRL Scoring Ring Element",
-      category: "ARENA GAME OBJECT",
-      desc: "Official competition ring picked up by the robot claw for autonomous/teleoperated scoring."
-    });
-
-    // ==========================================
-    // 8. REALISTIC STUDIO LIGHTING & GROUND CONTACT
-    // ==========================================
-    // Soft realistic contact shadow disc under the robot
-    const shadowGeom = new THREE.PlaneGeometry(3.6, 5.0);
-    const shadowMat = new THREE.MeshBasicMaterial({
-      color: 0x0f172a,
-      transparent: true,
-      opacity: 0.18
-    });
-    const groundShadow = new THREE.Mesh(shadowGeom, shadowMat);
-    groundShadow.rotation.x = -Math.PI / 2;
-    groundShadow.position.y = 0.01;
-    scene.add(groundShadow);
+    ledRef.current = led;
+    scene.add(carGroup);
 
     // Studio Key Light
     const keyLight = new THREE.DirectionalLight(0xffffff, 2.8);
@@ -429,17 +116,27 @@ export default function RoboCar3DModel({ autoRotate = false }) {
     scene.add(keyLight);
 
     // Soft Rim Light with theme color accent
-    const rimLight = new THREE.DirectionalLight(themeColor, 1.8);
+    const rimLight = new THREE.DirectionalLight(themeColor, 2.0);
     rimLight.position.set(-8, 5, -6);
     scene.add(rimLight);
 
     // Soft Ambient Studio Fill
-    const ambLight = new THREE.AmbientLight(0xffffff, 1.5);
+    const ambLight = new THREE.AmbientLight(0xffffff, 1.6);
     scene.add(ambLight);
 
-    // ==========================================
-    // 9. RAYCASTER HOVER INTERACTION
-    // ==========================================
+    // Ground Contact Shadow
+    const shadowGeom = new THREE.PlaneGeometry(4.0, 5.2);
+    const shadowMat = new THREE.MeshBasicMaterial({
+      color: 0x0f172a,
+      transparent: true,
+      opacity: 0.16
+    });
+    const groundShadow = new THREE.Mesh(shadowGeom, shadowMat);
+    groundShadow.rotation.x = -Math.PI / 2;
+    groundShadow.position.y = 0.01;
+    scene.add(groundShadow);
+
+    // Raycaster for hover telemetry
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
@@ -473,7 +170,7 @@ export default function RoboCar3DModel({ autoRotate = false }) {
 
     container.addEventListener('mousemove', handlePointerMove);
 
-    // DRAG ROTATION
+    // Drag Rotation
     let isDragging = false;
     let prevX = 0;
     let prevY = 0;
@@ -489,7 +186,7 @@ export default function RoboCar3DModel({ autoRotate = false }) {
       const dx = e.clientX - prevX;
       const dy = e.clientY - prevY;
       carGroup.rotation.y += dx * 0.009;
-      carGroup.rotation.x = Math.max(-0.35, Math.min(0.65, carGroup.rotation.x + dy * 0.006));
+      carGroup.rotation.x = Math.max(-0.45, Math.min(0.75, carGroup.rotation.x + dy * 0.006));
       prevX = e.clientX;
       prevY = e.clientY;
     };
@@ -513,7 +210,7 @@ export default function RoboCar3DModel({ autoRotate = false }) {
       const dx = e.touches[0].clientX - prevX;
       const dy = e.touches[0].clientY - prevY;
       carGroup.rotation.y += dx * 0.01;
-      carGroup.rotation.x = Math.max(-0.35, Math.min(0.65, carGroup.rotation.x + dy * 0.007));
+      carGroup.rotation.x = Math.max(-0.45, Math.min(0.75, carGroup.rotation.x + dy * 0.007));
       prevX = e.touches[0].clientX;
       prevY = e.touches[0].clientY;
     };
@@ -537,32 +234,78 @@ export default function RoboCar3DModel({ autoRotate = false }) {
     // ANIMATION LOOP
     let animId;
     let clock = new THREE.Clock();
+    let currentSimSpeed = 0;
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
       const delta = clock.getDelta();
       const time = clock.getElapsedTime();
 
-      // Auto rotation
-      if (autoRotate && !isDragging) {
+      // 1. WASD REAL-TIME DRIVE SIMULATOR
+      if (isSimulatorActive) {
+        const ctrl = simControlsRef.current;
+        let targetSpeed = 0;
+        if (ctrl.fwd) targetSpeed = 14.5;
+        else if (ctrl.bwd) targetSpeed = -7.2;
+
+        currentSimSpeed += (targetSpeed - currentSimSpeed) * Math.min(1, delta * 5);
+        setSimSpeed(currentSimSpeed);
+
+        // Steering Yaw
+        if (ctrl.left) carGroup.rotation.y += delta * 2.4;
+        if (ctrl.right) carGroup.rotation.y -= delta * 2.4;
+
+        // Pitch with acceleration
+        carGroup.rotation.x = (currentSimSpeed / 14.5) * 0.08;
+
+        // Spin wheels based on speed
+        wheelsRef.current.forEach((w) => {
+          w.rotation.x += currentSimSpeed * delta * 2.8;
+        });
+
+        // Articulated claw clamp
+        if (armRef.current) {
+          const targetArmAngle = ctrl.claw ? -0.45 : 0.08;
+          armRef.current.rotation.y += (targetArmAngle - armRef.current.rotation.y) * 0.15;
+        }
+
+        // Slight road vibration
+        carGroup.position.y = Math.sin(time * 30) * Math.abs(currentSimSpeed) * 0.001;
+      } 
+      // 2. DONUT TUMBLE ANIMATION STYLE
+      else if (isDonutTumbling && !isDragging) {
+        carGroup.rotation.y += delta * 0.42;
+        carGroup.rotation.x = Math.sin(time * 0.85) * 0.24 + 0.16;
+        carGroup.rotation.z = Math.cos(time * 0.7) * 0.12;
+        carGroup.position.y = Math.sin(time * 1.6) * 0.12;
+
+        const s = 1.0 - carGroup.position.y * 0.4;
+        groundShadow.scale.set(s, s, s);
+        groundShadow.material.opacity = Math.max(0.08, 0.18 - carGroup.position.y * 0.1);
+
+        wheelsRef.current.forEach((w) => {
+          w.rotation.x += delta * 3.5;
+        });
+
+        if (armRef.current) {
+          armRef.current.rotation.y = Math.sin(time * 2.2) * 0.14;
+        }
+      } else if (autoRotate && !isDragging) {
         carGroup.rotation.y += delta * 0.35;
       }
 
-      // Wheels spin
-      if (isDriving) {
+      // Wheels spin in driving test
+      if (isDriving && !isSimulatorActive) {
         wheelsRef.current.forEach((w) => {
-          w.rotation.x += delta * 8;
+          w.rotation.x += delta * 12;
         });
-        carGroup.position.y = Math.sin(time * 20) * 0.012;
-      }
-
-      // Servo claw breathing animation
-      if (armRef.current) {
-        armRef.current.rotation.y = Math.sin(time * 2.2) * 0.15;
+        carGroup.position.y = Math.sin(time * 24) * 0.015;
       }
 
       // Status LED blink
-      led1.visible = Math.sin(time * 8) > 0;
+      if (ledRef.current) {
+        ledRef.current.visible = Math.sin(time * 8) > 0;
+      }
 
       renderer.render(scene, camera);
     };
@@ -585,97 +328,226 @@ export default function RoboCar3DModel({ autoRotate = false }) {
       scene.clear();
       renderer.dispose();
     };
-  }, [activeThemeObj.hex, wireframeMode, isDriving, autoRotate]);
+  }, [activeThemeObj.hex, wireframeMode, isDriving, isDonutTumbling, autoRotate]);
 
   return (
-    <div className="relative w-full h-full rounded-2xl neo-box-lg overflow-hidden flex flex-col justify-between select-none bg-white">
+    <div className="relative w-full h-full rounded-2xl neo-box-lg overflow-hidden flex flex-col justify-between select-none bg-[#FFF9EB] border-3 border-black shadow-[6px_6px_0px_0px_#000]">
       {/* 3D WebGL Canvas */}
       <div 
         ref={mountRef} 
-        className="w-full h-[440px] sm:h-[500px] cursor-grab active:cursor-grabbing flex-1 relative bg-gradient-to-b from-slate-50 to-slate-100"
+        className="w-full h-[460px] sm:h-[540px] cursor-grab active:cursor-grabbing flex-1 relative bg-[#FAF5E6]"
         title="Hover over parts to inspect specifications. Drag to rotate 360°"
       />
 
       {/* NEOBRUTALIST FLOATING HOVER INFORMATION HUD */}
       {hoveredPart && (
         <div 
-          className="absolute top-4 left-4 right-4 sm:right-auto sm:max-w-sm z-30 p-4 rounded-xl neo-box animate-in fade-in slide-in-from-top-2 duration-150"
+          className="absolute top-4 left-4 right-4 sm:right-auto sm:max-w-sm z-30 p-4 rounded-xl neo-box animate-in fade-in slide-in-from-top-2 duration-150 bg-[#FFF9EB] border-3 border-black shadow-[5px_5px_0px_0px_#000]"
           style={{
             borderLeft: `6px solid ${activeThemeObj.hex}`
           }}
         >
-          <div className="flex items-center justify-between gap-2 border-b-2 border-slate-900 pb-2 mb-2">
-            <span className="font-mono text-[10px] tracking-wider font-extrabold uppercase text-slate-900">
+          <div className="flex items-center justify-between gap-2 border-b-2 border-black pb-2 mb-2">
+            <span className="font-mono text-[10px] tracking-wider font-black uppercase text-black">
               // {hoveredPart.category}
             </span>
-            <span className="font-mono text-[9px] px-2 py-0.5 rounded border border-slate-900 bg-emerald-300 text-slate-950 font-black">
+            <span className="font-mono text-[9px] px-2 py-0.5 rounded border border-black bg-emerald-300 text-black font-black">
               100% OPERATIONAL
             </span>
           </div>
 
-          <h4 className="font-['Orbitron'] text-sm sm:text-base font-black text-slate-950 mb-1 flex items-center gap-2">
-            <Crosshair className="w-4 h-4 shrink-0 text-slate-900" />
+          <h4 className="font-['Orbitron'] text-sm sm:text-base font-black text-black mb-1 flex items-center gap-2">
+            <Crosshair className="w-4 h-4 shrink-0 text-black" />
             {hoveredPart.name}
           </h4>
 
-          <p className="text-slate-700 text-xs font-sans font-medium leading-relaxed">
+          <p className="text-slate-800 text-xs font-sans font-medium leading-relaxed">
             {hoveredPart.desc}
           </p>
 
-          <div className="mt-2.5 pt-2 border-t border-slate-300 flex items-center justify-between font-mono text-[10px] text-slate-500 font-bold">
+          <div className="mt-2.5 pt-2 border-t border-black/20 flex items-center justify-between font-mono text-[10px] text-slate-700 font-bold">
             <span>OFFICIAL NRL KIT COMPONENT</span>
-            <span className="font-mono" style={{ color: activeThemeObj.hex }}>NRL_2026</span>
+            <span className="font-mono font-black" style={{ color: activeThemeObj.hex }}>NRL_2026</span>
           </div>
         </div>
       )}
 
-      {/* Top Banner Indicator */}
+      {/* Top Left Status Badge */}
       {!hoveredPart && (
-        <div className="absolute top-4 left-4 pointer-events-none font-mono text-[11px] font-bold text-slate-900 bg-white px-3 py-1.5 rounded-lg border-2 border-slate-900 shadow-[3px_3px_0px_0px_#000] flex items-center gap-2">
+        <div className="absolute top-4 left-4 pointer-events-none font-mono text-[11px] font-black text-black bg-[#FEF08A] px-3 py-1.5 rounded-lg border-2 border-black shadow-[3px_3px_0px_0px_#000] flex items-center gap-2">
           <span className="w-2.5 h-2.5 rounded-full animate-ping" style={{ backgroundColor: activeThemeObj.hex }} />
-          <span>HOVER OVER ANY PART TO INSPECT</span>
+          <span>{isDonutTumbling ? 'DONUT 3D TUMBLE ACTIVE' : 'HOVER TO INSPECT'}</span>
         </div>
       )}
 
-      {/* Top Right Controls */}
-      <div className="absolute top-4 right-4 flex items-center gap-2">
+      {/* Top Right Controls HUD */}
+      <div className="absolute top-4 right-4 flex flex-wrap items-center gap-2 z-20">
+        {/* WASD DRIVE SIMULATOR TOGGLE */}
+        <button
+          onClick={() => {
+            soundManager.playClick();
+            const next = !isSimulatorActive;
+            setIsSimulatorActive(next);
+            if (next) {
+              setIsDonutTumbling(false);
+              setIsDriving(false);
+            }
+          }}
+          className={`px-3 py-1.5 rounded-lg font-mono text-[11px] font-black border-2 border-black transition-all flex items-center gap-1.5 ${
+            isSimulatorActive 
+              ? 'bg-[#BBF7D0] text-black shadow-[3px_3px_0px_0px_#000] animate-pulse' 
+              : 'bg-[#FFF9EB] text-black shadow-[2px_2px_0px_0px_#000] hover:bg-[#BBF7D0]'
+          }`}
+          title="Drive Robo Car with Keyboard (W, A, S, D, Space) or On-Screen Controls"
+        >
+          <Zap className="w-3.5 h-3.5 text-black" />
+          <span>{isSimulatorActive ? 'DRIVE MODE ACTIVE' : 'TEST DRIVE (WASD)'}</span>
+        </button>
+
+        {/* DONUT ANIMATION STYLE TOGGLE */}
+        <button
+          onClick={() => {
+            soundManager.playClick();
+            setIsSimulatorActive(false);
+            setIsDonutTumbling(!isDonutTumbling);
+          }}
+          className={`px-3 py-1.5 rounded-lg font-mono text-[11px] font-black border-2 border-black transition-all flex items-center gap-1.5 ${
+            isDonutTumbling && !isSimulatorActive
+              ? 'bg-[#FEF08A] text-black shadow-[3px_3px_0px_0px_#000]' 
+              : 'bg-[#FFF9EB] text-black shadow-[2px_2px_0px_0px_#000] hover:bg-[#FEF08A]'
+          }`}
+          title="Toggle Donut-Style Multi-Axis 3D Tumbling Animation"
+        >
+          <Sparkles className="w-3.5 h-3.5 text-black" />
+          <span>DONUT TUMBLE</span>
+        </button>
+
+        {/* CAD Wireframe Toggle */}
         <button
           onClick={() => {
             soundManager.playClick();
             setWireframeMode(!wireframeMode);
           }}
-          className={`px-3 py-1.5 rounded-lg font-mono text-[11px] font-black border-2 border-slate-900 transition-all ${
+          className={`px-3 py-1.5 rounded-lg font-mono text-[11px] font-black border-2 border-black transition-all ${
             wireframeMode 
-              ? 'bg-amber-300 text-slate-950 shadow-[3px_3px_0px_0px_#000]' 
-              : 'bg-white text-slate-900 shadow-[2px_2px_0px_0px_#000] hover:bg-slate-100'
+              ? 'bg-[#FEF08A] text-black shadow-[3px_3px_0px_0px_#000]' 
+              : 'bg-[#FFF9EB] text-black shadow-[2px_2px_0px_0px_#000] hover:bg-[#FEF08A]'
           }`}
         >
           {wireframeMode ? 'SOLID' : 'CAD WIREFRAME'}
         </button>
 
+        {/* 4WD Wheels Drive Test */}
         <button
           onClick={() => {
             soundManager.playClick();
             setIsDriving(!isDriving);
           }}
-          className={`p-2 rounded-lg border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] transition-all ${
-            isDriving ? 'bg-emerald-300 text-slate-950' : 'bg-white text-slate-900 hover:bg-slate-100'
+          className={`p-2 rounded-lg border-2 border-black shadow-[2px_2px_0px_0px_#000] transition-all ${
+            isDriving ? 'bg-emerald-300 text-black' : 'bg-[#FFF9EB] text-black hover:bg-[#FEF08A]'
           }`}
           title={isDriving ? 'Stop Motors' : 'Spin 4WD Wheels'}
         >
-          {isDriving ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 fill-slate-900" />}
+          {isDriving ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 fill-black" />}
         </button>
       </div>
 
+      {/* WASD TELEMETRY & ON-SCREEN GAMEPAD OVERLAY */}
+      {isSimulatorActive && (
+        <>
+          {/* Live Telemetry Speedometer Gauge (Bottom-Left) */}
+          <div className="absolute bottom-14 left-4 z-20 p-3 rounded-xl border-3 border-black bg-[#FEF08A] shadow-[4px_4px_0px_0px_#000] font-mono text-black space-y-1">
+            <div className="text-[10px] font-black flex items-center justify-between gap-4 border-b border-black pb-1">
+              <span>REAL-TIME 4WD TELEMETRY</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
+            </div>
+            <div className="flex items-baseline gap-2">
+              <span className="font-['Orbitron'] text-2xl font-black">
+                {Math.abs(simSpeed).toFixed(1)}
+              </span>
+              <span className="text-xs font-bold">KM/H</span>
+              <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-black text-[#FEF08A] ml-auto">
+                {simSpeed > 0.5 ? 'FORWARD' : simSpeed < -0.5 ? 'REVERSE' : 'IDLE'}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-[10px] font-bold text-slate-800 pt-1">
+              <div>RPM: {Math.round(Math.abs(simSpeed) * 85)}</div>
+              <div>BATT: 12.4V</div>
+            </div>
+          </div>
+
+          {/* On-Screen Tactile D-Pad Controls (Bottom-Right) */}
+          <div className="absolute bottom-14 right-4 z-20 flex flex-col items-center gap-1.5 p-3 rounded-2xl border-3 border-black bg-[#FFF9EB] shadow-[4px_4px_0px_0px_#000]">
+            <span className="font-mono text-[9px] font-black uppercase text-black">
+              WASD / ON-SCREEN CONTROLS
+            </span>
+            <button
+              onMouseDown={() => { simControlsRef.current.fwd = true; }}
+              onMouseUp={() => { simControlsRef.current.fwd = false; }}
+              onTouchStart={() => { simControlsRef.current.fwd = true; }}
+              onTouchEnd={() => { simControlsRef.current.fwd = false; }}
+              className="w-10 h-10 rounded-lg border-2 border-black bg-[#FEF08A] font-black text-xs shadow-[2px_2px_0px_0px_#000] active:translate-y-0.5"
+            >
+              W
+            </button>
+            <div className="flex items-center gap-1.5">
+              <button
+                onMouseDown={() => { simControlsRef.current.left = true; }}
+                onMouseUp={() => { simControlsRef.current.left = false; }}
+                onTouchStart={() => { simControlsRef.current.left = true; }}
+                onTouchEnd={() => { simControlsRef.current.left = false; }}
+                className="w-10 h-10 rounded-lg border-2 border-black bg-[#FEF08A] font-black text-xs shadow-[2px_2px_0px_0px_#000] active:translate-y-0.5"
+              >
+                A
+              </button>
+              <button
+                onMouseDown={() => { simControlsRef.current.bwd = true; }}
+                onMouseUp={() => { simControlsRef.current.bwd = false; }}
+                onTouchStart={() => { simControlsRef.current.bwd = true; }}
+                onTouchEnd={() => { simControlsRef.current.bwd = false; }}
+                className="w-10 h-10 rounded-lg border-2 border-black bg-[#FEF08A] font-black text-xs shadow-[2px_2px_0px_0px_#000] active:translate-y-0.5"
+              >
+                S
+              </button>
+              <button
+                onMouseDown={() => { simControlsRef.current.right = true; }}
+                onMouseUp={() => { simControlsRef.current.right = false; }}
+                onTouchStart={() => { simControlsRef.current.right = true; }}
+                onTouchEnd={() => { simControlsRef.current.right = false; }}
+                className="w-10 h-10 rounded-lg border-2 border-black bg-[#FEF08A] font-black text-xs shadow-[2px_2px_0px_0px_#000] active:translate-y-0.5"
+              >
+                D
+              </button>
+            </div>
+            <button
+              onClick={() => {
+                simControlsRef.current.claw = !simControlsRef.current.claw;
+                setSimClawClosed(simControlsRef.current.claw);
+                soundManager.playClick();
+              }}
+              className={`w-full py-1 px-2 rounded-lg border-2 border-black font-mono text-[10px] font-black shadow-[2px_2px_0px_0px_#000] transition-colors ${
+                simClawClosed ? 'bg-[#FECDD3] text-black' : 'bg-[#BAE6FD] text-black'
+              }`}
+            >
+              {simClawClosed ? 'CLAW: CLAMPED' : 'CLAW: OPEN (SPACE)'}
+            </button>
+          </div>
+        </>
+      )}
+
       {/* Bottom Bar Instruction */}
-      <div className="p-3 bg-white border-t-2 border-slate-900 flex items-center justify-between font-mono text-xs text-slate-800">
-        <div className="flex items-center gap-2 font-semibold">
-          <Info className="w-4 h-4 text-slate-900" />
-          <span>Move cursor over the robotic claw, white wheels, HEXA hub, or acrylic deck to inspect.</span>
+      <div className="p-3 bg-[#FFF9EB] border-t-2 border-black flex items-center justify-between font-mono text-xs text-black">
+        <div className="flex items-center gap-2 font-bold">
+          <Info className="w-4 h-4 text-black" />
+          <span>
+            {isSimulatorActive
+              ? 'Use W, A, S, D keys to steer & accelerate; Space to actuate gripper claw.'
+              : 'Multi-axis 3D tumble, levitation floating & telemetry inspection.'}
+          </span>
         </div>
-        <div className="text-[11px] hidden sm:flex items-center gap-1.5 font-bold text-slate-900">
+        <div className="text-[11px] hidden sm:flex items-center gap-1.5 font-black text-black">
           <RotateCw className="w-3.5 h-3.5" />
-          <span>DRAG 360°</span>
+          <span>DRAG 360° TO ROTATE CAMERA</span>
         </div>
       </div>
     </div>

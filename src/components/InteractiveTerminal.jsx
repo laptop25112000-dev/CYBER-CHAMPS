@@ -186,18 +186,18 @@ rtt min/avg/max = 0.028/0.030/0.032 ms`
   };
 
   return (
-    <div className="w-full rounded-2xl bg-slate-950 border-3 sm:border-4 border-slate-900 overflow-hidden shadow-[8px_8px_0px_0px_#000]">
+    <div className="w-full rounded-2xl bg-slate-950 border-3 sm:border-4 border-black overflow-hidden shadow-[8px_8px_0px_0px_#000]">
       {/* Titlebar */}
-      <div className="flex items-center justify-between px-4 py-3 bg-slate-900 border-b-2 sm:border-b-3 border-slate-900">
+      <div className="flex items-center justify-between px-4 py-3 bg-black border-b-2 sm:border-b-3 border-black">
         <div className="flex items-center gap-2">
-          <div className="w-3.5 h-3.5 rounded-full bg-rose-500 border border-slate-950" />
-          <div className="w-3.5 h-3.5 rounded-full bg-amber-400 border border-slate-950" />
-          <div className="w-3.5 h-3.5 rounded-full bg-emerald-400 border border-slate-950" />
+          <div className="w-3.5 h-3.5 rounded-full bg-rose-500 border border-black" />
+          <div className="w-3.5 h-3.5 rounded-full bg-amber-400 border border-black" />
+          <div className="w-3.5 h-3.5 rounded-full bg-emerald-400 border border-black" />
           <span className="font-mono text-xs font-bold text-slate-200 ml-2">
             bash - team@cyber-champs:delhi-regional (tty1)
           </span>
         </div>
-        <div className="font-mono text-[10px] font-black text-slate-950 bg-cyan-400 px-2 py-0.5 rounded border border-slate-900 shadow-[1px_1px_0px_0px_#000]">
+        <div className="font-mono text-[10px] font-black text-black bg-cyan-400 px-2 py-0.5 rounded border border-black shadow-[1px_1px_0px_0px_#000]">
           DELHI_REGIONAL_TERMINAL
         </div>
       </div>
@@ -224,19 +224,19 @@ rtt min/avg/max = 0.028/0.030/0.032 ms`
       </div>
 
       {/* Interactive Input Prompt */}
-      <div className="flex items-center px-4 py-3 bg-slate-900 border-t-2 sm:border-t-3 border-slate-900">
+      <div className="flex items-center px-4 py-3 bg-black border-t-2 sm:border-t-3 border-black">
         <span className="font-mono text-cyan-400 font-black mr-2 text-sm">$</span>
         <input
           type="text"
           value={inputVal}
           onChange={(e) => setInputVal(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Type command here... (try: team, help, cat mayank, win)"
+          placeholder="Type command here... (try: team, help, car, win)"
           className="flex-1 bg-transparent font-mono text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none"
         />
         <button
           onClick={() => handleCommand(inputVal)}
-          className="px-3 py-1.5 rounded-lg bg-cyan-400 text-slate-950 font-mono text-xs font-black border-2 border-slate-900 shadow-[2px_2px_0px_0px_#000] hover:bg-cyan-300 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-1"
+          className="px-3 py-1.5 rounded-lg bg-cyan-400 text-black font-mono text-xs font-black border-2 border-black shadow-[2px_2px_0px_0px_#000] hover:bg-cyan-300 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-1"
         >
           <CornerDownLeft className="w-3.5 h-3.5" />
           EXEC

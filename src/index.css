@@ -2,9 +2,16 @@
 
 @layer base {
   :root {
-    --font-heading: 'Orbitron', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-body: 'Rajdhani', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
+    --fg: #171717;
+    --fg-soft: #6B6B6B;
+    --fg-faint: #9E9E99;
+    --bg-main: #F7F7F4;
+    --bg-secondary: #ECECE7;
+    --border-main: #D8D8D3;
+    --accent-red: #F04438;
+    --font-heading: 'Geist', 'Inter', -apple-system, sans-serif;
+    --font-body: 'Inter', -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
   }
 
   * {
@@ -12,63 +19,163 @@
     scroll-behavior: smooth;
   }
 
+  html {
+    -webkit-text-size-adjust: 100%;
+    background-color: var(--bg-main);
+    color: var(--fg);
+  }
+
   body {
     margin: 0;
     padding: 0;
     font-family: var(--font-body);
-    font-size: 1.05rem;
+    font-size: 1rem;
     line-height: 1.6;
     overflow-x: hidden;
-    background-color: #f8fafc;
-    color: #0f172a;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    background-color: var(--bg-main);
+    color: var(--fg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+}
+
+/* Hairline Scroll Progress Meter */
+.meter {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  height: 3px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: #000000;
+  opacity: 1;
+  pointer-events: none;
+}
+
+/* Boot Preloader */
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: var(--shade);
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  letter-spacing: .08em;
+  font-weight: 800;
+  transition: opacity .4s var(--ease), visibility .4s var(--ease);
+}
+.boot.done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.boot .bar {
+  width: 220px;
+  height: 6px;
+  border-radius: 999px;
+  background: #00000020;
+  border: 1.5px solid #000000;
+  overflow: hidden;
+  position: relative;
+}
+.boot .bar i {
+  position: absolute;
+  inset: 0;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: #000000;
+  transition: transform .12s linear;
+}
+
+/* Neobrutalist Tactile Pill Buttons */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 0 24px;
+  border-radius: 999px;
+  background: #000000;
+  color: #FAF5E6;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -.008em;
+  text-decoration: none;
+  white-space: nowrap;
+  opacity: 1;
+  border: 2.5px solid #000000;
+  box-shadow: 4px 4px 0px 0px #000000;
+  -webkit-text-fill-color: #FAF5E6;
+  transition: transform .15s ease-out, box-shadow .15s ease-out, background .15s ease-out;
+}
+.pill:hover, .pill:focus-visible {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px #000000;
+  background: #FEF08A;
+  color: #000000;
+  -webkit-text-fill-color: #000000;
+}
+.pill:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px 0px #000000;
 }
 
 /* Custom Scrollbar - Neobrutalist */
 ::-webkit-scrollbar {
-  width: 9px;
+  width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-left: 2px solid #0f172a;
+  background: #FAF5E6;
+  border-left: 2.5px solid #000000;
 }
 ::-webkit-scrollbar-thumb {
-  background: #0f172a;
-  border-radius: 0px;
+  background: #000000;
+  border: 1px solid #FAF5E6;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #1e293b;
 }
 
-/* Neobrutalist Core Utilities */
+/* Neobrutalist Core Utilities - NEVER WHITE */
 .neo-box {
-  background-color: #ffffff;
-  border: 2px solid #0f172a;
-  box-shadow: 4px 4px 0px 0px #0f172a;
+  background-color: #FFF9EB;
+  border: 3px solid #000000;
+  box-shadow: 4px 4px 0px 0px #000000;
+  color: #000000;
   transition: all 0.15s ease-out;
 }
 
 .neo-box-lg {
-  background-color: #ffffff;
-  border: 3px solid #0f172a;
-  box-shadow: 6px 6px 0px 0px #0f172a;
+  background-color: #FFF9EB;
+  border: 3.5px solid #000000;
+  box-shadow: 6px 6px 0px 0px #000000;
+  color: #000000;
   transition: all 0.15s ease-out;
 }
 
 .neo-box-interactive {
-  background-color: #ffffff;
-  border: 2px solid #0f172a;
-  box-shadow: 4px 4px 0px 0px #0f172a;
+  background-color: #FFF9EB;
+  border: 3px solid #000000;
+  box-shadow: 4px 4px 0px 0px #000000;
+  color: #000000;
   transition: all 0.15s ease-out;
 }
 .neo-box-interactive:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px 0px #0f172a;
+  box-shadow: 6px 6px 0px 0px #000000;
 }
 .neo-box-interactive:active {
   transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px 0px #0f172a;
+  box-shadow: 2px 2px 0px 0px #000000;
 }
 
 .neo-btn {
@@ -76,40 +183,90 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono);
-  font-weight: 700;
-  border: 2px solid #0f172a;
-  box-shadow: 3px 3px 0px 0px #0f172a;
+  font-weight: 800;
+  border: 2.5px solid #000000;
+  box-shadow: 3px 3px 0px 0px #000000;
   transition: all 0.12s ease-out;
   cursor: pointer;
 }
 .neo-btn:hover {
   transform: translate(-1.5px, -1.5px);
-  box-shadow: 4.5px 4.5px 0px 0px #0f172a;
+  box-shadow: 4.5px 4.5px 0px 0px #000000;
 }
 .neo-btn:active {
   transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px 0px #0f172a;
+  box-shadow: 1px 1px 0px 0px #000000;
 }
 
 .neo-badge {
   display: inline-flex;
   align-items: center;
   font-family: var(--font-mono);
-  font-weight: 700;
-  border: 1.5px solid #0f172a;
-  box-shadow: 2px 2px 0px 0px #0f172a;
+  font-weight: 900;
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0px 0px #000000;
 }
 
-/* Neobrutalist dot grid pattern */
-.neo-grid-dots {
-  background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
-  background-size: 24px 24px;
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
 }
 
-/* Subtle architectural graph lines */
-.neo-grid-lines {
-  background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, rgba(15, 23, 42, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+/* MotionSites Signature Animations */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.03); }
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 6s ease infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2.4s infinite;
+}
+
+.animate-float-gentle {
+  animation: float-gentle 4s ease-in-out infinite;
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+/* Motion Card Glare and Glow */
+.motion-glow-border {
+  position: relative;
+}
+.motion-glow-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(254, 240, 138, 0.6), transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.motion-glow-border:hover::before {
+  opacity: 1;
+}
+
