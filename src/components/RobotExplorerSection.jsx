@@ -245,7 +245,7 @@ export default function RobotExplorerSection() {
                 }}
               >
                 <img 
-                  src="./onshape-robot-cad.png" 
+                  src={`${import.meta.env.BASE_URL}onshape-robot-cad.png`}
                   alt="CYBER CHAMPS robot CAD model" 
                   className="w-full h-full object-contain filter drop-shadow-md"
                 />

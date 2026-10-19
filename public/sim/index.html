@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HYPERDRIVE Simulator · Overdrive 009</title>
+<meta name="description" content="Physics-accurate match simulator for the NRL 2026 game HYPERDRIVE: real robot CAD, the full 12 x 12 ft field, four robots and live scoring. Built by team Overdrive 009.">
+<meta name="theme-color" content="#06080c">
+<meta property="og:title" content="HYPERDRIVE Simulator by Overdrive 009">
+<meta property="og:description" content="Drive four robots on the full NRL 2026 HYPERDRIVE field with real physics and live scoring.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2306080c'/%3E%3Cpath d='M9 8v16M23 8v16M9 16h14' stroke='%23ffffff' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<script type="importmap">{ "imports": { "three": "./lib/three.module.js" } }</script>
+<script src="lib/supabase.umd.js" defer></script>
+</head>
+<body>
+<div id="view"></div>
+
+<!-- ======================================================== MAIN MENU -->
+<section id="menu" class="hidden">
+  <header class="menu-top">
+    <div class="mark"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#161b24"/><path d="M9 8v16M23 8v16M9 16h14" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/></svg><span class="mark-name">HYPERDRIVE</span><span class="mark-by">by <b>OVERDRIVE</b> 009</span></div>
+    <nav class="menu-nav">
+      <button class="nav-btn" data-act="howto" title="How to play"><span data-icon="book"></span><span class="lbl">How to play</span></button>
+      <button class="nav-btn" data-act="leaderboard" title="Leaderboard"><span data-icon="trophy"></span><span class="lbl">Leaderboard</span></button>
+      <button class="nav-btn" data-act="settings" title="Settings"><span data-icon="sliders"></span><span class="lbl">Settings</span></button>
+      <div id="menu-user"></div>
+    </nav>
+  </header>
+  <div class="menu-main">
+    <div class="hero">
+      <div class="kicker">NRL 2026 · Simulation game</div>
+      <h1 class="logo">HYPER<span>DRIVE</span></h1>
+      <p class="tagline">Drive a robot, stack CORE rings on poles and outscore the other squad in 2:30. Play solo, with friends on one keyboard, or online.</p>
+      <div class="modes">
+        <button class="mode primary" data-act="play"><span class="mi"><span data-icon="play"></span></span><span class="mt"><b>Play match</b><small>2:30 match · up to 4 drivers on this computer</small></span><span class="go"><span data-icon="chevron"></span></span></button>
+        <button class="mode" data-act="online"><span class="mi"><span data-icon="globe"></span></span><span class="mt"><b>Play online</b><small>Every driver on their own laptop</small></span><span class="go"><span data-icon="chevron"></span></span></button>
+        <button class="mode" data-act="practice"><span class="mi"><span data-icon="target"></span></span><span class="mt"><b>Practice</b><small>No clock · learn the controls</small></span><span class="go"><span data-icon="chevron"></span></span></button>
+      </div>
+      <button class="lnk learn" data-act="learn">New here? Learn to play in two minutes</button>
+      <div id="menu-account" class="acct-line"></div>
+    </div>
+  </div>
+  <footer class="menu-foot">
+    <span>Built by team <b class="team-name">OVERDRIVE 009</b> · <button class="lnk" data-act="privacy">Privacy &amp; data</button></span>
+    <span>Fan-made · not affiliated with the National Robotics League</span>
+  </footer>
+</section>
+
+<!-- ======================================================== IN-GAME HUD -->
+<section id="hud" class="hidden">
+  <div class="hud-tl">
+    <button class="hud-btn" id="btn-pause" title="Menu (Esc)"><span data-icon="menu"></span></button>
+    <button class="hud-btn" id="btn-cam" title="Camera (C)"><span data-icon="video"></span><span class="lbl" id="cam-label">Driver station</span></button>
+  </div>
+  <div class="hud-tr">
+    <button class="hud-btn net-pill hidden" id="net-pill" title="Online room"></button>
+  </div>
+
+  <!-- one slim broadcast scoreboard: score · clock · score, STARBURST progress as an underline, STAR MAP as pips -->
+  <div id="scorebar" role="button" tabindex="0" aria-expanded="false" aria-controls="details" title="Score breakdown (click, or hold Tab)">
+    <div class="sb-side red" id="sbt-red"><span class="sb-name">RED</span><span class="sb-score" id="score-red">0</span><i class="sb-prog"><b id="prog-red"></b></i></div>
+    <div class="sb-mid"><div id="clock">2:30</div><div id="phase">Pre-match</div><div class="sb-map" id="starmap"></div></div>
+    <div class="sb-side blue" id="sbt-blue"><span class="sb-score" id="score-blue">0</span><span class="sb-name">BLUE</span><i class="sb-prog"><b id="prog-blue"></b></i></div>
+  </div>
+
+  <div id="feed"></div>
+  <div id="banner"></div>
+  <div id="details" class="card hidden"></div>
+  <div id="center"></div>
+  <div id="coach" class="hidden" role="region" aria-label="Tutorial" aria-live="polite"></div>
+
+  <div class="dock red" id="dock-red">
+    <div class="hp" id="hp-red"></div>
+    <div class="rcards" id="rc-red"></div>
+  </div>
+  <div class="dock blue" id="dock-blue">
+    <div class="hp" id="hp-blue"></div>
+    <div class="rcards" id="rc-blue"></div>
+  </div>
+
+  <div id="touch" class="hidden"></div>
+</section>
+
+<div id="modal-root"></div>
+<div id="toast"></div>
+
+<div id="loading">
+  <div class="load-box">
+    <h1 class="logo">HYPER<span>DRIVE</span></h1>
+    <div class="load-team">by <b>OVERDRIVE</b> 009</div>
+    <div class="load-bar"><i id="load-bar"></i></div>
+    <div id="loading-status">Loading…</div>
+  </div>
+</div>
+
+<script type="module" src="./js/main.js"></script>
+</body>
+</html>

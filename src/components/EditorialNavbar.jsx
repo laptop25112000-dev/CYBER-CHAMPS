@@ -99,6 +99,14 @@ export default function EditorialNavbar() {
           </a>
 
           <a
+            href={`${import.meta.env.BASE_URL}tearable.html`}
+            className="px-3.5 py-1.5 border border-[#D8D8D3] bg-white text-[#171717] hover:border-[#171717] font-mono text-[14px] uppercase tracking-wider transition-all flex items-center gap-1.5 rounded-sm"
+            title="Open Interactive Tearable Notebook"
+          >
+            <span>Tearable Dossier</span>
+          </a>
+
+          <a
             href="https://cad.onshape.com/documents/b9775324604f1e712d8677c5/w/42798f7711b0b207da9310d3/e/2e8391d232133dd053e4cffb"
             target="_blank"
             rel="noopener noreferrer"
@@ -151,6 +159,13 @@ export default function EditorialNavbar() {
             })}
 
             <div className="pt-3 border-t border-[#D8D8D3] flex flex-col gap-2">
+              <a
+                href={`${import.meta.env.BASE_URL}tearable.html`}
+                className="p-3 text-[15px] font-mono bg-[#ECECE7] text-[#171717] font-semibold flex items-center justify-between rounded-sm"
+              >
+                <span>OPEN TEARABLE DOSSIER NOTEBOOK</span>
+                <ArrowRight className="w-4 h-4 text-[#F04438]" />
+              </a>
               <a
                 href="#team"
                 onClick={(e) => handleLinkClick(e, '#team')}

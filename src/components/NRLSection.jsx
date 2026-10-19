@@ -180,7 +180,7 @@ export default function NRLSection({ onSelectPart }) {
               className="relative rounded-xl overflow-hidden border-3 border-black cursor-pointer shadow-[4px_4px_0px_0px_#000] hover:shadow-[6px_6px_0px_0px_#000] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all bg-[#FAF5E6]"
             >
               <img
-                src="./robo_kit.png"
+                src={`${import.meta.env.BASE_URL}robo_kit.png`}
                 alt="National Robotics League Robot Kit Poster"
                 className="w-full h-72 sm:h-80 object-cover object-top filter brightness-98 group-hover:brightness-105 transition-all group-hover:scale-102 duration-300"
               />
@@ -276,7 +276,7 @@ export default function NRLSection({ onSelectPart }) {
 
             <div className="p-4 max-h-[80vh] overflow-y-auto flex items-center justify-center bg-[#FAF5E6]">
               <img
-                src="./robo_kit.png"
+                src={`${import.meta.env.BASE_URL}robo_kit.png`}
                 alt="National Robotics League Robot Kit Poster Full"
                 className="w-full h-auto rounded-lg object-contain border-2 border-black shadow-[4px_4px_0px_0px_#000]"
               />

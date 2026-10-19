@@ -18,25 +18,25 @@ export default function HowItWorksSection({ onSelectComponent }) {
     {
       label: "HexaLINK 2.4GHz Radio Link",
       tag: "INPUT CONTROL",
-      diagram: "/onshape-robot-cad.png",
+      diagram: `${import.meta.env.BASE_URL}onshape-robot-cad.png`,
       caption: "Driver transmits steering & claw commands via the paired wireless controller."
     },
     {
       label: "HEXA Dual-Core 240MHz MCU",
       tag: "COMPUTATION & SAFETY",
-      diagram: "/onshape-robot-cad.png",
+      diagram: `${import.meta.env.BASE_URL}onshape-robot-cad.png`,
       caption: "Onboard processor evaluates motor acceleration curves & safety watchdog in <5ms."
     },
     {
       label: "4WD Gearmotors & Actuators",
       tag: "PHYSICAL POWER",
-      diagram: "./onshape-robot-cad.png",
+      diagram: `${import.meta.env.BASE_URL}onshape-robot-cad.png`,
       caption: "Dual H-bridge MOSFETs pulse high-amperage current to wheels and the grabber claw."
     },
     {
       label: "Poles Scored & Space Station Dock",
       tag: "ARENA EXECUTION",
-      diagram: "./onshape-robot-cad.png",
+      diagram: `${import.meta.env.BASE_URL}onshape-robot-cad.png`,
       caption: "Robot scores rings on High/Star Poles and climbs the Space Station for 15 End Game pts."
     }
   ];

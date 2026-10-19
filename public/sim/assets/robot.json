@@ -1,0 +1,658 @@
+{
+ "source": "NRL Robot Final Assembly.step (Onshape export), fasteners removed and meshes simplified",
+ "frame": "meters; +X forward, +Y up, +Z right; origin on ground midway between axles",
+ "pivots": {
+  "armLower": [
+   0.0108,
+   0.0536,
+   0
+  ],
+  "armUpper": [
+   0.0105,
+   0.0836,
+   0
+  ],
+  "armLowerDistal": [
+   0.12830000000000003,
+   0.0991,
+   0
+  ],
+  "armUpperDistal": [
+   0.128,
+   0.1291,
+   0
+  ],
+  "wheelFL": [
+   0.0925,
+   0.0565,
+   -0.158
+  ],
+  "wheelFR": [
+   0.0925,
+   0.0565,
+   0.158
+  ],
+  "wheelRL": [
+   -0.0925,
+   0.0565,
+   -0.158
+  ],
+  "wheelRR": [
+   -0.0925,
+   0.0565,
+   0.158
+  ],
+  "gearL": [
+   0.164,
+   0.0991,
+   -0.0152
+  ],
+  "gearR": [
+   0.163,
+   0.0991,
+   0.017
+  ],
+  "holdPoint": [
+   0.236,
+   0.0991,
+   0.002
+  ]
+ },
+ "wheelRadius": 0.0565,
+ "armAngle0Deg": 21.168099470551677,
+ "armLinkLength": 0.12600198411136232,
+ "parts": [
+  {
+   "group": "chassis",
+   "color": [
+    0.6,
+    0.64,
+    0.86
+   ],
+   "names": [
+    "Connector Rod",
+    "Motor Driver MDD10A",
+    "QY603_inter_red.step-1/bouton001_2.step-1-solid1",
+    "QY603_inter_red.step-1/corps_2.step-1-solid1",
+    "Part 1"
+   ],
+   "pOff": 0,
+   "pLen": 33915,
+   "iOff": 67832,
+   "iLen": 14778,
+   "i16": true
+  },
+  {
+   "group": "end",
+   "color": [
+    0,
+    0,
+    0
+   ],
+   "names": [
+    "Parallelogram Spacer",
+    "Trapezoid Connector"
+   ],
+   "pOff": 97388,
+   "pLen": 8715,
+   "iOff": 114820,
+   "iLen": 3564,
+   "i16": true
+  },
+  {
+   "group": "armLower",
+   "color": [
+    0.82,
+    0.82,
+    0.82
+   ],
+   "names": [
+    "Arm-Link"
+   ],
+   "pOff": 121948,
+   "pLen": 5358,
+   "iOff": 132664,
+   "iLen": 3852,
+   "i16": true
+  },
+  {
+   "group": "chassis",
+   "color": [
+    1,
+    0.53,
+    0
+   ],
+   "names": [
+    "Spacer 11mm"
+   ],
+   "pOff": 140368,
+   "pLen": 756,
+   "iOff": 141880,
+   "iLen": 1512,
+   "i16": true
+  },
+  {
+   "group": "end",
+   "color": [
+    0.86,
+    0.86,
+    0.86
+   ],
+   "names": [
+    "Parallelogram Plate"
+   ],
+   "pOff": 144904,
+   "pLen": 2760,
+   "iOff": 150424,
+   "iLen": 3924,
+   "i16": true
+  },
+  {
+   "group": "armUpper",
+   "color": [
+    0.82,
+    0.82,
+    0.82
+   ],
+   "names": [
+    "Arm-Link"
+   ],
+   "pOff": 158272,
+   "pLen": 5358,
+   "iOff": 168988,
+   "iLen": 3852,
+   "i16": true
+  },
+  {
+   "group": "armLower",
+   "color": [
+    0,
+    0,
+    0
+   ],
+   "names": [
+    "Spacer Arm-Link"
+   ],
+   "pOff": 176692,
+   "pLen": 672,
+   "iOff": 178036,
+   "iLen": 960,
+   "i16": true
+  },
+  {
+   "group": "armUpper",
+   "color": [
+    0,
+    0,
+    0
+   ],
+   "names": [
+    "Spacer Arm-Link"
+   ],
+   "pOff": 179956,
+   "pLen": 672,
+   "iOff": 181300,
+   "iLen": 960,
+   "i16": true
+  },
+  {
+   "group": "armLower",
+   "color": [
+    1,
+    1,
+    1
+   ],
+   "names": [
+    "Servo Horn"
+   ],
+   "pOff": 183220,
+   "pLen": 1008,
+   "iOff": 185236,
+   "iLen": 1440,
+   "i16": true
+  },
+  {
+   "group": "chassis",
+   "color": [
+    0.42,
+    0.09,
+    0.5
+   ],
+   "names": [
+    "Servopivot spacer"
+   ],
+   "pOff": 188116,
+   "pLen": 252,
+   "iOff": 188620,
+   "iLen": 432,
+   "i16": true
+  },
+  {
+   "group": "chassis",
+   "color": [
+    0.86,
+    0.86,
+    0.86
+   ],
+   "names": [
+    "Servo Holder NRL-2",
+    "Side Plate for gripper",
+    "Triangular Plate"
+   ],
+   "pOff": 189484,
+   "pLen": 7470,
+   "iOff": 204424,
+   "iLen": 10650,
+   "i16": true
+  },
+  {
+   "group": "chassis",
+   "color": [
+    0.62,
+    0.71,
+    0.78
+   ],
+   "names": [
+    "Base Block",
+    "Battery Holder"
+   ],
+   "pOff": 225724,
+   "pLen": 42918,
+   "iOff": 311560,
+   "iLen": 17130,
+   "i16": true
+  },
+  {
+   "group": "chassis",
+   "color": [
+    0,
+    0,
+    0
+   ],
+   "names": [
+    "DC Motor Holder",
+    "Hexa Command Hub"
+   ],
+   "pOff": 345820,
+   "pLen": 53220,
+   "iOff": 452260,
+   "iLen": 20448,
+   "i16": true
+  },
+  {
+   "group": "chassis",
+   "color": [
+    0.32,
+    0.3,
+    0.24
+   ],
+   "names": [
+    "Drive Side Plate",
+    "DC Motor"
+   ],
+   "pOff": 493156,
+   "pLen": 12636,
+   "iOff": 518428,
+   "iLen": 13356,
+   "i16": true
+  },
+  {
+   "group": "wheelFR",
+   "color": [
+    0.6,
+    0.64,
+    0.86
+   ],
+   "names": [
+    "Part 1"
+   ],
+   "pOff": 545140,
+   "pLen": 936,
+   "iOff": 547012,
+   "iLen": 1314,
+   "i16": true
+  },
+  {
+   "group": "chassis",
+   "color": [
+    0.01,
+    0.9,
+    0.16
+   ],
+   "names": [
+    "Spacer7mm"
+   ],
+   "pOff": 549640,
+   "pLen": 1008,
+   "iOff": 551656,
+   "iLen": 2016,
+   "i16": true
+  },
+  {
+   "group": "chassis",
+   "color": [
+    0.82,
+    0.82,
+    0.82
+   ],
+   "names": [
+    "Drive Back",
+    "Drive Base"
+   ],
+   "pOff": 555688,
+   "pLen": 10656,
+   "iOff": 577000,
+   "iLen": 5820,
+   "i16": true
+  },
+  {
+   "group": "wheelRR",
+   "color": [
+    0.6,
+    0.64,
+    0.86
+   ],
+   "names": [
+    "Part 1"
+   ],
+   "pOff": 588640,
+   "pLen": 936,
+   "iOff": 590512,
+   "iLen": 1314,
+   "i16": true
+  },
+  {
+   "group": "chassis",
+   "color": [
+    0,
+    0,
+    1
+   ],
+   "names": [
+    "Squad Marker Right",
+    "Squad Marker Left"
+   ],
+   "pOff": 593140,
+   "pLen": 13218,
+   "iOff": 619576,
+   "iLen": 4764,
+   "i16": true
+  },
+  {
+   "group": "wheelRL",
+   "color": [
+    0.6,
+    0.64,
+    0.86
+   ],
+   "names": [
+    "Part 1"
+   ],
+   "pOff": 629104,
+   "pLen": 936,
+   "iOff": 630976,
+   "iLen": 1314,
+   "i16": true
+  },
+  {
+   "group": "chassis",
+   "color": [
+    0.94,
+    0.24,
+    0
+   ],
+   "names": [
+    "Battery"
+   ],
+   "pOff": 633604,
+   "pLen": 24,
+   "iOff": 633652,
+   "iLen": 36,
+   "i16": true
+  },
+  {
+   "group": "chassis",
+   "color": [
+    0.72,
+    0.81,
+    1
+   ],
+   "names": [
+    "Top Plate"
+   ],
+   "pOff": 633724,
+   "pLen": 4050,
+   "iOff": 641824,
+   "iLen": 2952,
+   "i16": true
+  },
+  {
+   "group": "chassis",
+   "color": [
+    0.05,
+    0.05,
+    0.05
+   ],
+   "names": [
+    "Servo MG996R"
+   ],
+   "pOff": 647728,
+   "pLen": 3732,
+   "iOff": 655192,
+   "iLen": 2604,
+   "i16": true
+  },
+  {
+   "group": "wheelFL",
+   "color": [
+    0.6,
+    0.64,
+    0.86
+   ],
+   "names": [
+    "Part 1"
+   ],
+   "pOff": 660400,
+   "pLen": 936,
+   "iOff": 662272,
+   "iLen": 1314,
+   "i16": true
+  },
+  {
+   "group": "end",
+   "color": [
+    0.01,
+    0.08,
+    0.43
+   ],
+   "names": [
+    "Middle Support",
+    "Servo Motor"
+   ],
+   "pOff": 664900,
+   "pLen": 12207,
+   "iOff": 689316,
+   "iLen": 5844,
+   "i16": true
+  },
+  {
+   "group": "fingerR",
+   "color": [
+    0.13,
+    0.12,
+    0.1
+   ],
+   "names": [
+    "Gripper Finger R"
+   ],
+   "pOff": 701004,
+   "pLen": 9804,
+   "iOff": 720612,
+   "iLen": 3540,
+   "i16": true
+  },
+  {
+   "group": "end",
+   "color": [
+    0.1,
+    0.56,
+    0.51
+   ],
+   "names": [
+    "Spacer20mm"
+   ],
+   "pOff": 727692,
+   "pLen": 504,
+   "iOff": 728700,
+   "iLen": 864,
+   "i16": true
+  },
+  {
+   "group": "end",
+   "color": [
+    0.94,
+    0.24,
+    0
+   ],
+   "names": [
+    "Spacer13mm"
+   ],
+   "pOff": 730428,
+   "pLen": 504,
+   "iOff": 731436,
+   "iLen": 1008,
+   "i16": true
+  },
+  {
+   "group": "gearL",
+   "color": [
+    0.13,
+    0.12,
+    0.1
+   ],
+   "names": [
+    "Driving Helical Gear"
+   ],
+   "pOff": 733452,
+   "pLen": 20391,
+   "iOff": 774236,
+   "iLen": 7428,
+   "i16": true
+  },
+  {
+   "group": "end",
+   "color": [
+    0.01,
+    0.9,
+    0.16
+   ],
+   "names": [
+    "Spacer7mm"
+   ],
+   "pOff": 789092,
+   "pLen": 1008,
+   "iOff": 791108,
+   "iLen": 2016,
+   "i16": true
+  },
+  {
+   "group": "gearL",
+   "color": [
+    0.6,
+    0.56,
+    0.47
+   ],
+   "names": [
+    "Servo Horn"
+   ],
+   "pOff": 795140,
+   "pLen": 1008,
+   "iOff": 797156,
+   "iLen": 1440,
+   "i16": true
+  },
+  {
+   "group": "end",
+   "color": [
+    0.82,
+    0.82,
+    0.82
+   ],
+   "names": [
+    "Servo Holder",
+    "Gripper Base"
+   ],
+   "pOff": 800036,
+   "pLen": 13452,
+   "iOff": 826940,
+   "iLen": 6660,
+   "i16": true
+  },
+  {
+   "group": "linkL",
+   "color": [
+    0.13,
+    0.12,
+    0.1
+   ],
+   "names": [
+    "Gripper Connector Link"
+   ],
+   "pOff": 840260,
+   "pLen": 2133,
+   "iOff": 844528,
+   "iLen": 2994,
+   "i16": true
+  },
+  {
+   "group": "fingerL",
+   "color": [
+    0.13,
+    0.12,
+    0.1
+   ],
+   "names": [
+    "Gripper Finger L"
+   ],
+   "pOff": 850516,
+   "pLen": 7776,
+   "iOff": 866068,
+   "iLen": 2808,
+   "i16": true
+  },
+  {
+   "group": "gearR",
+   "color": [
+    0.13,
+    0.12,
+    0.1
+   ],
+   "names": [
+    "Follower Helical Gear"
+   ],
+   "pOff": 871684,
+   "pLen": 16806,
+   "iOff": 905296,
+   "iLen": 6048,
+   "i16": true
+  },
+  {
+   "group": "linkR",
+   "color": [
+    0.13,
+    0.12,
+    0.1
+   ],
+   "names": [
+    "Gripper Connector Link"
+   ],
+   "pOff": 917392,
+   "pLen": 2133,
+   "iOff": 921660,
+   "iLen": 2994,
+   "i16": true
+  }
+ ],
+ "format": "int16",
+ "posScale": 0.000015259254737998596
+}

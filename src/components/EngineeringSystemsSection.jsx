@@ -120,7 +120,7 @@ export default function EngineeringSystemsSection({ onSelectComponent }) {
           {/* Right Column: Visual Diagram / Component Overview */}
           <div className="lg:col-span-5 relative aspect-[4/3] rounded-2xl bg-[#F6F7F8] border border-[#E4E7EB] p-6 flex flex-col justify-center items-center text-center">
             <img 
-              src="/onshape-robot-cad.png" 
+              src={`${import.meta.env.BASE_URL}onshape-robot-cad.png`}
               alt="CYBER CHAMPS robot Onshape CAD architecture overview"
               className="w-full h-full object-contain filter drop-shadow-md"
             />

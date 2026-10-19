@@ -115,7 +115,7 @@ export default function EditorialHero({ onExploreRobot, onSeeHowItWorks }) {
           <div className="lg:col-span-6 xl:col-span-6">
             <div className="relative aspect-[16/11] xl:aspect-[16/10] max-h-[620px] w-full border border-[#D8D8D3] bg-[#ECECE7] p-6 sm:p-10 xl:p-12 flex items-center justify-center rounded-2xl overflow-hidden group shadow-sm">
               <img 
-                src="/onshape-robot-cad.png" 
+                src={`${import.meta.env.BASE_URL}onshape-robot-cad.png`}
                 alt="CYBER CHAMPS competition robot actual Onshape CAD model" 
                 className="w-full h-full object-contain filter drop-shadow-md transition-transform duration-500 group-hover:scale-102"
               />

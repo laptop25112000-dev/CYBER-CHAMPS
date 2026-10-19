@@ -164,7 +164,7 @@ export default function TearableNotebookApp() {
 
           {/* Link back to Main 3D Website */}
           <a
-            href="./index.html"
+            href={`${import.meta.env.BASE_URL}index.html`}
             className="px-3.5 py-2 rounded-xl border-2 border-black bg-[#BAE6FD] hover:bg-cyan-300 shadow-[2px_2px_0px_0px_#000] font-mono text-xs font-black text-black flex items-center gap-1.5 transition-transform active:translate-y-0.5"
             title="Return to the 3D scroll explosion site"
           >

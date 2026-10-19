@@ -27,7 +27,7 @@ export default function ExplodedCADScrubber({ onSelectPart }) {
 
   const getFramePath = (idx) => {
     const num = String(idx + 1).padStart(3, '0');
-    return `/car-frames/ezgif-frame-${num}.jpg`;
+    return `${import.meta.env.BASE_URL}car-frames/ezgif-frame-${num}.jpg`;
   };
 
   // Preload frames

@@ -54,7 +54,7 @@ export default function HyperdrivePracticeSimulator() {
     soundManager.playClick();
     if (iframeRef.current) {
       setSimStatus('loading');
-      iframeRef.current.src = '/sim-proxy/?mode=practice&t=' + Date.now();
+      iframeRef.current.src = `${import.meta.env.BASE_URL}sim/index.html?mode=practice&t=${Date.now()}`;
     }
   };
 
@@ -126,12 +126,12 @@ export default function HyperdrivePracticeSimulator() {
           </button>
 
           <a
-            href="https://hyperdrive-sim.vercel.app"
+            href={`${import.meta.env.BASE_URL}sim/index.html`}
             target="_blank"
             rel="noopener noreferrer"
             className="px-4 py-2 bg-[#F04438] hover:bg-[#D9382C] text-white font-mono text-[15px] font-bold rounded-lg flex items-center gap-2 transition-all shadow-sm"
           >
-            <span>LAUNCH EXTERNAL</span>
+            <span>LAUNCH FULLSCREEN</span>
             <ExternalLink className="w-4 h-4" />
           </a>
         </div>
@@ -140,10 +140,10 @@ export default function HyperdrivePracticeSimulator() {
       {/* Main Interactive WebGL Simulator Viewport */}
       <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] lg:aspect-[21/10] min-h-[500px] sm:min-h-[580px] bg-[#06080C] overflow-hidden">
         
-        {/* The Live Interactive Iframe via zero-restriction proxy */}
+        {/* The Live Interactive Iframe via self-hosted static simulator */}
         <iframe
           ref={iframeRef}
-          src="/sim-proxy/"
+          src={`${import.meta.env.BASE_URL}sim/index.html`}
           title="HYPERDRIVE Simulator - Practice Mode"
           className="w-full h-full border-0"
           allow="fullscreen; gamepad; accelerometer; gyroscope"

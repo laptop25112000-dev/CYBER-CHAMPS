@@ -37,7 +37,7 @@ export default function ExplodedPartMagnifierModal({ part, onClose, onSelectMemb
     if (!ctx) return;
 
     const img = new Image();
-    img.src = '/car-frames/ezgif-frame-300.jpg';
+    img.src = `${import.meta.env.BASE_URL}car-frames/ezgif-frame-300.jpg`;
 
     img.onload = () => {
       const cw = canvas.width;

@@ -101,7 +101,7 @@ export default function Navbar() {
 
           {/* Standalone Tearable Notebook Website Button */}
           <a
-            href="./tearable.html"
+            href={`${import.meta.env.BASE_URL}tearable.html`}
             className="neo-btn px-3.5 py-2 rounded-xl text-black font-mono text-xs font-black bg-[#BBF7D0] hover:bg-emerald-300 shadow-[3px_3px_0px_0px_#000] flex items-center gap-1.5"
             title="Open Separate Tearable UI Engineering Notebook Website"
           >
@@ -154,7 +154,7 @@ export default function Navbar() {
             VIEW ROBO CAR
           </a>
           <a
-            href="./tearable.html"
+            href={`${import.meta.env.BASE_URL}tearable.html`}
             className="block text-center px-4 py-2.5 rounded-lg border-2 border-black font-mono text-xs font-black bg-[#BBF7D0] text-black shadow-[3px_3px_0px_0px_#000] flex items-center justify-center gap-2"
           >
             <Scissors className="w-4 h-4 text-black" />

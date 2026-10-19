@@ -68,7 +68,7 @@ export default function HeroSection({ onExploreRobot, onSeeHowItWorks }) {
               
               {/* Actual Robot Photograph & Official Onshape CAD Model */}
               <img 
-                src="/onshape-robot-cad.png" 
+                src={`${import.meta.env.BASE_URL}onshape-robot-cad.png`}
                 alt="CYBER CHAMPS 4WD Battle Rover official CAD assembly" 
                 className="w-full h-full object-contain filter drop-shadow-xl transition-transform duration-500 group-hover:scale-105"
               />
