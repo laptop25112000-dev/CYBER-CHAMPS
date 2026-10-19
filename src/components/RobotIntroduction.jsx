@@ -34,7 +34,7 @@ export default function RobotIntroduction({ onExploreComponents }) {
           <div className="lg:col-span-7 relative">
             <div className="relative aspect-[16/10] sm:aspect-[16/9] rounded-2xl bg-white border border-[#E4E7EB] p-6 sm:p-8 flex items-center justify-center shadow-sm overflow-hidden group">
               <img 
-                src="/onshape-robot-cad.png" 
+                src="./onshape-robot-cad.png" 
                 alt="CYBER CHAMPS robot official Onshape CAD assembly"
                 className="w-full h-full object-contain filter drop-shadow-md transition-transform duration-500 group-hover:scale-102"
               />

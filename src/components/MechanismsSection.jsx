@@ -13,7 +13,7 @@ export default function MechanismsSection() {
       tag: '01 / CORE MANIPULATION',
       title: 'Articulated Scissor CORE Claw',
       shortRole: 'Picks up and threads 95mm rings onto arena poles.',
-      image: '/onshape-robot-cad.png',
+      image: './onshape-robot-cad.png',
       rule: 'Rule R1.7 & R5.2 Compliant',
       simple: {
         problem: 'During a match, rings are scattered flat on the foam arena floor. The robot needs to grab them securely and thread them down onto tall vertical poles without dropping them.',
@@ -41,7 +41,7 @@ export default function MechanismsSection() {
       tag: '02 / PAYLOAD TRANSPORT',
       title: 'Gravity-Assisted PAYLOAD Cargo Bay',
       shortRole: 'Transports team 3" cube & unlocks early Starburst Mode.',
-      image: '/onshape-robot-cad.png',
+      image: './onshape-robot-cad.png',
       rule: 'Rule R9.4 & R9.6 Compliant',
       simple: {
         problem: 'The official rules strictly ban using the ring claw to carry the team cube. The robot needs a completely separate way to carry the cube and release it into the scoring zone.',

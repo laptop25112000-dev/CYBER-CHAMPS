@@ -30,13 +30,13 @@ export default function HowItWorksSection({ onSelectComponent }) {
     {
       label: "4WD Gearmotors & Actuators",
       tag: "PHYSICAL POWER",
-      diagram: "/onshape-robot-cad.png",
+      diagram: "./onshape-robot-cad.png",
       caption: "Dual H-bridge MOSFETs pulse high-amperage current to wheels and the grabber claw."
     },
     {
       label: "Poles Scored & Space Station Dock",
       tag: "ARENA EXECUTION",
-      diagram: "/onshape-robot-cad.png",
+      diagram: "./onshape-robot-cad.png",
       caption: "Robot scores rings on High/Star Poles and climbs the Space Station for 15 End Game pts."
     }
   ];

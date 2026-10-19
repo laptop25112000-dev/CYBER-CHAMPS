@@ -65,7 +65,7 @@ export default function ScrollScrubbedStage({ onSelectPart, onSelectMember }) {
 
     const getFramePath = (idx) => {
       const num = String(idx + 1).padStart(3, '0');
-      return `/car-frames/ezgif-frame-${num}.jpg`;
+      return `${import.meta.env.BASE_URL}car-frames/ezgif-frame-${num}.jpg`;
     };
 
     // Draw frame to canvas preserving 16:9 aspect ratio (contain)

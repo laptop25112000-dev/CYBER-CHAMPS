@@ -45,8 +45,8 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
-        tearable: resolve(__dirname, 'tearable.html'),
+        main: resolve(import.meta.dirname, 'index.html'),
+        tearable: resolve(import.meta.dirname, 'tearable.html'),
       },
     },
   },
