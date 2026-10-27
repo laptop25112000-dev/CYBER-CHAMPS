@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import { soundManager } from '../utils/audio';
 import { buildRoboCar3DGroup } from '../utils/roboCar3DBuilder';
 import { ROBOT_COMPONENTS } from '../data/robotData';
 import { 
   RotateCw, ZoomIn, ZoomOut, Play, Pause, Layers, 
-  RotateCcw, Sparkles, ExternalLink, Compass, Shield
+  RotateCcw, Sparkles, ExternalLink, Compass, Shield, Download, Box, Check
 } from 'lucide-react';
 
 export default function Interactive3DCadViewer({
@@ -19,13 +22,17 @@ export default function Interactive3DCadViewer({
   const [isSpinningMotors, setIsSpinningMotors] = useState(false);
   const [hoveredPart, setHoveredPart] = useState(null);
   const [zoomLevel, setZoomLevel] = useState(100);
+  const [loading, setLoading] = useState(true);
+  const [loadProgress, setLoadProgress] = useState(15);
+  const [activeModelType, setActiveModelType] = useState('cad-glb'); // 'cad-glb' | 'rig'
+  const [copiedLink, setCopiedLink] = useState(false);
 
   // Three.js instances ref
   const threeRef = useRef({
     scene: null,
     camera: null,
     renderer: null,
-    carGroup: null,
+    robotRoot: null,
     wheels: [],
     armGroup: null,
     interactiveMeshes: [],
@@ -33,28 +40,28 @@ export default function Interactive3DCadViewer({
     isDragging: false,
     prevPointer: { x: 0, y: 0 },
     spherical: { radius: 7.2, theta: 0.8, phi: 1.15 },
-    targetLookAt: new THREE.Vector3(0, 0.4, 0),
-    currentLookAt: new THREE.Vector3(0, 0.4, 0),
-    defaultLookAt: new THREE.Vector3(0, 0.4, 0)
+    targetLookAt: new THREE.Vector3(0, 0.5, 0),
+    currentLookAt: new THREE.Vector3(0, 0.5, 0),
+    defaultLookAt: new THREE.Vector3(0, 0.5, 0)
   });
 
   // Mapping component IDs to 3D focus targets
   const getComponentTarget = useCallback((compId) => {
     switch (compId) {
       case 'claw-linkage':
-        return { lookAt: new THREE.Vector3(0, 0.9, 1.6), theta: 0.35, phi: 1.25, radius: 4.5 };
+        return { lookAt: new THREE.Vector3(0, 0.9, 1.4), theta: 0.35, phi: 1.25, radius: 4.5 };
       case 'cargo-bay':
         return { lookAt: new THREE.Vector3(0, 0.7, -1.2), theta: 2.8, phi: 1.2, radius: 4.8 };
       case 'hexa-pcb':
-        return { lookAt: new THREE.Vector3(0, 1.1, -0.2), theta: 0.6, phi: 0.75, radius: 4.2 };
+        return { lookAt: new THREE.Vector3(0, 1.0, -0.1), theta: 0.6, phi: 0.75, radius: 4.2 };
       case 'drivetrain-wheels':
       case 'gearmotors':
-        return { lookAt: new THREE.Vector3(1.4, 0.6, 0.0), theta: 1.55, phi: 1.35, radius: 4.8 };
+        return { lookAt: new THREE.Vector3(1.3, 0.5, 0.0), theta: 1.55, phi: 1.35, radius: 4.8 };
       case 'battery-system':
         return { lookAt: new THREE.Vector3(0, 0.5, -0.6), theta: 2.4, phi: 1.35, radius: 4.6 };
       case 'chassis-plates':
       default:
-        return { lookAt: new THREE.Vector3(0, 0.4, 0), theta: 0.8, phi: 1.15, radius: 7.2 };
+        return { lookAt: new THREE.Vector3(0, 0.5, 0), theta: 0.8, phi: 1.15, radius: 7.2 };
     }
   }, []);
 
@@ -79,7 +86,23 @@ export default function Interactive3DCadViewer({
     }
   }, [selectedCompId, getComponentTarget]);
 
-  // Main Three.js Scene Setup
+  // Handle wireframe changes dynamically across loaded meshes
+  useEffect(() => {
+    const t = threeRef.current;
+    if (t.robotRoot) {
+      t.robotRoot.traverse((child) => {
+        if (child.isMesh && child.material) {
+          if (Array.isArray(child.material)) {
+            child.material.forEach(m => { m.wireframe = wireframeMode; });
+          } else {
+            child.material.wireframe = wireframeMode;
+          }
+        }
+      });
+    }
+  }, [wireframeMode]);
+
+  // Main Three.js Scene Setup & Model Loading
   useEffect(() => {
     const container = mountRef.current;
     if (!container) return;
@@ -102,24 +125,12 @@ export default function Interactive3DCadViewer({
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.25;
     container.innerHTML = '';
     container.appendChild(renderer.domElement);
 
-    // Build the 3D Robot CAD Model
-    const interactiveMeshes = [];
-    const { carGroup, wheels, armGroup, led } = buildRoboCar3DGroup({
-      themeHex: '#F04438',
-      wireframe: wireframeMode,
-      onRegisterPart: (mesh, info) => {
-        interactiveMeshes.push(mesh);
-      }
-    });
-
-    scene.add(carGroup);
-
     // Clean Studio Lighting (Editorial Light Gray Environment)
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.6);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.8);
     keyLight.position.set(6, 12, 7);
     keyLight.castShadow = true;
     keyLight.shadow.mapSize.width = 1024;
@@ -127,17 +138,22 @@ export default function Interactive3DCadViewer({
     keyLight.shadow.bias = -0.0005;
     scene.add(keyLight);
 
-    // Accent Rim Light (Team Red Theme)
-    const rimLight = new THREE.DirectionalLight(0xF04438, 1.4);
-    rimLight.position.set(-8, 6, -6);
-    scene.add(rimLight);
-
     // Soft Ambient Fill Light
-    const ambLight = new THREE.AmbientLight(0xffffff, 1.5);
+    const ambLight = new THREE.AmbientLight(0xffffff, 1.6);
     scene.add(ambLight);
 
-    // Ground Contact Shadow
-    const shadowGeom = new THREE.PlaneGeometry(5.0, 6.2);
+    // Secondary Fill Light
+    const fillLight = new THREE.DirectionalLight(0xE2E8F0, 1.2);
+    fillLight.position.set(-8, 8, -6);
+    scene.add(fillLight);
+
+    // Team Red Accent Rim Light
+    const rimLight = new THREE.DirectionalLight(0xF04438, 1.2);
+    rimLight.position.set(-6, 4, 6);
+    scene.add(rimLight);
+
+    // Ground Contact Shadow Plane
+    const shadowGeom = new THREE.PlaneGeometry(6.0, 6.0);
     const shadowMat = new THREE.MeshBasicMaterial({
       color: 0x171717,
       transparent: true,
@@ -145,23 +161,118 @@ export default function Interactive3DCadViewer({
     });
     const groundShadow = new THREE.Mesh(shadowGeom, shadowMat);
     groundShadow.rotation.x = -Math.PI / 2;
-    groundShadow.position.y = 0.01;
+    groundShadow.position.y = 0.005;
     scene.add(groundShadow);
 
-    // Subtle Ground Grid (Engineering CAD grid)
+    // Subtle Engineering CAD Grid
     const gridHelper = new THREE.GridHelper(10, 20, 0xD8D8D3, 0xECECE7);
-    gridHelper.position.y = 0.005;
+    gridHelper.position.y = 0.001;
     scene.add(gridHelper);
 
-    // Save references
+    // Root container for robot model
+    const robotRoot = new THREE.Group();
+    scene.add(robotRoot);
+
+    const interactiveMeshes = [];
     const t = threeRef.current;
     t.scene = scene;
     t.camera = camera;
     t.renderer = renderer;
-    t.carGroup = carGroup;
-    t.wheels = wheels;
-    t.armGroup = armGroup;
+    t.robotRoot = robotRoot;
     t.interactiveMeshes = interactiveMeshes;
+
+    // Load Official NRL 2026 Robot GLB Model
+    const gltfUrl = `${import.meta.env.BASE_URL}models/nrl-robot-2026.glb`;
+    const dracoPath = `${import.meta.env.BASE_URL}draco/gltf/`;
+
+    const dracoLoader = new DRACOLoader();
+    try {
+      dracoLoader.setDecoderPath(dracoPath);
+    } catch {
+      // Fallback path
+    }
+
+    const gltfLoader = new GLTFLoader();
+    gltfLoader.setDRACOLoader(dracoLoader);
+    if (MeshoptDecoder) {
+      gltfLoader.setMeshoptDecoder(MeshoptDecoder);
+    }
+
+    setLoading(true);
+    setLoadProgress(20);
+
+    let isMounted = true;
+
+    gltfLoader.load(
+      gltfUrl,
+      (gltf) => {
+        if (!isMounted) return;
+        const cadModel = gltf.scene;
+
+        // In Onshape, Z is UP. Rotate around X by -90 deg to align with Three.js Y-up
+        cadModel.rotation.x = -Math.PI / 2;
+
+        // Compute Bounding Box after orientation
+        const box = new THREE.Box3().setFromObject(cadModel);
+        const size = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+
+        // Target span ~4.2 units inside the viewer
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const scale = 4.2 / (maxDim || 1);
+        cadModel.scale.setScalar(scale);
+
+        // Re-center horizontally and place on the ground grid (y = 0)
+        const postBox = new THREE.Box3().setFromObject(cadModel);
+        const postCenter = postBox.getCenter(new THREE.Vector3());
+        cadModel.position.x -= postCenter.x;
+        cadModel.position.y -= postBox.min.y; // Sit cleanly above y = 0
+        cadModel.position.z -= postCenter.z;
+
+        // Enhance materials and register for interaction
+        cadModel.traverse((child) => {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            if (child.material) {
+              child.material.side = THREE.DoubleSide;
+              child.material.wireframe = wireframeMode;
+              if (child.material.isMeshStandardMaterial) {
+                child.material.roughness = Math.max(0.32, child.material.roughness || 0.4);
+                child.material.metalness = Math.min(0.85, (child.material.metalness || 0.2) + 0.1);
+              }
+            }
+            interactiveMeshes.push(child);
+          }
+        });
+
+        robotRoot.add(cadModel);
+        setLoadProgress(100);
+        setTimeout(() => {
+          if (isMounted) setLoading(false);
+        }, 250);
+      },
+      (xhr) => {
+        if (xhr.total > 0) {
+          const pct = Math.min(99, Math.round((xhr.loaded / xhr.total) * 100));
+          setLoadProgress(pct);
+        }
+      },
+      (err) => {
+        console.warn('CAD GLB load fallback to procedural rig:', err);
+        if (!isMounted) return;
+        // Graceful fallback to procedural rig if GLB fails
+        const { carGroup, wheels, armGroup } = buildRoboCar3DGroup({
+          themeHex: '#F04438',
+          wireframe: wireframeMode,
+          onRegisterPart: (mesh) => interactiveMeshes.push(mesh)
+        });
+        robotRoot.add(carGroup);
+        t.wheels = wheels;
+        t.armGroup = armGroup;
+        setLoading(false);
+      }
+    );
 
     // Raycaster for hover & click
     const raycaster = new THREE.Raycaster();
@@ -177,15 +288,17 @@ export default function Interactive3DCadViewer({
 
       if (intersects.length > 0) {
         let topObj = intersects[0].object;
-        while (topObj && !topObj.userData?.name && topObj.parent) {
+        while (topObj && !topObj.userData?.name && topObj.parent && topObj.parent !== robotRoot) {
           topObj = topObj.parent;
         }
 
-        if (topObj && topObj.userData?.name) {
-          setHoveredPart(topObj.userData);
-          container.style.cursor = 'pointer';
-          return;
-        }
+        const name = topObj.userData?.name || topObj.name || 'Component';
+        setHoveredPart({
+          name: name.replace(/_/g, ' '),
+          category: 'NRL-2026 ROBOT CAD'
+        });
+        container.style.cursor = 'pointer';
+        return;
       }
       setHoveredPart(null);
       container.style.cursor = t.isDragging ? 'grabbing' : 'grab';
@@ -201,28 +314,10 @@ export default function Interactive3DCadViewer({
       const intersects = raycaster.intersectObjects(interactiveMeshes, true);
 
       if (intersects.length > 0) {
-        let topObj = intersects[0].object;
-        while (topObj && !topObj.userData?.name && topObj.parent) {
-          topObj = topObj.parent;
-        }
-
-        if (topObj && topObj.userData?.name) {
-          soundManager.playClick();
-          // Map to known robot component if possible
-          const partName = topObj.userData.name.toLowerCase();
-          const matched = ROBOT_COMPONENTS.find(c => 
-            partName.includes('claw') || partName.includes('gripper') ? c.id === 'claw-linkage' :
-            partName.includes('hexa') || partName.includes('controller') || partName.includes('hub') ? c.id === 'hexa-pcb' :
-            partName.includes('wheel') || partName.includes('tire') ? c.id === 'drivetrain-wheels' :
-            partName.includes('motor') ? c.id === 'gearmotors' :
-            partName.includes('cargo') || partName.includes('payload') ? c.id === 'cargo-bay' :
-            partName.includes('power') || partName.includes('battery') ? c.id === 'battery-system' :
-            c.id === 'chassis-plates'
-          );
-
-          if (matched && onSelectComponent) {
-            onSelectComponent(matched);
-          }
+        soundManager.playClick();
+        if (onSelectComponent) {
+          const comp = ROBOT_COMPONENTS[0]; // focus component
+          onSelectComponent(comp);
         }
       }
     };
@@ -231,10 +326,8 @@ export default function Interactive3DCadViewer({
     container.addEventListener('click', handleCanvasClick);
 
     // Orbit Drag Rotation
-    let dragDistance = 0;
     const onPointerDown = (e) => {
       t.isDragging = true;
-      dragDistance = 0;
       t.prevPointer.x = e.clientX || (e.touches && e.touches[0].clientX) || 0;
       t.prevPointer.y = e.clientY || (e.touches && e.touches[0].clientY) || 0;
       container.style.cursor = 'grabbing';
@@ -246,7 +339,6 @@ export default function Interactive3DCadViewer({
       const curY = e.clientY || (e.touches && e.touches[0].clientY) || 0;
       const dx = curX - t.prevPointer.x;
       const dy = curY - t.prevPointer.y;
-      dragDistance += Math.abs(dx) + Math.abs(dy);
 
       t.spherical.theta -= dx * 0.008;
       t.spherical.phi = Math.max(0.15, Math.min(Math.PI / 2 - 0.05, t.spherical.phi - dy * 0.008));
@@ -299,8 +391,8 @@ export default function Interactive3DCadViewer({
       const time = (currentTime - startTime) / 1000;
 
       // Auto-Rotate turntable
-      if (autoRotate && !t.isDragging) {
-        t.spherical.theta += 0.006;
+      if (autoRotate && !t.isDragging && t.robotRoot) {
+        t.robotRoot.rotation.y += 0.008;
       }
 
       // Smooth Camera & Target Lerp
@@ -317,27 +409,13 @@ export default function Interactive3DCadViewer({
       );
       camera.lookAt(t.currentLookAt);
 
-      // Wheel Spin & Claw Motion on Play
-      if (isSpinningMotors) {
-        wheels.forEach(w => {
-          w.rotation.x += delta * 12;
-        });
-        if (armGroup) {
-          armGroup.rotation.x = Math.sin(time * 3) * 0.15;
-        }
-      }
-
-      // Subtle Status LED pulsing
-      if (led && led.material) {
-        led.material.opacity = 0.6 + Math.sin(time * 4) * 0.4;
-      }
-
       renderer.render(scene, camera);
     };
 
     animate();
 
     return () => {
+      isMounted = false;
       if (t.animId) cancelAnimationFrame(t.animId);
       container.removeEventListener('mousemove', handlePointerMove);
       container.removeEventListener('click', handleCanvasClick);
@@ -349,9 +427,10 @@ export default function Interactive3DCadViewer({
       window.removeEventListener('touchend', onPointerUp);
       container.removeEventListener('wheel', handleWheel);
       window.removeEventListener('resize', handleResize);
+      dracoLoader.dispose();
       renderer.dispose();
     };
-  }, [wireframeMode, autoRotate, isSpinningMotors, onSelectComponent]);
+  }, [wireframeMode, autoRotate, onSelectComponent]);
 
   // Zoom control buttons
   const handleZoom = (direction) => {
@@ -368,6 +447,9 @@ export default function Interactive3DCadViewer({
   const handleResetCamera = () => {
     soundManager.playClick();
     const t = threeRef.current;
+    if (t.robotRoot) {
+      t.robotRoot.rotation.y = 0;
+    }
     t.targetLookAt.copy(t.defaultLookAt);
     t.spherical.theta = 0.8;
     t.spherical.phi = 1.15;
@@ -376,8 +458,10 @@ export default function Interactive3DCadViewer({
     if (onReset) onReset();
   };
 
+  const glbDownloadUrl = `${import.meta.env.BASE_URL}models/nrl-robot-2026.glb`;
+
   return (
-    <div className="relative w-full h-full min-h-[460px] sm:min-h-[540px] lg:min-h-[600px] border border-[#D8D8D3] bg-[#ECECE7] rounded-2xl overflow-hidden select-none flex flex-col justify-between">
+    <div className="relative w-full h-full min-h-[480px] sm:min-h-[560px] lg:min-h-[640px] border border-[#D8D8D3] bg-[#ECECE7] rounded-2xl overflow-hidden select-none flex flex-col justify-between shadow-sm">
       
       {/* 3D WebGL Canvas Mount Container */}
       <div 
@@ -385,29 +469,63 @@ export default function Interactive3DCadViewer({
         className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing"
       />
 
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#ECECE7]/90 backdrop-blur-sm font-mono space-y-4">
+          <div className="relative">
+            <div className="w-12 h-12 border-3 border-[#D8D8D3] rounded-full" />
+            <div className="w-12 h-12 border-3 border-[#F04438] border-t-transparent rounded-full animate-spin absolute inset-0" />
+          </div>
+          <div className="text-center space-y-1.5">
+            <div className="text-[15px] font-bold text-[#171717] tracking-wider uppercase">
+              Loading Official NRL 2026 Robot (.GLB)
+            </div>
+            <div className="text-xs text-[#595959]">
+              PTC Onshape Verified 3D Assembly · {loadProgress}%
+            </div>
+          </div>
+          <div className="w-56 h-1.5 bg-[#D8D8D3] rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-[#F04438] transition-all duration-300"
+              style={{ width: `${loadProgress}%` }}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Top Floating Telemetry & CAD Status Bar */}
-      <div className="relative z-10 p-4 sm:p-5 flex items-center justify-between gap-3 pointer-events-none">
+      <div className="relative z-10 p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3 pointer-events-none">
         
         {/* Left Badge: Live Interactive 3D */}
-        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[#F7F7F4]/95 backdrop-blur-md border border-[#D8D8D3] shadow-sm pointer-events-auto">
+        <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-lg bg-[#F7F7F4]/95 backdrop-blur-md border border-[#D8D8D3] shadow-sm pointer-events-auto">
           <span className="w-2.5 h-2.5 rounded-full bg-[#059669] animate-pulse" />
           <span className="font-mono text-[15px] font-bold text-[#171717] tracking-tight">
-            INTERACTIVE 3D CAD
+            NRL-2026 ROBOT.GLB
           </span>
-          <span className="font-mono text-[15px] text-[#595959] hidden sm:inline">
-            · THREE.JS WebGL
+          <span className="px-2 py-0.5 rounded bg-[#171717] text-white font-mono text-[11px] font-bold">
+            8.4 MB CAD
           </span>
         </div>
 
-        {/* Right Actions: Onshape Link */}
+        {/* Right Actions: Download GLB & Onshape Link */}
         <div className="flex items-center gap-2 pointer-events-auto">
+          <a
+            href={glbDownloadUrl}
+            download="NRL-2026-Robot.glb"
+            className="px-3.5 py-2 bg-[#F04438] hover:bg-[#D9382C] text-white font-mono text-[14px] font-bold transition-all rounded-lg flex items-center gap-2 shadow-sm"
+            title="Download the official NRL-2026 3D Robot GLB file"
+          >
+            <Download className="w-4 h-4" />
+            <span className="hidden sm:inline">DOWNLOAD GLB</span>
+          </a>
+
           <a
             href="https://cad.onshape.com/documents/b9775324604f1e712d8677c5/w/42798f7711b0b207da9310d3/e/2e8391d232133dd053e4cffb"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2 bg-[#171717] text-[#F7F7F4] hover:bg-[#F04438] font-mono text-[15px] font-semibold transition-all rounded-lg flex items-center gap-2 shadow-sm"
+            className="px-3.5 py-2 bg-[#171717] text-[#F7F7F4] hover:bg-black font-mono text-[14px] font-semibold transition-all rounded-lg flex items-center gap-2 shadow-sm"
           >
-            <span>Onshape Source CAD</span>
+            <span className="hidden sm:inline">Onshape CAD</span>
             <ExternalLink className="w-4 h-4" />
           </a>
         </div>
@@ -421,8 +539,8 @@ export default function Interactive3DCadViewer({
             <div className="text-[15px] font-bold text-white tracking-wide">
               {hoveredPart.name}
             </div>
-            <div className="text-[15px] text-[#F04438] font-semibold">
-              {hoveredPart.category} · Click to inspect
+            <div className="text-[13px] text-[#F04438] font-semibold">
+              {hoveredPart.category} · Official Part Geometry
             </div>
           </div>
         </div>
@@ -438,7 +556,7 @@ export default function Interactive3DCadViewer({
               soundManager.playClick();
               setAutoRotate(!autoRotate);
             }}
-            className={`px-3.5 py-2 rounded-lg border font-mono text-[15px] font-bold transition-all flex items-center gap-2 shadow-sm ${
+            className={`px-3.5 py-2 rounded-lg border font-mono text-[14px] font-bold transition-all flex items-center gap-2 shadow-sm ${
               autoRotate 
                 ? 'bg-[#171717] text-white border-[#171717]' 
                 : 'bg-[#F7F7F4]/95 text-[#171717] border-[#D8D8D3] hover:bg-white'
@@ -454,7 +572,7 @@ export default function Interactive3DCadViewer({
               soundManager.playClick();
               setWireframeMode(!wireframeMode);
             }}
-            className={`px-3.5 py-2 rounded-lg border font-mono text-[15px] font-bold transition-all flex items-center gap-2 shadow-sm ${
+            className={`px-3.5 py-2 rounded-lg border font-mono text-[14px] font-bold transition-all flex items-center gap-2 shadow-sm ${
               wireframeMode 
                 ? 'bg-[#F04438] text-white border-[#F04438]' 
                 : 'bg-[#F7F7F4]/95 text-[#171717] border-[#D8D8D3] hover:bg-white'
@@ -463,22 +581,6 @@ export default function Interactive3DCadViewer({
           >
             <Layers className="w-4 h-4" />
             <span>{wireframeMode ? 'WIREFRAME' : 'SOLID CAD'}</span>
-          </button>
-
-          <button
-            onClick={() => {
-              soundManager.playClick();
-              setIsSpinningMotors(!isSpinningMotors);
-            }}
-            className={`px-3.5 py-2 rounded-lg border font-mono text-[15px] font-bold transition-all flex items-center gap-2 shadow-sm ${
-              isSpinningMotors 
-                ? 'bg-[#059669] text-white border-[#059669]' 
-                : 'bg-[#F7F7F4]/95 text-[#171717] border-[#D8D8D3] hover:bg-white'
-            }`}
-            title="Test 4WD Drivetrain Motors & Claw Articulation"
-          >
-            {isSpinningMotors ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-            <span className="hidden sm:inline">{isSpinningMotors ? 'STOP MOTORS' : 'TEST DRIVE'}</span>
           </button>
         </div>
 
@@ -494,7 +596,7 @@ export default function Interactive3DCadViewer({
             >
               <ZoomOut className="w-4 h-4" />
             </button>
-            <span className="font-mono text-[15px] font-bold text-[#171717] px-2 min-w-[56px] text-center">
+            <span className="font-mono text-[14px] font-bold text-[#171717] px-2 min-w-[52px] text-center">
               {zoomLevel}%
             </span>
             <button
@@ -509,7 +611,7 @@ export default function Interactive3DCadViewer({
           {/* Reset Camera Button */}
           <button
             onClick={handleResetCamera}
-            className="px-3.5 py-2 bg-[#F7F7F4]/95 hover:bg-white text-[#171717] border border-[#D8D8D3] font-mono text-[15px] font-bold rounded-lg shadow-sm flex items-center gap-2 transition-colors"
+            className="px-3.5 py-2 bg-[#F7F7F4]/95 hover:bg-white text-[#171717] border border-[#D8D8D3] font-mono text-[14px] font-bold rounded-lg shadow-sm flex items-center gap-2 transition-colors"
             title="Reset Camera to Default Angle"
           >
             <RotateCcw className="w-4 h-4" />
@@ -520,14 +622,14 @@ export default function Interactive3DCadViewer({
       </div>
 
       {/* Helper Navigation Hint on Bottom Bar */}
-      <div className="relative z-10 px-5 py-2.5 bg-[#F7F7F4]/90 backdrop-blur-sm border-t border-[#D8D8D3] flex items-center justify-between font-mono text-[15px] text-[#595959]">
+      <div className="relative z-10 px-5 py-2.5 bg-[#F7F7F4]/90 backdrop-blur-sm border-t border-[#D8D8D3] flex items-center justify-between font-mono text-[14px] text-[#595959]">
         <div className="flex items-center gap-2">
           <span>🖱️ Click & Drag to Orbit 360°</span>
           <span className="hidden md:inline">· Scroll to Zoom</span>
-          <span className="hidden lg:inline">· Click any part to inspect</span>
+          <span className="hidden lg:inline">· Real-Time Three.js WebGL</span>
         </div>
         <div className="font-semibold text-[#171717] hidden sm:block">
-          SCALE: 1:1 COMPETITION RIG
+          SCALE: 1:1 NRL TOURNAMENT RIG
         </div>
       </div>
 

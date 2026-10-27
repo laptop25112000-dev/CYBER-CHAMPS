@@ -8,7 +8,7 @@ import { RotateCcw, ZoomIn, ZoomOut, ChevronDown, ChevronUp, ArrowRight, Crossha
 
 export default function RobotExplorerSection() {
   const [selectedCompId, setSelectedCompId] = useState(null); // Default to full robot reset view (100%)
-  const [viewMode, setViewMode] = useState('onshape'); // 'onshape' (default, matches simulator) | '3d' | '2d'
+  const [viewMode, setViewMode] = useState('3d'); // Default to interactive 3D GLB model viewer
   const [manualZoom, setManualZoom] = useState(1);
   const [showTechDetails, setShowTechDetails] = useState(false);
 
@@ -65,7 +65,10 @@ export default function RobotExplorerSection() {
                 }`}
               >
                 <Box className="w-4 h-4 text-[#F04438]" />
-                <span>3D CAD MODEL</span>
+                <span>3D CAD MODEL (GLB)</span>
+                <span className="text-[10px] uppercase px-1.5 py-0.5 rounded bg-[#F04438] text-white font-extrabold tracking-wider">
+                  OFFICIAL
+                </span>
               </button>
 
               <button

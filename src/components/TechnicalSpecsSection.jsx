@@ -133,7 +133,7 @@ export default function TechnicalSpecsSection() {
           </div>
 
           {/* Action buttons */}
-          <div className="flex items-center gap-3 self-start md:self-auto">
+          <div className="flex flex-wrap items-center gap-3 self-start md:self-auto">
             <button
               onClick={handleCopySpecs}
               className="inline-flex items-center gap-2 px-4 py-2 text-xs font-mono rounded-lg border border-[#D8D8D3] bg-white text-[#171717] hover:bg-[#ECECE7] transition-all"
@@ -141,6 +141,14 @@ export default function TechnicalSpecsSection() {
               {copied ? <Check className="w-3.5 h-3.5 text-[#059669]" /> : <Copy className="w-3.5 h-3.5 text-[#6B6B6B]" />}
               <span>{copied ? 'COPIED TO CLIPBOARD' : 'COPY SPEC SHEET'}</span>
             </button>
+            <a
+              href={`${import.meta.env.BASE_URL}models/nrl-robot-2026.glb`}
+              download="NRL-2026-Robot.glb"
+              className="inline-flex items-center gap-2 px-4 py-2 text-xs font-mono rounded-lg bg-[#F04438] text-white hover:bg-[#d9382d] transition-all font-bold shadow-sm"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>DOWNLOAD 3D CAD (.GLB)</span>
+            </a>
             <a
               href="https://cad.onshape.com/documents/b9775324604f1e712d8677c5/w/42798f7711b0b207da9310d3/e/2e8391d232133dd053e4cffb"
               target="_blank"
