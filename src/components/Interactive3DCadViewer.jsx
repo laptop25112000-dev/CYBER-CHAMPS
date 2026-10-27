@@ -7,8 +7,8 @@ import { soundManager } from '../utils/audio';
 import { buildRoboCar3DGroup } from '../utils/roboCar3DBuilder';
 import { ROBOT_COMPONENTS } from '../data/robotData';
 import { 
-  RotateCw, ZoomIn, ZoomOut, Play, Pause, Layers, 
-  RotateCcw, Sparkles, ExternalLink, Compass, Shield, Download, Box, Check
+  RotateCw, ZoomIn, ZoomOut, Layers, 
+  RotateCcw, ExternalLink, Download
 } from 'lucide-react';
 
 export default function Interactive3DCadViewer({
@@ -19,13 +19,14 @@ export default function Interactive3DCadViewer({
   const mountRef = useRef(null);
   const [wireframeMode, setWireframeMode] = useState(false);
   const [autoRotate, setAutoRotate] = useState(false);
-  const [isSpinningMotors, setIsSpinningMotors] = useState(false);
-  const [hoveredPart, setHoveredPart] = useState(null);
   const [zoomLevel, setZoomLevel] = useState(100);
   const [loading, setLoading] = useState(true);
-  const [loadProgress, setLoadProgress] = useState(15);
-  const [activeModelType, setActiveModelType] = useState('cad-glb'); // 'cad-glb' | 'rig'
-  const [copiedLink, setCopiedLink] = useState(false);
+  const [loadProgress, setLoadProgress] = useState(25);
+
+  const autoRotateRef = useRef(autoRotate);
+  useEffect(() => {
+    autoRotateRef.current = autoRotate;
+  }, [autoRotate]);
 
   // Three.js instances ref
   const threeRef = useRef({
@@ -33,23 +34,20 @@ export default function Interactive3DCadViewer({
     camera: null,
     renderer: null,
     robotRoot: null,
-    wheels: [],
-    armGroup: null,
-    interactiveMeshes: [],
     animId: null,
     isDragging: false,
     prevPointer: { x: 0, y: 0 },
     spherical: { radius: 7.2, theta: 0.8, phi: 1.15 },
-    targetLookAt: new THREE.Vector3(0, 0.5, 0),
-    currentLookAt: new THREE.Vector3(0, 0.5, 0),
-    defaultLookAt: new THREE.Vector3(0, 0.5, 0)
+    targetLookAt: new THREE.Vector3(0, 0.45, 0),
+    currentLookAt: new THREE.Vector3(0, 0.45, 0),
+    defaultLookAt: new THREE.Vector3(0, 0.45, 0)
   });
 
   // Mapping component IDs to 3D focus targets
   const getComponentTarget = useCallback((compId) => {
     switch (compId) {
       case 'claw-linkage':
-        return { lookAt: new THREE.Vector3(0, 0.9, 1.4), theta: 0.35, phi: 1.25, radius: 4.5 };
+        return { lookAt: new THREE.Vector3(0, 0.85, 1.4), theta: 0.35, phi: 1.25, radius: 4.5 };
       case 'cargo-bay':
         return { lookAt: new THREE.Vector3(0, 0.7, -1.2), theta: 2.8, phi: 1.2, radius: 4.8 };
       case 'hexa-pcb':
@@ -61,7 +59,7 @@ export default function Interactive3DCadViewer({
         return { lookAt: new THREE.Vector3(0, 0.5, -0.6), theta: 2.4, phi: 1.35, radius: 4.6 };
       case 'chassis-plates':
       default:
-        return { lookAt: new THREE.Vector3(0, 0.5, 0), theta: 0.8, phi: 1.15, radius: 7.2 };
+        return { lookAt: new THREE.Vector3(0, 0.45, 0), theta: 0.8, phi: 1.15, radius: 7.2 };
     }
   }, []);
 
@@ -86,7 +84,7 @@ export default function Interactive3DCadViewer({
     }
   }, [selectedCompId, getComponentTarget]);
 
-  // Handle wireframe changes dynamically across loaded meshes
+  // Handle wireframe changes dynamically without re-creating scene
   useEffect(() => {
     const t = threeRef.current;
     if (t.robotRoot) {
@@ -102,7 +100,7 @@ export default function Interactive3DCadViewer({
     }
   }, [wireframeMode]);
 
-  // Main Three.js Scene Setup & Model Loading
+  // Main Three.js Scene Setup (Runs ONCE on mount)
   useEffect(() => {
     const container = mountRef.current;
     if (!container) return;
@@ -114,45 +112,37 @@ export default function Interactive3DCadViewer({
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
     
-    // Renderer
+    // Optimized WebGL Renderer (No heavy dynamic shadow maps, capped DPR)
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
       powerPreference: 'high-performance'
     });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFShadowMap;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
+    renderer.shadowMap.enabled = false; // Fast grounded shadow plane used instead
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.25;
+    renderer.toneMappingExposure = 1.2;
     container.innerHTML = '';
     container.appendChild(renderer.domElement);
 
-    // Clean Studio Lighting (Editorial Light Gray Environment)
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.8);
+    // Clean Studio Lighting
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
     keyLight.position.set(6, 12, 7);
-    keyLight.castShadow = true;
-    keyLight.shadow.mapSize.width = 1024;
-    keyLight.shadow.mapSize.height = 1024;
-    keyLight.shadow.bias = -0.0005;
     scene.add(keyLight);
 
-    // Soft Ambient Fill Light
-    const ambLight = new THREE.AmbientLight(0xffffff, 1.6);
+    const ambLight = new THREE.AmbientLight(0xffffff, 1.5);
     scene.add(ambLight);
 
-    // Secondary Fill Light
-    const fillLight = new THREE.DirectionalLight(0xE2E8F0, 1.2);
+    const fillLight = new THREE.DirectionalLight(0xE2E8F0, 1.1);
     fillLight.position.set(-8, 8, -6);
     scene.add(fillLight);
 
-    // Team Red Accent Rim Light
-    const rimLight = new THREE.DirectionalLight(0xF04438, 1.2);
+    const rimLight = new THREE.DirectionalLight(0xF04438, 1.0);
     rimLight.position.set(-6, 4, 6);
     scene.add(rimLight);
 
-    // Ground Contact Shadow Plane
+    // Fast Ground Shadow Plane (Zero GPU depth overhead)
     const shadowGeom = new THREE.PlaneGeometry(6.0, 6.0);
     const shadowMat = new THREE.MeshBasicMaterial({
       color: 0x171717,
@@ -164,7 +154,7 @@ export default function Interactive3DCadViewer({
     groundShadow.position.y = 0.005;
     scene.add(groundShadow);
 
-    // Subtle Engineering CAD Grid
+    // Subtle CAD Grid
     const gridHelper = new THREE.GridHelper(10, 20, 0xD8D8D3, 0xECECE7);
     gridHelper.position.y = 0.001;
     scene.add(gridHelper);
@@ -173,13 +163,11 @@ export default function Interactive3DCadViewer({
     const robotRoot = new THREE.Group();
     scene.add(robotRoot);
 
-    const interactiveMeshes = [];
     const t = threeRef.current;
     t.scene = scene;
     t.camera = camera;
     t.renderer = renderer;
     t.robotRoot = robotRoot;
-    t.interactiveMeshes = interactiveMeshes;
 
     // Load Official NRL 2026 Robot GLB Model
     const gltfUrl = `${import.meta.env.BASE_URL}models/nrl-robot-2026.glb`;
@@ -189,7 +177,7 @@ export default function Interactive3DCadViewer({
     try {
       dracoLoader.setDecoderPath(dracoPath);
     } catch {
-      // Fallback path
+      // Fallback
     }
 
     const gltfLoader = new GLTFLoader();
@@ -199,7 +187,7 @@ export default function Interactive3DCadViewer({
     }
 
     setLoading(true);
-    setLoadProgress(20);
+    setLoadProgress(30);
 
     let isMounted = true;
 
@@ -209,40 +197,30 @@ export default function Interactive3DCadViewer({
         if (!isMounted) return;
         const cadModel = gltf.scene;
 
-        // In Onshape, Z is UP. Rotate around X by -90 deg to align with Three.js Y-up
+        // Onshape Z-up -> Three.js Y-up
         cadModel.rotation.x = -Math.PI / 2;
 
-        // Compute Bounding Box after orientation
+        // Center and ground
         const box = new THREE.Box3().setFromObject(cadModel);
         const size = box.getSize(new THREE.Vector3());
-        const center = box.getCenter(new THREE.Vector3());
-
-        // Target span ~4.2 units inside the viewer
         const maxDim = Math.max(size.x, size.y, size.z);
         const scale = 4.2 / (maxDim || 1);
         cadModel.scale.setScalar(scale);
 
-        // Re-center horizontally and place on the ground grid (y = 0)
         const postBox = new THREE.Box3().setFromObject(cadModel);
         const postCenter = postBox.getCenter(new THREE.Vector3());
         cadModel.position.x -= postCenter.x;
-        cadModel.position.y -= postBox.min.y; // Sit cleanly above y = 0
+        cadModel.position.y -= postBox.min.y;
         cadModel.position.z -= postCenter.z;
 
-        // Enhance materials and register for interaction
+        // Front-side materials for high framerate
         cadModel.traverse((child) => {
-          if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-            if (child.material) {
-              child.material.side = THREE.DoubleSide;
-              child.material.wireframe = wireframeMode;
-              if (child.material.isMeshStandardMaterial) {
-                child.material.roughness = Math.max(0.32, child.material.roughness || 0.4);
-                child.material.metalness = Math.min(0.85, (child.material.metalness || 0.2) + 0.1);
-              }
+          if (child.isMesh && child.material) {
+            child.material.side = THREE.FrontSide;
+            if (child.material.isMeshStandardMaterial) {
+              child.material.roughness = Math.max(0.32, child.material.roughness || 0.4);
+              child.material.metalness = Math.min(0.85, (child.material.metalness || 0.2) + 0.1);
             }
-            interactiveMeshes.push(child);
           }
         });
 
@@ -250,7 +228,7 @@ export default function Interactive3DCadViewer({
         setLoadProgress(100);
         setTimeout(() => {
           if (isMounted) setLoading(false);
-        }, 250);
+        }, 150);
       },
       (xhr) => {
         if (xhr.total > 0) {
@@ -261,71 +239,16 @@ export default function Interactive3DCadViewer({
       (err) => {
         console.warn('CAD GLB load fallback to procedural rig:', err);
         if (!isMounted) return;
-        // Graceful fallback to procedural rig if GLB fails
-        const { carGroup, wheels, armGroup } = buildRoboCar3DGroup({
+        const { carGroup } = buildRoboCar3DGroup({
           themeHex: '#F04438',
-          wireframe: wireframeMode,
-          onRegisterPart: (mesh) => interactiveMeshes.push(mesh)
+          wireframe: false
         });
         robotRoot.add(carGroup);
-        t.wheels = wheels;
-        t.armGroup = armGroup;
         setLoading(false);
       }
     );
 
-    // Raycaster for hover & click
-    const raycaster = new THREE.Raycaster();
-    const mouse = new THREE.Vector2();
-
-    const handlePointerMove = (e) => {
-      const rect = container.getBoundingClientRect();
-      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      mouse.y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
-
-      raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObjects(interactiveMeshes, true);
-
-      if (intersects.length > 0) {
-        let topObj = intersects[0].object;
-        while (topObj && !topObj.userData?.name && topObj.parent && topObj.parent !== robotRoot) {
-          topObj = topObj.parent;
-        }
-
-        const name = topObj.userData?.name || topObj.name || 'Component';
-        setHoveredPart({
-          name: name.replace(/_/g, ' '),
-          category: 'NRL-2026 ROBOT CAD'
-        });
-        container.style.cursor = 'pointer';
-        return;
-      }
-      setHoveredPart(null);
-      container.style.cursor = t.isDragging ? 'grabbing' : 'grab';
-    };
-
-    const handleCanvasClick = (e) => {
-      if (t.isDragging) return;
-      const rect = container.getBoundingClientRect();
-      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      mouse.y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
-
-      raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObjects(interactiveMeshes, true);
-
-      if (intersects.length > 0) {
-        soundManager.playClick();
-        if (onSelectComponent) {
-          const comp = ROBOT_COMPONENTS[0]; // focus component
-          onSelectComponent(comp);
-        }
-      }
-    };
-
-    container.addEventListener('mousemove', handlePointerMove);
-    container.addEventListener('click', handleCanvasClick);
-
-    // Orbit Drag Rotation
+    // Orbit Drag Controls (Lightweight & Smooth)
     const onPointerDown = (e) => {
       t.isDragging = true;
       t.prevPointer.x = e.clientX || (e.touches && e.touches[0].clientX) || 0;
@@ -340,8 +263,8 @@ export default function Interactive3DCadViewer({
       const dx = curX - t.prevPointer.x;
       const dy = curY - t.prevPointer.y;
 
-      t.spherical.theta -= dx * 0.008;
-      t.spherical.phi = Math.max(0.15, Math.min(Math.PI / 2 - 0.05, t.spherical.phi - dy * 0.008));
+      t.spherical.theta -= dx * 0.007;
+      t.spherical.phi = Math.max(0.15, Math.min(Math.PI / 2 - 0.05, t.spherical.phi - dy * 0.007));
 
       t.prevPointer.x = curX;
       t.prevPointer.y = curY;
@@ -353,7 +276,7 @@ export default function Interactive3DCadViewer({
     };
 
     container.addEventListener('mousedown', onPointerDown);
-    window.addEventListener('mousemove', onPointerMove);
+    window.addEventListener('mousemove', onPointerMove, { passive: true });
     window.addEventListener('mouseup', onPointerUp);
 
     container.addEventListener('touchstart', onPointerDown, { passive: true });
@@ -363,12 +286,12 @@ export default function Interactive3DCadViewer({
     // Mouse Wheel Zoom
     const handleWheel = (e) => {
       e.preventDefault();
-      t.spherical.radius = Math.max(2.8, Math.min(11.0, t.spherical.radius + e.deltaY * 0.006));
+      t.spherical.radius = Math.max(2.8, Math.min(11.0, t.spherical.radius + e.deltaY * 0.005));
       setZoomLevel(Math.round((7.2 / t.spherical.radius) * 100));
     };
     container.addEventListener('wheel', handleWheel, { passive: false });
 
-    // Window Resize
+    // Window Resize Handler
     const handleResize = () => {
       if (!container || !renderer || !camera) return;
       const w = container.clientWidth;
@@ -379,20 +302,22 @@ export default function Interactive3DCadViewer({
     };
     window.addEventListener('resize', handleResize);
 
-    // Render Animation Loop
-    let lastTime = performance.now();
-    const startTime = performance.now();
+    // Pause rendering when scrolled out of view
+    let isVisible = true;
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+    }, { threshold: 0.05 });
+    observer.observe(container);
 
-    const animate = (now) => {
+    // 60 FPS Render Loop (Zero CPU burn when off-screen)
+    const animate = () => {
       t.animId = requestAnimationFrame(animate);
-      const currentTime = now || performance.now();
-      const delta = Math.min((currentTime - lastTime) / 1000, 0.1);
-      lastTime = currentTime;
-      const time = (currentTime - startTime) / 1000;
+
+      if (!isVisible) return; // Sleep when user is not viewing 3D model
 
       // Auto-Rotate turntable
-      if (autoRotate && !t.isDragging && t.robotRoot) {
-        t.robotRoot.rotation.y += 0.008;
+      if (autoRotateRef.current && !t.isDragging && t.robotRoot) {
+        t.robotRoot.rotation.y += 0.007;
       }
 
       // Smooth Camera & Target Lerp
@@ -417,8 +342,7 @@ export default function Interactive3DCadViewer({
     return () => {
       isMounted = false;
       if (t.animId) cancelAnimationFrame(t.animId);
-      container.removeEventListener('mousemove', handlePointerMove);
-      container.removeEventListener('click', handleCanvasClick);
+      observer.disconnect();
       container.removeEventListener('mousedown', onPointerDown);
       window.removeEventListener('mousemove', onPointerMove);
       window.removeEventListener('mouseup', onPointerUp);
@@ -430,9 +354,9 @@ export default function Interactive3DCadViewer({
       dracoLoader.dispose();
       renderer.dispose();
     };
-  }, [wireframeMode, autoRotate, onSelectComponent]);
+  }, []);
 
-  // Zoom control buttons
+  // Zoom buttons
   const handleZoom = (direction) => {
     soundManager.playClick();
     const t = threeRef.current;
@@ -503,7 +427,7 @@ export default function Interactive3DCadViewer({
             NRL-2026 ROBOT.GLB
           </span>
           <span className="px-2 py-0.5 rounded bg-[#171717] text-white font-mono text-[11px] font-bold">
-            8.4 MB CAD
+            3.6 MB CAD
           </span>
         </div>
 
@@ -530,21 +454,6 @@ export default function Interactive3DCadViewer({
           </a>
         </div>
       </div>
-
-      {/* Hovered Part Telemetry Pill (Centered in Canvas) */}
-      {hoveredPart && (
-        <div className="absolute top-20 left-1/2 -translate-x-1/2 z-20 px-4 py-2 rounded-xl bg-[#171717]/95 text-white backdrop-blur-md border border-[#F04438]/50 shadow-xl pointer-events-none flex items-center gap-3 animate-in fade-in zoom-in-95">
-          <div className="w-2.5 h-2.5 rounded-full bg-[#F04438] animate-ping" />
-          <div className="text-left font-mono">
-            <div className="text-[15px] font-bold text-white tracking-wide">
-              {hoveredPart.name}
-            </div>
-            <div className="text-[13px] text-[#F04438] font-semibold">
-              {hoveredPart.category} · Official Part Geometry
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Bottom Floating Control Bar */}
       <div className="relative z-10 p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3 pointer-events-none">
@@ -626,7 +535,7 @@ export default function Interactive3DCadViewer({
         <div className="flex items-center gap-2">
           <span>🖱️ Click & Drag to Orbit 360°</span>
           <span className="hidden md:inline">· Scroll to Zoom</span>
-          <span className="hidden lg:inline">· Real-Time Three.js WebGL</span>
+          <span className="hidden lg:inline">· 60 FPS Three.js WebGL</span>
         </div>
         <div className="font-semibold text-[#171717] hidden sm:block">
           SCALE: 1:1 NRL TOURNAMENT RIG
