@@ -107,7 +107,7 @@ export default function CapabilitiesSection({ onSelectComponent }) {
                           <p>Delivers 3.2 kg·cm combined stall torque to climb the 15° inclined ramp and balance horizontally during the final 30 seconds.</p>
                         )}
                         {cap.id === 'hexalink-telemetry' && (
-                          <p>Official 2.4GHz FHSS HexaLINK radio with sub-5ms packet turnaround time and an onboard 0.96" OLED showing Team 100.</p>
+                          <p>Official 2.4GHz FHSS HexaLINK radio with sub-5ms packet turnaround time and an onboard 0.96" OLED showing Team 291.</p>
                         )}
                         {cap.id === 'torsion-box-impact' && (
                           <p>Dual-deck 4mm polycarbonate and 6061-T6 aluminum construction with chamfered safe edges (Rule R1.3 compliant).</p>

@@ -41,7 +41,7 @@ export default function SubsystemsSection({ onSelectSystem }) {
       num: "05",
       name: "Sensors & Feedback",
       desc: "How the robot monitors hardware health and displays match status to referees without tilting or opening plates.",
-      tech: "Onboard 0.96\" I2C OLED screen (displaying Team 100, Link, Channel per R8.7), status LED, and battery voltage telemetry.",
+      tech: "Onboard 0.96\" I2C OLED screen (displaying Team 291, Link, Channel per R8.7), status LED, and battery voltage telemetry.",
       targetAnchor: "#control",
       componentId: "hexa-pcb"
     },

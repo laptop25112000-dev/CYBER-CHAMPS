@@ -58,7 +58,7 @@ export default function EditorialTeamSection() {
           </div>
 
           <div className="font-mono text-[15px] text-[#6B6B6B] self-start md:self-auto font-semibold">
-            TEAM #100 / DELHI REGIONAL
+            TEAM #291 / DELHI REGIONAL
           </div>
         </div>
 
@@ -99,7 +99,7 @@ export default function EditorialTeamSection() {
                       {member.name.charAt(0)}
                     </div>
                     <span className="font-mono text-[15px] text-[#6B6B6B] px-2.5 py-0.5 rounded bg-[#FAFAFA] border border-[#D8D8D3] font-semibold">
-                      TEAM #100
+                      TEAM #291
                     </span>
                   </div>
 

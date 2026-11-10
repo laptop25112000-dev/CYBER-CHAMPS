@@ -68,7 +68,7 @@ export default function EditorialNavbar() {
               <span className="w-2 h-2 rounded-full bg-[#F04438]" />
             </div>
             <span className="text-xs sm:text-[13px] font-mono text-[#595959] tracking-tight font-medium">
-              INNOVERTERS OF FUTURE · TEAM #100
+              INNOVERTERS OF FUTURE · TEAM #291
             </span>
           </div>
         </a>

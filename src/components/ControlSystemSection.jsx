@@ -32,7 +32,7 @@ export default function ControlSystemSection() {
       rule: 'Rule R8.7',
       type: 'SCRUTINEERING DISPLAY',
       role: 'Top-deck display inspectable by referees during pre-match staging and live rounds.',
-      specs: ['128 × 64 monochrome I2C interface', 'Displays: HexaLINK connection status', 'Displays: Team Name "CYBER CHAMPS"', 'Displays: Team #100 & Assigned RF Channel']
+      specs: ['128 × 64 monochrome I2C interface', 'Displays: HexaLINK connection status', 'Displays: Team Name "CYBER CHAMPS"', 'Displays: Team #291 & Assigned RF Channel']
     },
     motors: {
       name: '4× TT DC Drivetrain Channels',
@@ -231,7 +231,7 @@ export default function ControlSystemSection() {
                     }`}
                   >
                     <div className="text-xs font-bold text-[#171717]">0.96" OLED Display</div>
-                    <div className="font-mono text-[10px] text-[#6B6B6B] mt-1">Ref Inspection, Team 100 (I2C)</div>
+                    <div className="font-mono text-[10px] text-[#6B6B6B] mt-1">Ref Inspection, Team 291 (I2C)</div>
                   </button>
                 </div>
               </div>

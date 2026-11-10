@@ -25,7 +25,7 @@ export default function EditorialFooter() {
                 CYBER CHAMPS
               </div>
               <div className="font-mono text-[14px] text-[#595959] mt-0.5 font-semibold">
-                INNOVERTERS OF FUTURE · TEAM #100 · NRL HYPERDRIVE 2026
+                INNOVERTERS OF FUTURE · TEAM #291 · NRL HYPERDRIVE 2026
               </div>
             </div>
           </div>

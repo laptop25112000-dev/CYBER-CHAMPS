@@ -88,7 +88,7 @@ export default function TechnicalSpecsSection() {
     },
     {
       parameter: 'Onboard Scrutineering Display',
-      robotSpec: '0.96" I2C OLED (Link, Team 100, Channel)',
+      robotSpec: '0.96" I2C OLED (Link, Team 291, Channel)',
       ruleLimit: 'Must be clearly visible to referees',
       ruleCode: 'Rule R8.7',
       status: 'PASS',
@@ -232,7 +232,7 @@ export default function TechnicalSpecsSection() {
 
           <div className="p-4 bg-[#FAFAFA] border-t border-[#D8D8D3] flex flex-col sm:flex-row items-center justify-between text-xs text-[#6B6B6B] font-mono gap-2">
             <span>SCRUTINEERING STATUS: ALL 12 VERIFIED TESTS PASSED</span>
-            <span>CYBER CHAMPS — TEAM NUMBER 100</span>
+            <span>CYBER CHAMPS — TEAM NUMBER 291</span>
           </div>
         </div>
 

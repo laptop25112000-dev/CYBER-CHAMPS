@@ -243,7 +243,7 @@ export default function TechnicalDetailsUnifiedSection() {
                 <div className="font-mono text-[15px] sm:text-base font-bold text-[#0284C7]">HARDWARE HUB</div>
                 <h4 className="text-xl font-bold text-[#171717]">Official HEXA Hub</h4>
                 <p className="text-base sm:text-[17px] text-[#595959] leading-relaxed">
-                  32-bit dual-core 240MHz MCU running the official NRL Engine runtime. Integrates dual H-bridges (3.2A continuous/ch) and a 0.96" I2C status OLED displaying Link, Team 100, and RF Channel (Rule R8.7).
+                  32-bit dual-core 240MHz MCU running the official NRL Engine runtime. Integrates dual H-bridges (3.2A continuous/ch) and a 0.96" I2C status OLED displaying Link, Team 291, and RF Channel (Rule R8.7).
                 </p>
                 <div className="pt-2 font-mono text-[15px] sm:text-base text-[#171717] space-y-1">
                   <div>• Radio: HexaLINK 2.4GHz FHSS</div>

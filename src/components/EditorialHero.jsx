@@ -20,8 +20,8 @@ export default function EditorialHero({ onExploreRobot, onSeeHowItWorks }) {
             <span className="font-bold text-[#171717]">NATIONAL ROBOTICS LEAGUE · HYPERDRIVE 2026</span>
           </div>
           <div className="flex items-center gap-6">
-            <span className="font-medium">DELHI REGIONAL CHAMPIONSHIP</span>
-            <span className="hidden sm:inline font-medium">ROBOT IDENTIFIER: #100</span>
+            <span className="medium">DELHI REGIONAL CHAMPIONSHIP</span>
+            <span className="hidden sm:inline font-medium">ROBOT IDENTIFIER: #291</span>
             <span className="hidden md:inline font-bold text-[#059669]">RULES COMPLIANT</span>
           </div>
         </div>
@@ -40,7 +40,7 @@ export default function EditorialHero({ onExploreRobot, onSeeHowItWorks }) {
                   className="w-6 h-6 object-contain"
                 />
                 <span className="font-mono text-xs sm:text-[13px] uppercase tracking-wider font-bold text-[#171717]">
-                  OFFICIAL COMPETITION SHOWCASE · TEAM 100
+                  OFFICIAL COMPETITION SHOWCASE · TEAM 291
                 </span>
                 <span className="w-1.5 h-1.5 rounded-full bg-[#F04438]" />
                 <span className="font-mono text-[11px] text-[#F04438] font-bold uppercase tracking-wider hidden sm:inline">
@@ -132,7 +132,7 @@ export default function EditorialHero({ onExploreRobot, onSeeHowItWorks }) {
               />
 
               <div className="absolute top-4 left-4 bg-[#F7F7F4]/95 border border-[#D8D8D3] px-3.5 py-1.5 font-mono text-[15px] uppercase tracking-wider text-[#171717] shadow-sm font-semibold">
-                ONSHAPE CAD ASSEMBLY · TEAM #100
+                ONSHAPE CAD ASSEMBLY · TEAM #291
               </div>
 
               <div className="absolute bottom-4 right-4 bg-[#F7F7F4]/95 border border-[#D8D8D3] px-3.5 py-1.5 font-mono text-[15px] text-[#595959] shadow-sm hidden sm:block font-semibold">

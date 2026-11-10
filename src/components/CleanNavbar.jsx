@@ -59,7 +59,7 @@ export default function CleanNavbar({ onExploreRobot }) {
               CYBER CHAMPS
             </span>
             <span className="text-[10px] uppercase font-semibold tracking-wider text-[#626A73]">
-              INNOVERTERS OF FUTURE · TEAM #100
+              INNOVERTERS OF FUTURE · TEAM #291
             </span>
           </div>
         </a>

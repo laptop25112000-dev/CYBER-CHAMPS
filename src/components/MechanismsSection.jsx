@@ -335,7 +335,7 @@ export default function MechanismsSection() {
                   <ShieldCheck className="w-4 h-4 text-[#F04438]" />
                   <span>Verified in CAD Assembly & NRL Game Manual</span>
                 </div>
-                <span className="font-mono font-medium text-[#171717]">TEAM #100</span>
+                <span className="font-mono font-medium text-[#171717]">TEAM #291</span>
               </div>
 
             </div>

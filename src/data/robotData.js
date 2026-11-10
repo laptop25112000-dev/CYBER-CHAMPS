@@ -144,7 +144,7 @@ export const ROBOT_COMPONENTS = [
       "Mechanism Type": "Gravity-Assisted Tilt Cradle with Micro-Servo Latch",
       "Supported Payload Dimensions": "Fits inside 4\" cube, larger than 2\" cube (Complies with R-Payload)",
       "Maximum Payload Mass": "Tested up to 380 g (Rule limit: Max 400 g)",
-      "Team Number Display": "Embossed '100' Team Number visible from 12+ inches (R4.1 / R4.2)",
+      "Team Number Display": "Embossed '291' Team Number visible from 12+ inches (R4.1 / R4.2)",
       "Strategic Impact": "Reduces Starburst threshold from 10 COREs to 4 COREs (Table 4.5.2)",
       "Rule Compliance": "R9.4 (Separate from CORE mechanism); R9.6 (Actuator count ≤ 2)"
     },
@@ -177,7 +177,7 @@ export const ROBOT_COMPONENTS = [
       "1. Wireless 2.4GHz FHSS radio receives driver controller packets with sub-4.2ms round-trip latency.",
       "2. Dual-core 240MHz MCU runs team OpMode logic to calculate motor speeds and check watchdog timers.",
       "3. Integrated H-bridge MOSFETs dispatch 7.4V PWM drive current to the 4 gearmotors and 5V power to the servos.",
-      "4. The 0.96\" I2C OLED screen continuously displays link quality, Team Name, Number 100, and frequency channel."
+      "4. The 0.96\" I2C OLED screen continuously displays link quality, Team Name, Number 291, and frequency channel."
     ],
 
     technicalDetails: {
@@ -185,7 +185,7 @@ export const ROBOT_COMPONENTS = [
       "Firmware Runtime": "Official NRL Engine Library with OpModes Architecture (R8.1/R8.2)",
       "Wireless Interface": "Official HexaLINK 2.4GHz FHSS Dedicated Radio Channel (R8.9)",
       "Telemetry Latency": "< 4.2 milliseconds packet round-trip time",
-      "Onboard Display": "0.96\" I2C OLED (Displays Link, Name, Num 100, Channel R8.7)",
+      "Onboard Display": "0.96\" I2C OLED (Displays Link, Name, Num 291, Channel R8.7)",
       "Motor Drivers": "Dual Integrated H-Bridges (3.2A continuous / channel)",
       "Safety Features": "Hardware watchdog, instant R8.13 driver stop, status LED (R8.15)",
       "Rule Compliance": "R7.1 (Official Hub); R8.3 (Controller Firmware); R8.6 (Stamped Identity)"
@@ -408,7 +408,7 @@ export const ROBOT_SYSTEMS = [
     points: [
       "Official NRL HEXA Command Hub running verified OpModes code (Rules R7.1, R8.1, R8.2)",
       "HexaLINK 2.4GHz FHSS anti-jamming dedicated telemetry radio (Rule R8.9)",
-      "Top-mounted 0.96\" OLED displays Link, Team Name, Num 100, and Channel (Rule R8.7)",
+      "Top-mounted 0.96\" OLED displays Link, Team Name, Num 291, and Channel (Rule R8.7)",
       "Instant driver stop button and hardware watchdog loop satisfy Safety Rule R8.13"
     ]
   },
@@ -483,7 +483,7 @@ export const ROBOT_CAPABILITIES = [
     id: "hexalink-telemetry",
     title: "HexaLINK 2.4GHz Telemetry & OLED",
     subtitle: "Sub-5ms Protocol & R8.7 Display",
-    description: "Official NRL HexaLINK radio ensures zero match interference while the top OLED displays real-time Link, Team Name, Number 100, and Assigned Frequency Channel.",
+    description: "Official NRL HexaLINK radio ensures zero match interference while the top OLED displays real-time Link, Team Name, Number 291, and Assigned Frequency Channel.",
     systemId: "electronics",
     componentId: "hexa-pcb",
     tag: "TELEMETRY"
