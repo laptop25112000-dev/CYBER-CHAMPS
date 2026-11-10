@@ -1,7 +1,7 @@
 import React from 'react';
-import { TEAM_MEMBERS } from '../../../data/team';
+import { TEAM_MEMBERS, MENTORS } from '../../../data/team';
 import TearablePerforatedSlip from '../TearablePerforatedSlip';
-import { Users, Award, Shield, Sparkles } from 'lucide-react';
+import { Users, Award, Shield, Sparkles, GraduationCap } from 'lucide-react';
 
 export default function SquadScrapbookPage() {
   const memberColors = ['#FEF08A', '#BAE6FD', '#BBF7D0', '#FECDD3', '#E9D5FF', '#FED7AA'];
@@ -44,8 +44,8 @@ export default function SquadScrapbookPage() {
                   <div className="font-['Orbitron'] text-base font-black text-black">
                     {member.name}
                   </div>
-                  <div className="font-mono text-[10px] font-bold text-slate-700 uppercase">
-                    CYBER CHAMPS 2026
+                  <div className="inline-block mt-0.5 px-2 py-0.5 rounded text-[10px] font-mono font-black uppercase tracking-wider bg-black text-[#FEF08A]">
+                    {member.role}
                   </div>
                 </div>
               </div>
@@ -68,6 +68,28 @@ export default function SquadScrapbookPage() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Faculty & Robotics Mentors */}
+      <div className="p-4 rounded-xl border-2 border-black bg-[#EAF7EE] shadow-[3px_3px_0px_0px_#000] space-y-3">
+        <div className="flex items-center gap-2 font-['Orbitron'] text-xs font-black uppercase text-black">
+          <GraduationCap className="w-4 h-4 text-[#059669]" />
+          FACULTY MENTORS · TEAM #291
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {MENTORS.map((mentor) => (
+            <div key={mentor.id} className="p-3 bg-white rounded-lg border border-black/40 shadow-xs space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-['Orbitron'] text-sm font-black text-black">{mentor.name}</span>
+                <span className="font-mono text-[10px] font-black px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  {mentor.role}
+                </span>
+              </div>
+              <div className="text-[11px] font-mono font-bold text-slate-600">{mentor.designation}</div>
+              <p className="text-[11px] text-slate-700 leading-snug">{mentor.bio}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Perforated Member Credential Tear Slips */}
