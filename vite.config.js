@@ -3,9 +3,14 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'vite'
 
+// Base path: '/' when building on Vercel (or when VERCEL or VITE_BASE is specified),
+// otherwise '/CYBER-CHAMPS/' for GitHub Pages
+const isVercel = Boolean(process.env.VERCEL) || process.env.NOW_BUILDER !== undefined;
+const base = process.env.VITE_BASE || (isVercel ? '/' : '/CYBER-CHAMPS/');
+
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/CYBER-CHAMPS/',
+  base,
   plugins: [react(), tailwindcss()],
   server: {
     host: true,
