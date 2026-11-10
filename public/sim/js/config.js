@@ -122,7 +122,7 @@ export const COLORS = {
 };
 
 export const TEAMS = [
-  { id: 0, name: 'Red 1', squad: 'red', number: '009',    startX: 60 },
+  { id: 0, name: 'Red 1', squad: 'red', number: '291',    startX: 60 },
   { id: 1, name: 'Red 2', squad: 'red', number: '1002', startX: 84 },
   { id: 2, name: 'Blue 1', squad: 'blue', number: '2001', startX: 84 },
   { id: 3, name: 'Blue 2', squad: 'blue', number: '2002', startX: 60 },

@@ -3,16 +3,39 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>HYPERDRIVE Simulator · Overdrive 009</title>
-<meta name="description" content="Physics-accurate match simulator for the NRL 2026 game HYPERDRIVE: real robot CAD, the full 12 x 12 ft field, four robots and live scoring. Built by team Overdrive 009.">
+<title>HYPERDRIVE Simulator · CYBER CHAMPS #291</title>
+<meta name="description" content="Physics-accurate match simulator for the NRL 2026 game HYPERDRIVE: real robot CAD, the full 12 x 12 ft field, four robots and live scoring. Custom built for team CYBER CHAMPS #291.">
 <meta name="theme-color" content="#06080c">
-<meta property="og:title" content="HYPERDRIVE Simulator by Overdrive 009">
+<meta property="og:title" content="HYPERDRIVE Simulator by CYBER CHAMPS #291">
 <meta property="og:description" content="Drive four robots on the full NRL 2026 HYPERDRIVE field with real physics and live scoring.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2306080c'/%3E%3Cpath d='M9 8v16M23 8v16M9 16h14' stroke='%23ffffff' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* Critical inline styles to prevent SVG blowout and unstyled flash */
+  .hidden { display: none !important; }
+  svg { max-width: 100%; }
+  .mark { display: inline-flex; align-items: center; gap: 10px; font: 800 15px/1 sans-serif; letter-spacing: 0.08em; }
+  .mark svg { width: 26px !important; height: 26px !important; max-width: 26px !important; flex-shrink: 0 !important; }
+  #view { position: fixed; inset: 0; }
+  body { margin: 0; background: #06080c; color: #fff; }
+</style>
+
+<script>
+  // Ensure relative assets (css/app.css, js/main.js, lib/...) resolve inside /sim/ even if loaded without trailing slash
+  (function() {
+    var p = window.location.pathname;
+    if (p.endsWith('/sim')) {
+      var baseEl = document.createElement('base');
+      baseEl.href = window.location.origin + p + '/';
+      document.head.prepend(baseEl);
+    }
+  })();
+</script>
+
 <link rel="stylesheet" href="css/app.css">
 <script type="importmap">{ "imports": { "three": "./lib/three.module.js" } }</script>
 <script src="lib/supabase.umd.js" defer></script>
@@ -23,7 +46,7 @@
 <!-- ======================================================== MAIN MENU -->
 <section id="menu" class="hidden">
   <header class="menu-top">
-    <div class="mark"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#161b24"/><path d="M9 8v16M23 8v16M9 16h14" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/></svg><span class="mark-name">HYPERDRIVE</span><span class="mark-by">by <b>OVERDRIVE</b> 009</span></div>
+    <div class="mark"><svg width="26" height="26" style="width:26px;height:26px;flex-shrink:0" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#161b24"/><path d="M9 8v16M23 8v16M9 16h14" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/></svg><span class="mark-name">HYPERDRIVE</span><span class="mark-by">by <b>CYBER CHAMPS</b> #291</span></div>
     <nav class="menu-nav">
       <button class="nav-btn" data-act="howto" title="How to play"><span data-icon="book"></span><span class="lbl">How to play</span></button>
       <button class="nav-btn" data-act="leaderboard" title="Leaderboard"><span data-icon="trophy"></span><span class="lbl">Leaderboard</span></button>
@@ -46,8 +69,8 @@
     </div>
   </div>
   <footer class="menu-foot">
-    <span>Built by team <b class="team-name">OVERDRIVE 009</b> · <button class="lnk" data-act="privacy">Privacy &amp; data</button></span>
-    <span>Fan-made · not affiliated with the National Robotics League</span>
+    <span>Official simulator for team <b class="team-name">CYBER CHAMPS #291</b> · <button class="lnk" data-act="privacy">Privacy &amp; data</button></span>
+    <span>National Robotics League · HYPERDRIVE 2026</span>
   </footer>
 </section>
 
@@ -92,7 +115,7 @@
 <div id="loading">
   <div class="load-box">
     <h1 class="logo">HYPER<span>DRIVE</span></h1>
-    <div class="load-team">by <b>OVERDRIVE</b> 009</div>
+    <div class="load-team">by <b>CYBER CHAMPS</b> #291</div>
     <div class="load-bar"><i id="load-bar"></i></div>
     <div id="loading-status">Loading…</div>
   </div>

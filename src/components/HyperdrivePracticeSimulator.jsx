@@ -143,7 +143,7 @@ export default function HyperdrivePracticeSimulator() {
         {/* The Live Interactive Iframe via self-hosted static simulator */}
         <iframe
           ref={iframeRef}
-          src={`${import.meta.env.BASE_URL}sim/index.html`}
+          src={`${import.meta.env.BASE_URL}sim/index.html?mode=practice`}
           title="HYPERDRIVE Simulator - Practice Mode"
           className="w-full h-full border-0"
           allow="fullscreen; gamepad; accelerometer; gyroscope"

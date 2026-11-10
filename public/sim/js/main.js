@@ -417,8 +417,16 @@ async function boot() {
 
   setLoad(100, 'Ready');
   ui.setView('menu');
-  const roomParam = new URLSearchParams(location.search).get('room');
+  const params = new URLSearchParams(location.search);
+  const roomParam = params.get('room');
   if (roomParam) setTimeout(() => ui.openOnline({ code: roomParam, restore: hostRoomFor(roomParam.toUpperCase()) }), 300);
+  const modeParam = params.get('mode');
+  if (modeParam === 'practice') {
+    setTimeout(() => {
+      ctx.startGame('practice');
+      sim.game.start();
+    }, 250);
+  }
   controls.enabled = false;
   requestAnimationFrame(frame);
   setTimeout(() => { const l = document.getElementById('loading'); l.classList.add('done'); setTimeout(() => l.remove(), 600); }, 150);
