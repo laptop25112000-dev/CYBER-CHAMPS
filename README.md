@@ -1,47 +1,78 @@
-# 🛡️ CYBER CHAMPS // Elite Cybersecurity & Systems Engineering Squad
+# 🤖 TEAM CYBER CHAMPS (#291) // National Robotics League 2026
 
-An ultra-modern, high-performance, 3D interactive portfolio website built for **CYBER CHAMPS** — a premier collective of 9 elite cybersecurity researchers, exploit developers, post-quantum cryptographers, and autonomous systems engineers.
+![Cyber Champs Mascot Logo](./public/cyber-champs-logo.jpg)
 
----
+> **"Different Roles | One Goal | A Smarter Tomorrow"**  
+> *Build · Innovate · Compete — Innoverters of Future*
 
-## ⚡ Live Features
-
-- **🌐 Interactive 3D Cyber Core**: Real-time Three.js WebGL holographic core featuring rotating icosahedral lattices, glowing orbital rings, dynamic particle constellations, and interactive mouse parallax tilt.
-- **🛡️ 3D Member Badge Avatars**: Each of the 9 team members commands a custom, interactive 3D geometric emblem (`icosahedron`, `octahedron`, `cube`, `torus`, `dodecahedron`, `sphere`, `cylinder`, `pyramid`, `tetrahedron`) rendered in real-time WebGL.
-- **🎮 Interactive 3D Tilt Cards**: Fluid 3D perspective mouse tilt effect for each operator card with real-time stat bars, tools breakdown, and clearance badges.
-- **📂 Tactical Operator Dossiers**: Modal drawer for inspecting deep-dive dossiers: military-grade clear-levels, philosophies, combat radar statistics, flagship projects, and direct encrypted communication channels.
-- **🧪 3D Cyber Lab & Arsenal**: Interactive 3D orbital mesh connecting 9 defense nodes across zero-day research, red teaming, reverse engineering, post-quantum crypto, neural AI sentinels, cloud security, and digital forensics.
-- **💻 Embedded Cyber CLI Terminal**: Interactive retro-futuristic Unix shell where users can run commands (`help`, `team`, `cat <member>`, `stats`, `missions`, `matrix`, `ping`, `sudo access`, `celebrate`, `clear`).
-- **🔊 Web Audio API Synthesizer**: Zero external audio dependencies! Built-in real-time audio synthesis generating cyber blips, laser chimes, terminal keystrokes, and ambient defense drones with a reactive audio visualizer toggle.
-- **📡 Secure Transmission Dispatch**: Encrypted contact interface supporting post-quantum ML-KEM-1024 hybrid signing simulation, PGP fingerprint verification, and instant confirmation hashes.
+An ultra-modern, interactive 3D competition showcase and engineering portfolio website for **TEAM CYBER CHAMPS (Team #291)** competing in the **National Robotics League (NRL) HYPERDRIVE 2026 Delhi Regional Championship**.
 
 ---
 
-## 👥 Squad Roster (The 9 Champions)
+## ⚡ Live Deployments
 
-| # | Operator | Callsign | Role & Specialization | 3D Emblem |
-|---|----------|----------|-----------------------|-----------|
-| **01** | **Mayank** | `APEX_ZERO` | Squad Commander & Systems Architect (Low-Level Exploits & Zero-Days) | Icosahedron |
-| **02** | **Sayan Kakkar** | `SHADOW_BYTE` | Offensive Security & Red Team Lead (Network Penetration & AD Exploits) | Octahedron |
-| **03** | **Chirag Koli** | `CIPHER_BLADE` | Smart Contract & Binary Reverse Engineer (EVM Security & Bytecode Audits) | Cube |
-| **04** | **Mahika Singh** | `AETHER_VALKYRIE` | Cloud Security Architect & Threat Intelligence Lead (Multi-Cloud & SIEM) | Torus |
-| **05** | **Samrat** | `CRYPTIC_MONARCH` | Post-Quantum Cryptography & Protocol Engineer (Lattices & ZK-SNARKs) | Dodecahedron |
-| **06** | **Divyansh Mishra** | `NEURAL_SENTINEL` | AI/ML Security & Autonomous Defense Systems (Adversarial ML & LLM Red Team) | Sphere |
-| **07** | **Swastik** | `VORTEX_CORE` | Creative Technologist & 3D Web Architect (WebGL, Shaders & Cyber UI/UX) | Cylinder |
-| **08** | **Dakshesh** | `GHOST_TRACE` | Digital Forensics & Incident Response Specialist (Memory Volatility & DFIR) | Pyramid |
-| **09** | **Shubh Shankar** | `TITAN_FORGE` | DevSecOps & Zero-Trust Infrastructure Engineer (CI/CD & Hardened Bastions) | Tetrahedron |
+- **🌐 Live Website (GitHub Pages)**: [https://laptop25112000-dev.github.io/CYBER-CHAMPS/](https://laptop25112000-dev.github.io/CYBER-CHAMPS/)
+- **📦 GitHub Repository**: [https://github.com/laptop25112000-dev/CYBER-CHAMPS](https://github.com/laptop25112000-dev/CYBER-CHAMPS)
+- **⚡ Vercel Deployment Ready**: Preconfigured with `vercel.json` for zero-config root routing (`/`).
+
+---
+
+## 👥 The Squad · Assigned Competition Roles
+
+Directly mapped from our official NRL Delhi Regional team poster:
+
+| # | Member | Role | Icon | Focus & Arena Responsibilities |
+|---|--------|------|------|--------------------------------|
+| **01** | **Mayank Prasad** | **TEAM LEAD** | 👑 Crown | Multidisciplinary build coordination, NRL HYPERDRIVE rule compliance, and pit strategy. |
+| **02** | **Sayan Kakkar** | **DRIVER** | 🏎️ Steering Wheel | Precision 4WD skid-steer maneuvers, CORE ring collection, and 15-point Space Station dock balance. |
+| **03** | **Swastik** | **STRATEGIST** | 💡 Lightbulb | Match gameplans, score optimization algorithms, payload drop timing, and 3D modeling. |
+| **04** | **Divyansh Mishra** | **TECHNICAL** | ⚙️ Gear / CPU | Avionics architecture, HEXA Command Hub firmware, wireless 2.4GHz RF telemetry, and OLED diagnostics. |
+| **05** | **Chirag Koli** | **MECHANICAL** | 🔧 Wrench | 4mm optical polycarbonate chassis fabrication, 6061-T6 aluminum belly pan, and Rule R1.1 sizing envelope. |
+| **06** | **Mahika Singh** | **HUMAN PLAYER** | 👤 Human Silhouette | Safe perimeter ring staging at the Source Zone, queue management, and zero-fault rule adherence. |
+| **07** | **Shubh Shankar** | **RESEARCH** | 🔍 Magnifying Glass | Game manual scrutiny, opponent scoring efficiency analysis, and technical dossier verification. |
+| **08** | **Samrat** | **HELPING** | 🤝 Handshake | Pit maintenance, rapid 60-second hardware servicing, claw linkage setup, and spare parts readiness. |
+| **09** | **Dakshesh** | **SUPPORTING** | 🛡️ Shield | 7.4V Li-Ion battery health diagnostics, pre-match safety audits, and wire strain relief inspection. |
+
+---
+
+## 🎓 Our Mentors
+
+Guided by esteemed faculty advisors from start to competition:
+
+| Mentor | Designation | Guidance Area |
+|--------|-------------|---------------|
+| **Vipul Gupta Sir** | **MENTOR** — Faculty Mentor & Robotics Lead | Engineering oversight, electrical safety architectures, control theory, and high-stakes tournament tactics. |
+| **Iqbal Kaur Mam** | **MENTOR** — STEM & Technical Advisor | Design validation, team coordination, safety compliance, documentation excellence, and state championship presentation. |
+
+---
+
+## 🤖 The Robot · Engineering Specifications
+
+- **Chassis & Envelope**: Dual-deck 4mm optical polycarbonate plates with CNC-machined 6061-T6 aluminum reinforcement, measuring 310mm × 265mm × 195mm (strictly within Rule R1.1 18" envelope bounds).
+- **Drivetrain**: 4WD independent skid-steer configuration driven by 4× TT DC high-torque gearmotors (1:48 reduction) with 65mm high-traction knobby rubber wheels.
+- **Manipulation Mechanism**: SG90 articulated micro-servo claw with mechanical grabber pads, linked to a gravity-tilt payload cradle with sear-pin trigger for high-pole scoring and vault releases.
+- **Avionics & Telemetry**: HEXA dual-core robotics hub, HexaLINK 2.4GHz FHSS wireless link (<4.2ms latency), and onboard 0.96" I2C OLED display outputting live battery voltage, match timer, and Team #291 identity.
+
+---
+
+## 🎨 Interactive Website Features
+
+1. **Official Team Poster Layout**: Interactive replica of our competition poster (4 in Row 1, 4 in Row 2, 1 centered in Row 3) with pastel organic bubble badges, custom SVG iconography, and script typography (`Caveat`).
+2. **Deep-Dive Technical Modals**: Click any squad member or mentor to inspect technical competencies, build contributions, tools used, and competition radar stats.
+3. **Interactive 3D Rover Viewer**: Real-time WebGL view with exploded components, subsystem inspection, and wireframe overlays.
+4. **Interactive 2.5D Driving Simulator**: Keyboard/touch-driven mini-game simulating arena navigation, obstacle avoidance, and ring collection.
+5. **Interactive Scrapbook Dossier**: Retro perforated tearable notebook (`/tearable`) with physical drag-to-tear slips, polaroid cards, and field reports.
 
 ---
 
 ## 🛠️ Tech Stack
 
 - **Framework**: React 19 + Vite
-- **3D Graphics & WebGL**: Three.js
-- **Styling**: Tailwind CSS v4 + Custom Cyber Glassmorphism & Neon Glow Utilities
-- **Typography**: Google Fonts (`Orbitron`, `Rajdhani`, `JetBrains Mono`)
-- **Audio Engine**: Web Audio API (Native Oscillator Synthesizer)
-- **Icons**: Lucide React + Custom Brand Vectors
-- **Effects**: Canvas Confetti
+- **3D Graphics & WebGL**: Three.js + Draco GLTF Loader
+- **Styling**: Tailwind CSS v4 + Custom Engineering Theme
+- **Typography**: Google Fonts (`Geist`, `Inter`, `Caveat`, `Orbitron`)
+- **Icons**: Lucide React + Hand-crafted Competition SVGs
+- **Audio Synthesizer**: Native Web Audio API (zero external sound dependencies)
 
 ---
 
@@ -51,29 +82,35 @@ An ultra-modern, high-performance, 3D interactive portfolio website built for **
 - Node.js (v18+)
 - npm
 
-### Installation & Development
+### Installation & Local Development
 ```bash
 # Clone the repository
-git clone https://github.com/cyber-champs/portfolio.git
+git clone https://github.com/laptop25112000-dev/CYBER-CHAMPS.git
 cd CYBER-CHAMPS
 
 # Install dependencies
 npm install
 
-# Start local development server with Hot Module Replacement (HMR)
+# Start local dev server
 npm run dev
 
-# Or build for production
+# Build for production
 npm run build
 
-# Preview production build locally
+# Preview build locally
 npm run preview
 ```
 
-The production assets will be generated in `dist/` with relative base paths (`./`) ready for deployment on GitHub Pages, Vercel, Netlify, or self-hosted static servers.
+### Deployment Configuration
+- **GitHub Pages**: Automatically deployed via GitHub Actions on push to `main` with base path `/CYBER-CHAMPS/`.
+- **Vercel**: Deploy with zero configuration; `vercel.json` and dynamic `vite.config.js` ensure root `/` path is used automatically.
 
 ---
 
-## 🔐 Security & Ethics Notice
+## 📜 Competition Compliance
 
-All operations and tools referenced by Cyber Champs are created and conducted under authorized vulnerability research programs, bug bounty platforms, competitive academic CTFs, and responsible disclosure protocols.
+All rover specifications and team roles strictly adhere to the **National Robotics League (NRL) HYPERDRIVE 2026 Official Game Manual**, including:
+- **Rule R1.1**: Sizing Envelope (< 18" × 18" × 18")
+- **Rule R1.3**: Exterior Safety & Edge Chamfering
+- **Rule R8.7**: Scrutineering Display & Team #291 Signage
+- **Rule R9.4**: Mechanism Separation & Payload Handling Safety
