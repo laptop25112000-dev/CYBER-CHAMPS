@@ -12,12 +12,21 @@ export default function EditorialFooter() {
         
         {/* Top Row: Wordmark & Back to Top */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-8 border-b border-[#D8D8D3]">
-          <div>
-            <div className="font-mono text-xl sm:text-2xl font-black tracking-tight text-[#171717]">
-              CYBER CHAMPS
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white border border-[#D8D8D3] p-1.5 flex items-center justify-center shadow-sm overflow-hidden flex-shrink-0">
+              <img 
+                src={`${import.meta.env.BASE_URL}cyber-champs-logo-transparent.png`}
+                alt="Cyber Champs Mascot Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
-            <div className="font-mono text-[15px] text-[#595959] mt-1 font-semibold">
-              TEAM #100 / NATIONAL ROBOTICS LEAGUE™ 2026
+            <div>
+              <div className="font-mono text-xl sm:text-2xl font-black tracking-tight text-[#171717]">
+                CYBER CHAMPS
+              </div>
+              <div className="font-mono text-[14px] text-[#595959] mt-0.5 font-semibold">
+                INNOVERTERS OF FUTURE · TEAM #100 · NRL HYPERDRIVE 2026
+              </div>
             </div>
           </div>
 

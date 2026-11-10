@@ -33,9 +33,20 @@ export default function EditorialHero({ onExploreRobot, onSeeHowItWorks }) {
           <div className="lg:col-span-6 xl:col-span-6 space-y-6 sm:space-y-8 text-left">
             
             <div className="space-y-4">
-              <span className="font-mono text-[15px] uppercase tracking-widest text-[#F04438] block font-bold">
-                OFFICIAL COMPETITION SHOWCASE · TEAM 100
-              </span>
+              <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white border border-[#D8D8D3] shadow-sm">
+                <img 
+                  src={`${import.meta.env.BASE_URL}cyber-champs-logo-transparent.png`}
+                  alt="Cyber Champs Mascot Logo"
+                  className="w-6 h-6 object-contain"
+                />
+                <span className="font-mono text-xs sm:text-[13px] uppercase tracking-wider font-bold text-[#171717]">
+                  OFFICIAL COMPETITION SHOWCASE · TEAM 100
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#F04438]" />
+                <span className="font-mono text-[11px] text-[#F04438] font-bold uppercase tracking-wider hidden sm:inline">
+                  INNOVERTERS OF FUTURE
+                </span>
+              </div>
               
               <h1 className="font-['Geist',sans-serif] text-4xl sm:text-6xl xl:text-7xl 2xl:text-8xl font-extrabold tracking-tight text-[#171717] uppercase leading-[0.98]">
                 ENGINEERED<br />

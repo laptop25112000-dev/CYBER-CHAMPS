@@ -47,15 +47,19 @@ export default function CleanNavbar({ onExploreRobot }) {
           }}
           className="flex items-center gap-3 group"
         >
-          <div className="w-10 h-10 rounded-xl bg-[#245DFF] text-white flex items-center justify-center font-bold shadow-sm transition-transform group-hover:scale-105">
-            <Shield className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-xl bg-white border border-[#E4E7EB] p-1 flex items-center justify-center shadow-sm overflow-hidden transition-transform group-hover:scale-105">
+            <img 
+              src={`${import.meta.env.BASE_URL}cyber-champs-logo-transparent.png`}
+              alt="Cyber Champs Mascot Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
           <div className="flex flex-col">
             <span className="font-['Inter'] font-extrabold text-base sm:text-lg tracking-tight text-[#17191C]">
               CYBER CHAMPS
             </span>
             <span className="text-[10px] uppercase font-semibold tracking-wider text-[#626A73]">
-              NRL Robotics · Delhi Regional
+              INNOVERTERS OF FUTURE · TEAM #100
             </span>
           </div>
         </a>

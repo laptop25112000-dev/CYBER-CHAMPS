@@ -47,19 +47,28 @@ export default function EditorialNavbar() {
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#F7F7F4]/95 backdrop-blur-md border-b border-[#D8D8D3] transition-colors">
       <div className="w-full max-w-[1720px] mx-auto px-6 sm:px-10 lg:px-14 xl:px-16 h-16 sm:h-18 flex items-center justify-between">
         
-        {/* Brand Wordmark */}
+        {/* Brand Logo & Wordmark */}
         <a 
           href="#overview"
           onClick={(e) => handleLinkClick(e, '#overview')}
-          className="flex items-center gap-3 group focus:outline-none"
+          className="flex items-center gap-3.5 group focus:outline-none"
         >
-          <div className="w-2.5 h-2.5 bg-[#F04438]" />
+          <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white border border-[#D8D8D3] p-1 flex items-center justify-center shadow-sm group-hover:border-[#F04438] group-hover:shadow-md transition-all overflow-hidden flex-shrink-0">
+            <img 
+              src={`${import.meta.env.BASE_URL}cyber-champs-logo-transparent.png`}
+              alt="Cyber Champs Mascot Logo"
+              className="w-full h-full object-contain transform group-hover:scale-105 transition-transform"
+            />
+          </div>
           <div className="flex flex-col text-left">
-            <span className="font-mono text-[15px] sm:text-base font-bold uppercase tracking-widest text-[#171717] group-hover:text-[#F04438] transition-colors">
-              CYBER CHAMPS
-            </span>
-            <span className="text-[15px] font-mono text-[#595959] tracking-tight">
-              NRL HYPERDRIVE 2026
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[15px] sm:text-base font-bold uppercase tracking-widest text-[#171717] group-hover:text-[#F04438] transition-colors">
+                CYBER CHAMPS
+              </span>
+              <span className="w-2 h-2 rounded-full bg-[#F04438]" />
+            </div>
+            <span className="text-xs sm:text-[13px] font-mono text-[#595959] tracking-tight font-medium">
+              INNOVERTERS OF FUTURE · TEAM #100
             </span>
           </div>
         </a>
